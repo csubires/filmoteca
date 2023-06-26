@@ -1,0 +1,349 @@
+// Constantes y variables de colores y tamaños
+@use "constants" as c;
+@use "mixins";
+
+//  -------
+//  BOTONES
+//  -------
+
+.btn {
+    font-family: c.$bs-font-sans-serif;
+    padding: c.$bs-btn-padding-y c.$bs-btn-padding-x;
+    line-height: c.$bs-btn-line-height;
+    color: c.$bs-btn-color;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+	text-decoration: none;
+	background-color: transparent;
+    border: c.$bs-btn-border-width solid c.$bs-btn-border-color;
+    border-radius: c.$bs-btn-border-radius;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    &:disabled {
+        pointer-events: none;
+        opacity: c.$bs-btn-disabled-opacity;
+    }
+}
+
+// Estilos de botones disponibles
+$buttons: (
+	"primary": ("color": c.$bs-white, "bkg": c.$bs-blue),
+	"secondary": ("color": c.$bs-white, "bkg": c.$bs-gray),
+	"success": ("color": c.$bs-white, "bkg": c.$bs-green),
+	"danger": ("color": c.$bs-white, "bkg": c.$bs-red),
+	"warning": ("color": c.$bs-black, "bkg": c.$bs-yellow),
+	"info": ("color": c.$bs-black, "bkg": c.$bs-cyan),
+	"light": ("color": c.$bs-black, "bkg": c.$bs-gray-300),
+	"dark": ("color": c.$bs-white, "bkg": c.$bs-gray-900),
+	"link": ("color": c.$bs-blue, "bkg": transparent)
+);
+
+// LLamada a crear botones
+@include mixins.make-all-button($buttons);
+
+//  ------
+//  INPUTS
+//  ------
+
+input,
+select {
+	font-family: c.$bs-font-sans-serif;
+	font-size: 1.2rem;
+	outline-style: none;
+	border: 1px solid c.$bs-gray-400;
+	border-radius: 5px;
+	padding: 0.7rem;
+	transition: border-color 0.5s ease-out;
+	opacity: 1;
+
+	&:required:valid {
+		border: 1px solid c.$bs-green;
+	}
+
+	&:invalid {
+		border: 1px solid c.$bs-red;
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+	}
+
+	&:required:focus:valid {
+		background: url("icons/check.svg") no-repeat 95% 50% #edfdf6;
+		background-size: 25px;
+	}
+
+	&:focus:invalid {
+		background: url("icons/exclamation.svg") no-repeat 95% 50% #f5edee;
+		background-size: 25px;
+	}
+
+	&:disabled {
+		opacity: 0.9;
+	}
+}
+
+input[type=date] {
+	background: url("icons/calendar.svg") no-repeat 5% 50% #f5edee;
+	background-size: 25px;
+	padding-left: 3rem;
+}
+
+input[type=checkbox] {
+	transform: scale(2);
+	margin: 0 1rem;
+	width: min-content;
+	height: 1.5rem;
+	&:hover {
+		border-color: #86b7fe;
+		outline: 0;
+		box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+	}
+}
+
+input[type=range] {
+	padding: 0;
+	margin: 0.7rem 0.5rem;
+}
+
+// Input de número con botones de incremento a los lados
+.inp-number {
+    display: inline-flex;
+	margin: 0 1rem;
+
+	input[type=button]{
+		padding: 0 1rem;
+	}
+
+	input[type=number] {
+		width: 95%;
+		border-radius: 0;
+		outline: none;
+		appearance: textfield;
+	}
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem;
+	text-transform: capitalize;
+	font-weight: bold;
+
+	input {
+		@extend input;
+		opacity: 1;
+	}
+
+	&.row {
+		display: flex;
+		flex-direction: row;
+
+		input[type=number] {
+			padding: 0 1rem;
+			max-width: 4rem;
+			appearance: textfield;
+			opacity: 1;
+		}
+
+		.noborder {
+			border: none;
+		}
+	}
+
+	.folder {
+		text-transform: lowercase !important;
+		background: url("icons/folder-open.svg") no-repeat 98% 50% #f5edee;
+		background-size: 25px;
+	}
+}
+
+//  ---------------------
+//  CONTENEDOR DE ALERTAS
+//  ---------------------
+
+#alerts-container {
+	position: fixed;
+	bottom: 0;
+	width: 40vw;
+	max-height: 50vh;
+	opacity: 0.9;
+	overflow-y: scroll;
+	padding: 0.75rem;
+	z-index: 10;
+
+	.alert {
+		display: flex;
+		position: relative;
+		padding: c.$bs-alert-padding-y c.$bs-alert-padding-x;
+		margin-bottom: c.$bs-alert-margin-bottom;
+		color: c.$bs-alert-color;
+		background-color: c.$bs-alert-bg;
+	}
+
+	// Alertas disponibles
+	$alerts: (
+		"info": (#084298, #cfe2ff, #b6d4fe),
+		"success": (#0f5132, #d1e7dd, #badbcc),
+		"warning": (#664d03, #fff3cd, #ffecb5),
+		"danger": (#842029, #f8d7da, #f5c2c7)
+	);
+
+	// LLamada a crear alertas
+	@each $name, $value in $alerts {
+		.alert-#{$name} {
+			@extend .alert;
+			@include mixins.make-alert(nth($value, 1), nth($value, 2), nth($value, 3));
+		} 
+	}
+
+	// Icono en mensaje
+	.bi {
+		max-width: 1.2rem;
+		max-height: 1.2rem;
+		fill: currentColor;
+		margin-right: 0.7rem;
+	}
+}	// End #alerts-container
+
+// Bóton de cerrar alerta
+.btn-close {
+	box-sizing: content-box;
+	width: 1em;
+	height: 1em;
+	padding: 0.25em 0.25em;
+	color: #000;
+	background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+	border: 0;
+	border-radius: 0.375rem;
+	opacity: 0.5;
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2;
+	padding: 1.25rem 1rem;
+	&:hover {
+		color: #000;
+		text-decoration: none;
+		opacity: 0.75;
+	}
+}
+
+//  ---------------------
+//  OTROS ELEMENTOS
+//  ---------------------
+
+// Encabezados
+h3 {
+	width: 100%;
+	opacity: 0.6;
+	letter-spacing: 0.1rem;
+}
+
+// Botón radio con dos opciones autoexcluyentes
+.btn-group {
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+	border-radius: 0.375rem;
+	margin: 0 1rem;
+
+	>.btn-group:not(:first-child),
+	>:not(.btn-check:first-child) + .btn {
+		margin-left: -1px;
+	}
+
+	>.btn-group:not(:last-child) > .btn,
+	>.btn.dropdown-toggle-split:first-child,
+	>.btn:not(:last-child):not(.dropdown-toggle) {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	>.btn-group:not(:first-child) > .btn,
+	>.btn:nth-child(n + 3),
+	>:not(.btn-check) + .btn {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	.btn-check {
+		position: absolute;
+		clip: rect(0, 0, 0, 0);
+		pointer-events: none;
+	}
+	
+	.btn-check + .btn:hover {
+		color: c.$bs-blue;
+		background-color: #cfe2ff;
+		border-color: c.$bs-blue;
+	}
+	
+	.btn-check:checked + .btn,
+	:not(.btn-check) + .btn:active {
+		color: c.$bs-white;
+		background-color: c.$bs-blue;
+		border-color: c.$bs-blue;
+	}
+}
+
+//  ------
+//  TABLAS
+//  ------
+
+table {
+	background-color: c.$bs-gray-100;
+	border-radius: 0 0 5px 5px;
+	padding: 1rem;
+	text-align: center;
+
+	caption {
+		font-weight: bold;
+		padding: 1rem;
+		text-align: left;
+		background-color: c.$bs-gray-100;
+		border-radius: 5px 5px 0 0;
+	}
+
+	thead {
+		color: c.$bs-gray-600;
+		text-transform: uppercase;
+		font-size: 0.5rem;
+		position: sticky;
+		top: 0;	
+
+		th {
+			padding: 0 0.5rem;
+		}
+	}
+	
+	tbody {
+
+		tr {
+			&:hover {
+				box-shadow: 8px 0 16px 0 rgba(0,0,0,0.2);
+				outline: thin solid c.$bs-gray-400;
+			}
+
+			td {
+				padding: 10px;
+			}
+		}
+	}
+}	// End table
+
+//  -----
+//  ICONS
+//  -----
+
+i {
+    background: {
+        repeat: no-repeat;
+        size: 1rem;
+        position: center;
+        color: transparent;
+    }
+    opacity: 0.5;
+    padding: 0 1rem;
+}

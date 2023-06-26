@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block content%}
+    {% if response %}
+
+    {#
+        0 id_genre
+        1 name
+        2 num_movies
+        3 local_size_str
+        4 local_duration_str
+        5 is_subgenre
+    #}
+
+<article class="item-list card-genre">
+    {% for genre in response %}
+    <a href="/view/{{ genre[0] }}" class="card-genre{{ ' card-subgenre' if genre[5] else '' }}">
+        {% if genre[5] %}
+        <div class="popup-genre">Subgénero</div>
+        {% endif %}
+        <img src="{{ url_for('render_image', tag='genres', file_name=genre[0]|string) + '.jpg' }}" loading="lazy">
+        <strong class="grid-two-cols">{{ genre[1]|title }}{{ " (subgenero)" if genre[5] else "" }}</strong>
+        <div class="card-genre-right">
+            <span><b>{{ genre[2] }}</b> Películas</span>
+            <span>Tamaño Global <b>{{ genre[3] }}</b></span>
+            <span><b>{{ genre[4] }}</b></span>
+        </div>
+    </a> 
+    {% endfor %}
+</article>
+
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Listado Música</title>
+		<style type="text/css">
+			html{scroll-behavior:smooth;scrollbar-color:#65727e,#212529}body{background-color:#f8f9fa;color:#000;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;margin:0;padding:0}body h3:first-child{margin-top:0}header{border-bottom:solid 2px #e9ecef;display:flex;justify-content:space-around;justify-items:center;align-items:center;padding:10px;color:#085f63}header b{color:#085f63;background-color:transparent;font-size:1.5rem}nav{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;padding:1rem;margin:.5rem;font-size:1.5rem;background-color:#ebedf0;border-radius:3px}a{background-color:#0d6efd;padding:.5rem 1rem;border-radius:5px;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;text-align:center;font-weight:700;color:#fff}a:hover{background-color:#0257d5;border-color:#0262ef}a.up{position:sticky;top:5rem;padding:.8rem 1.2rem;border-radius:50%;margin-right:.5rem;background-color:#fd7e14;float:right}a.up:hover{background-color:#dc6502;border-color:#f57102}a.up .arrow-up{transform:scale(3);transform-origin:center}h3{background-color:#085f63;color:#f1faee;text-align:center;text-transform:uppercase;padding:1rem;margin-top:3rem}h3.sub{background-color:#fd7e14}section{display:flex;gap:1rem;justify-content:space-around;flex-wrap:wrap;background-color:#ebedf0;margin:.5rem;border-radius:5px}section ul{width:20rem;border:1px solid gray;border-radius:3px;list-style:none;padding:.5rem .7rem .5rem .5rem;display:flex;flex-direction:column;gap:.5rem;background-color:#fff;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}section ul:empty{display:none}section ul li,section ul i{padding:0 .3rem}section ul li:hover,section ul i:hover{background-color:#545b62;color:#fff}section ul li.subi,section ul i.subi{background-color:#fd7e14}section ul i{color:#085f63;opacity:.7;float:right}section ul .header,section ul .sub{text-align:center;font-size:1.2rem;color:#f1faee;background-color:#495057;font-style:italic;font-weight:700;padding:.5rem;text-transform:uppercase}section ul .sub{background-color:#fd7e14}section ul .sub:hover{background-color:#dc6502;border-color:#f57102}
+		</style>
+	</head>
+	<body>
+	
+		<h3>Listado Música</h3>
+		<header>
+			<p><b>110G</b> Ocupados</p>
+			<p><b>13513</b> Archivos</p>
+			<p><b>1462</b> Carpetas</p>
+		</header>
+		
+		<h3 id="up">Categorías</h3>
+		<nav>
+<a href="#Ablaze[Japón]"> Ablaze [Japón]</a>
+<a href="#Accept[Alemania]"> Accept [Alemania]</a>
+<a href="#AC-DC[Australia]"> AC-DC [Australia]</a>
+<a href="#Adgar[España]"> Adgar [España]</a>
+<a href="#AdrianVonZiegler[Suiza]"> Adrian Von Ziegler [Suiza]</a>
+<a href="#Aephanemer[Francia]"> Aephanemer [Francia]</a>
+<a href="#Aerosmith[EEUU]"> Aerosmith [EEUU]</a>
+<a href="#ÆtherRealm[EEUU]"> Æther Realm [EEUU]</a>
+<a href="#Aeveron[Alemania]"> Aeveron [Alemania]</a>
+<a href="#Alestorm[Escocia]"> Alestorm [Escocia]</a>
+<a href="#AliceCooper[EEUU]"> Alice Cooper [EEUU]</a>
+<a href="#Amaranthe[Suecia]"> Amaranthe [Suecia]</a>
+<a href="#AmberianDawn[Finlandia]"> Amberian Dawn [Finlandia]</a>
+<a href="#AmonAmarth[Suecia]"> Amon Amarth [Suecia]</a>
+<a href="#Amorphis[Finlandia]"> Amorphis [Finlandia]</a>
+<a href="#Ankhara[España]"> Ankhara [España]</a>
+<a href="#ApocalypseOrchestra[Suecia]"> Apocalypse Orchestra [Suecia]</a>
+<a href="#ArchEnemy[Suecia]"> Arch Enemy [Suecia]</a>
+<a href="#Archeon[Polonia]"> Archeon [Polonia]</a>
+<a href="#Arkona[Rusia]"> Arkona [Rusia]</a>
+<a href="#Athena[Italia]"> Athena [Italia]</a>
+<a href="#AutumnNostalgie[Eslovaquia]"> Autumn Nostalgie [Eslovaquia]</a>
+<a href="#Avalanch[España]"> Avalanch [España]</a>
+<a href="#Avantasia[Alemania]"> Avantasia [Alemania]</a>
+<a href="#AvengedSevenfold[EEUU]"> Avenged Sevenfold [EEUU]</a>
+<a href="#Axenstar[Suecia]"> Axenstar [Suecia]</a>
+<a href="#BarónRojo[España]"> Barón Rojo [España]</a>
+<a href="#BeastInBlack[Finlandia]"> Beast In Black [Finlandia]</a>
+<a href="#BeethovenR[España]"> Beethoven R [España]</a>
+<a href="#BeforetheDawn[Finlandia]"> Before the Dawn [Finlandia]</a>
+<a href="#Be'Lakor[Australia]"> Be'Lakor [Australia]</a>
+<a href="#BlackMessiah[Alemania]"> Black Messiah [Alemania]</a>
+<a href="#BlackSabbath[ReinoUnido]"> Black Sabbath [Reino Unido]</a>
+<a href="#BlackVeilBrides[EEUU]"> Black Veil Brides [EEUU]</a>
+<a href="#BlackBriar[Holanda]"> BlackBriar [Holanda]</a>
+<a href="#Blackguard[Canadá]"> Blackguard [Canadá]</a>
+<a href="#BlindGuardian[Alemania]"> Blind Guardian [Alemania]</a>
+<a href="#BlindedColony[Suecia]"> Blinded Colony [Suecia]</a>
+<a href="#BloodStainChild[Japón]"> Blood Stain Child [Japón]</a>
+<a href="#Bloodbound[Suecia]"> Bloodbound [Suecia]</a>
+<a href="#BodomAfterMidnight[Finlandia]"> Bodom After Midnight [Finlandia]</a>
+<a href="#Boikot[España]"> Boikot [España]</a>
+<a href="#BonJovi[EEUU]"> Bon Jovi [EEUU]</a>
+<a href="#Brymir[Finlandia]"> Brymir [Finlandia]</a>
+<a href="#BucketHead[EEUU]"> BucketHead [EEUU]</a>
+<a href="#BulletforMyValentine[ReinoUnido]"> Bullet for My Valentine [Reino Unido]</a>
+<a href="#Cadacross[Finlandia]"> Cadacross [Finlandia]</a>
+<a href="#Catamenia[Finlandia]"> Catamenia [Finlandia]</a>
+<a href="#Celesty[Finlandia]"> Celesty [Finlandia]</a>
+<a href="#Celtian[España]"> Celtian [España]</a>
+<a href="#ChildrenofBodom[Finlandia]"> Children of Bodom [Finlandia]</a>
+<a href="#ConcertoMoon[Japón]"> Concerto Moon [Japón]</a>
+<a href="#Conquest[Ucrania]"> Conquest [Ucrania]</a>
+<a href="#CountlessSkies[ReinoUnido]"> Countless Skies [Reino Unido]</a>
+<a href="#CradleofFilth[Inglaterra]"> Cradle of Filth [Inglaterra]</a>
+<a href="#CrownOfGlory[Suiza]"> Crown Of Glory [Suiza]</a>
+<a href="#DarkMoor[España]"> Dark Moor [España]</a>
+<a href="#DarkTranquillity[Suecia]"> Dark Tranquillity [Suecia]</a>
+<a href="#DawnofTears[España]"> Dawn of Tears [España]</a>
+<a href="#DefaultDimension[España]"> Default Dimension [España]</a>
+<a href="#Delirion[España]"> Delirion [España]</a>
+<a href="#Demons&Wizards[Alemania-EEUU]"> Demons & Wizards [Alemania - EEUU]</a>
+<a href="#Descending‎[Grecia]"> Descending ‎[Grecia]</a>
+<a href="#DevilInTheKitchen[EEUU]"> Devil In The Kitchen [EEUU]</a>
+<a href="#DimmuBorgir[Noruega]"> Dimmu Borgir [Noruega]</a>
+<a href="#Dio[EEUU]"> Dio [EEUU]</a>
+<a href="#Dissection[Suecia]"> Dissection [Suecia]</a>
+<a href="#DistantDream[Polonia]"> Distant Dream [Polonia]</a>
+<a href="#Disturbed[EEUU]"> Disturbed [EEUU]</a>
+<a href="#Dover[España]"> Dover [España]</a>
+<a href="#Dragonfly[Argentina]"> Dragonfly [Argentina]</a>
+<a href="#DragonForce[ReinoUnido]"> DragonForce [Reino Unido]</a>
+<a href="#Dragonland[Suecia]"> Dragonland [Suecia]</a>
+<a href="#DreamEvil[Suecia]"> Dream Evil [Suecia]</a>
+<a href="#DreamsofTears[Venezuela]"> Dreams of Tears [Venezuela]</a>
+<a href="#Dreamtale[Finlandia]"> Dreamtale [Finlandia]</a>
+<a href="#DropkickMurphys[EEUU]"> Dropkick Murphys [EEUU]</a>
+<a href="#Dünedain[España]"> Dünedain [España]</a>
+<a href="#Edguy[Alemania]"> Edguy [Alemania]</a>
+<a href="#Ekyrian[España]"> Ekyrian [España]</a>
+<a href="#Eluveitie[Suiza]"> Eluveitie [Suiza]</a>
+<a href="#Elvenking[Italia]"> Elvenking [Italia]</a>
+<a href="#Ensiferum[Finlandia]"> Ensiferum [Finlandia]</a>
+<a href="#Equilibrium[Alemania]"> Equilibrium [Alemania]</a>
+<a href="#EternalLegacy[EEUU]"> Eternal Legacy [EEUU]</a>
+<a href="#EternalTearsofSorrow[Finlandia]"> Eternal Tears of Sorrow [Finlandia]</a>
+<a href="#Euphoreon[Alemania-NuevaZelanda]"> Euphoreon [Alemania - Nueva Zelanda]</a>
+<a href="#Europe[Suecia]"> Europe [Suecia]</a>
+<a href="#Evanescence[EEUU]"> Evanescence [EEUU]</a>
+<a href="#ExtrechinatoyTú[España]"> Extrechinato y Tú [España]</a>
+<a href="#Extremoduro[España]"> Extremoduro [España]</a>
+<a href="#Fairyland[Francia]"> Fairyland [Francia]</a>
+<a href="#Falkenbach[Alemania]"> Falkenbach [Alemania]</a>
+<a href="#Faun[Alemania]"> Faun [Alemania]</a>
+<a href="#Finntroll[Finlandia]"> Finntroll [Finlandia]</a>
+<a href="#Firewind[Grecia]"> Firewind [Grecia]</a>
+<a href="#Fito&Fitipaldis[España]"> Fito & Fitipaldis [España]</a>
+<a href="#FlotsamAndJetsam[EEUU]"> Flotsam And Jetsam [EEUU]</a>
+<a href="#Followbane[Japón]"> Followbane [Japón]</a>
+<a href="#ForMyPain[Finlandia]"> For My Pain [Finlandia]</a>
+<a href="#Frosttide[Finlandia]"> Frosttide [Finlandia]</a>
+<a href="#FrozenCrown[Italia]"> Frozen Crown [Italia]</a>
+<a href="#GaiaPrelude[Japón]"> Gaia Prelude [Japón]</a>
+<a href="#Galar[Noruega]"> Galar [Noruega]</a>
+<a href="#GallowsEnd[Suecia]"> Gallows End [Suecia]</a>
+<a href="#GammaRay[Alemania]"> Gamma Ray [Alemania]</a>
+<a href="#Ghost[Suecia]"> Ghost [Suecia]</a>
+<a href="#Gloryhammer[ReinoUnido]"> Gloryhammer [Reino Unido]</a>
+<a href="#Grajo[España]"> Grajo [España]</a>
+<a href="#GreenDay[EEUU]"> Green Day [EEUU]</a>
+<a href="#GunsN'Roses[EEUU]"> Guns N' Roses [EEUU]</a>
+<a href="#Haggard[Alemania]"> Haggard [Alemania]</a>
+<a href="#HammerFall[Suecia]"> HammerFall [Suecia]</a>
+<a href="#Hazzerd[Canada]"> Hazzerd [Canada]</a>
+<a href="#Heavenly[Francia]"> Heavenly [Francia]</a>
+<a href="#Heidra[Dinamarca]"> Heidra [Dinamarca]</a>
+<a href="#Helloween[Alemania]"> Helloween [Alemania]</a>
+<a href="#HeroesdelSilencio[España]"> Heroes del Silencio [España]</a>
+<a href="#Humanerror[Australia]"> Human error [Australia]</a>
+<a href="#IcedEarth[EEUU]"> Iced Earth [EEUU]</a>
+<a href="#Illnath[Dinamarca]"> Illnath [Dinamarca]</a>
+<a href="#Imperanon[Finlandia]"> Imperanon [Finlandia]</a>
+<a href="#InFlames[Suecia]"> In Flames [Suecia]</a>
+<a href="#Inexist[Rusia]"> Inexist [Rusia]</a>
+<a href="#Insania[Suecia]"> Insania [Suecia]</a>
+<a href="#Insomnium[Finlandia]"> Insomnium [Finlandia]</a>
+<a href="#IronMaiden[ReinoUnido]"> Iron Maiden [Reino Unido]</a>
+<a href="#JohnPetrucci[EEUU]"> John Petrucci [EEUU]</a>
+<a href="#JudasPriest[ReinoUnido]"> Judas Priest [Reino Unido]</a>
+<a href="#Kaliban[Finlandia]"> Kaliban [Finlandia]</a>
+<a href="#Kalmah[Finlandia]"> Kalmah [Finlandia]</a>
+<a href="#Kälter[Canadá]"> Kälter [Canadá]</a>
+<a href="#Kamelot[EEUU]"> Kamelot [EEUU]</a>
+<a href="#Kiss[EEUU]"> Kiss [EEUU]</a>
+<a href="#Korn[EEUU]"> Korn [EEUU]</a>
+<a href="#Korpiklaani[Finlandia]"> Korpiklaani [Finlandia]</a>
+<a href="#Kotipelto[Finlandia]"> Kotipelto [Finlandia]</a>
+<a href="#Kromlek[Alemania]"> Kromlek [Alemania]</a>
+<a href="#Krusader[Brasil]"> Krusader [Brasil]</a>
+<a href="#LaFuga[España]"> La Fuga [España]</a>
+<a href="#LeatherNunn[EEUU]"> Leather Nunn [EEUU]</a>
+<a href="#LedZeppelin[ReinoUnido]"> Led Zeppelin [Reino Unido]</a>
+<a href="#Lemuria[Bélgica]"> Lemuria [Bélgica]</a>
+<a href="#LennyKravitz[EEUU]"> Lenny Kravitz [EEUU]</a>
+<a href="#Lèpoka[España]"> Lèpoka [España]</a>
+<a href="#Lindemann[Alemania-Suecia]"> Lindemann [Alemania - Suecia]</a>
+<a href="#LinkinPark[EEUU]"> Linkin Park [EEUU]</a>
+<a href="#Lordi[Finlandia]"> Lordi [Finlandia]</a>
+<a href="#LostDreams[Austria]"> Lost Dreams [Austria]</a>
+<a href="#MadeofHate[Polonia]"> Made of Hate [Polonia]</a>
+<a href="#MagoDeOz[España]"> Mago De Oz [España]</a>
+<a href="#Majestic[Suecia]"> Majestic [Suecia]</a>
+<a href="#Manegarm[Suecia]"> Manegarm [Suecia]</a>
+<a href="#Manowar[EEUU]"> Manowar [EEUU]</a>
+<a href="#Marea[España]"> Marea [España]</a>
+<a href="#MartyFriedman[EEUU]"> Marty Friedman [EEUU]</a>
+<a href="#MedinaAzahara[España]"> Medina Azahara [España]</a>
+<a href="#Megadeth[EEUU]"> Megadeth [EEUU]</a>
+<a href="#MetalHawk[España]"> MetalHawk [España]</a>
+<a href="#Metallica[EEUU]"> Metallica [EEUU]</a>
+<a href="#Moonsorrow[Finlandia]"> Moonsorrow [Finlandia]</a>
+<a href="#MorsPrincipiumEst[Finlandia]"> Mors Principium Est [Finlandia]</a>
+<a href="#Motörhead[ReinoUnido]"> Motörhead [Reino Unido]</a>
+<a href="#Muro[España]"> Muro [España]</a>
+<a href="#Muse[ReinoUnido]"> Muse [Reino Unido]</a>
+<a href="#MysticProphecy[Alemania]"> Mystic Prophecy [Alemania]</a>
+<a href="#Naildown[Finlandia]"> Naildown [Finlandia]</a>
+<a href="#Nazgûl[Italia]"> Nazgûl [Italia]</a>
+<a href="#Nekrogoblikon[EEUU]"> Nekrogoblikon [EEUU]</a>
+<a href="#Nightscape[Suecia]"> Nightscape [Suecia]</a>
+<a href="#Nightwish[Finlandia]"> Nightwish [Finlandia]</a>
+<a href="#Nirvana[EEUU]"> Nirvana [EEUU]</a>
+<a href="#NorifumiShima[Japón]"> Norifumi Shima [Japón]</a>
+<a href="#Norther[Finlandia]"> Norther [Finlandia]</a>
+<a href="#Northland[España]"> Northland [España]</a>
+<a href="#Nothgard[Alemania]"> Nothgard [Alemania]</a>
+<a href="#Noumena[Finlandia]"> Noumena [Finlandia]</a>
+<a href="#Obtenebris[Canadá]"> Obtenebris [Canadá]</a>
+<a href="#OmniumGatherum[Finlandia]"> Omnium Gatherum [Finlandia]</a>
+<a href="#OrdenOgan[Alemania]"> Orden Ogan [Alemania]</a>
+<a href="#OzzyOsbourne[ReinoUnido]"> Ozzy Osbourne [Reino Unido]</a>
+<a href="#Pain[Suecia]"> Pain [Suecia]</a>
+<a href="#ParasiteInc[Alemania]"> Parasite Inc [Alemania]</a>
+<a href="#PimeaMetsa[España]"> Pimea Metsa [España]</a>
+<a href="#PlateroyTú[España]"> Platero y Tú [España]</a>
+<a href="#Powerwolf[Alemania]"> Powerwolf [Alemania]</a>
+<a href="#Primalfrost‎[Canada]"> Primalfrost ‎[Canada]</a>
+<a href="#Raintime[Italia]"> Raintime [Italia]</a>
+<a href="#Rammstein[Alemania]"> Rammstein [Alemania]</a>
+<a href="#Ramones[EEUU]"> Ramones [EEUU]</a>
+<a href="#RataBlanca[Argentina]"> Rata Blanca [Argentina]</a>
+<a href="#RedHotChiliPeppers[EEUU]"> Red Hot Chili Peppers [EEUU]</a>
+<a href="#RedWine[España]"> Red Wine [España]</a>
+<a href="#ReignofFury[ReinoUnido]"> Reign of Fury [Reino Unido]</a>
+<a href="#Reincidentes[España]"> Reincidentes [España]</a>
+<a href="#RhapsodyofFire[Italia]"> Rhapsody of Fire [Italia]</a>
+<a href="#Riot[EEUU]"> Riot [EEUU]</a>
+<a href="#Sabaton[Suecia]"> Sabaton [Suecia]</a>
+<a href="#Salduie[España]"> Salduie [España]</a>
+<a href="#Saratoga[España]"> Saratoga [España]</a>
+<a href="#Saurom[España]"> Saurom [España]</a>
+<a href="#Scorpions[Alemania]"> Scorpions [Alemania]</a>
+<a href="#Shadow[Japón]"> Shadow [Japón]</a>
+<a href="#Shylmagoghnar[PaísesBajos]"> Shylmagoghnar [Países Bajos]</a>
+<a href="#Ska-P[España]"> Ska-P [España]</a>
+<a href="#SkidRow[EEUU]"> Skid Row [EEUU]</a>
+<a href="#Skyfire[Suecia]"> Skyfire [Suecia]</a>
+<a href="#Skylark[Italia]"> Skylark [Italia]</a>
+<a href="#Slipknot[EEUU]"> Slipknot [EEUU]</a>
+<a href="#Sôber[España]"> Sôber [España]</a>
+<a href="#Solerrain[Rusia]"> Solerrain [Rusia]</a>
+<a href="#SonataArctica[Finlandia]"> Sonata Arctica [Finlandia]</a>
+<a href="#Stormlord[Italia]"> Stormlord [Italia]</a>
+<a href="#Stormwarrior[Alemania]"> Stormwarrior [Alemania]</a>
+<a href="#Stratovarius[Finlandia]"> Stratovarius [Finlandia]</a>
+<a href="#Stravaganzza[España]"> Stravaganzza [España]</a>
+<a href="#StreamOfPassion[PaísesBajos]"> Stream Of Passion [Países Bajos]</a>
+<a href="#SunlessRise[Rusia]"> Sunless Rise [Rusia]</a>
+<a href="#SystemofaDown[EEUU]"> System of a Down [EEUU]</a>
+<a href="#Temperance[Italia]"> Temperance [Italia]</a>
+<a href="#TheHaloEffect[Suecia]"> The Halo Effect [Suecia]</a>
+<a href="#TheMisfits[EEUU]"> The Misfits [EEUU]</a>
+<a href="#TheOffspring[EEUU]"> The Offspring [EEUU]</a>
+<a href="#TheRollingStones[ReinoUnido]"> The Rolling Stones [Reino Unido]</a>
+<a href="#TierraSanta[España]"> Tierra Santa [España]</a>
+<a href="#Tool[EEUU]"> Tool [EEUU]</a>
+<a href="#Tracedawn[Alemania]"> Tracedawn [Alemania]</a>
+<a href="#Trivium[EEUU]"> Trivium [EEUU]</a>
+<a href="#Turisas[Finlandia]"> Turisas [Finlandia]</a>
+<a href="#TwistedSister[EEUU]"> Twisted Sister [EEUU]</a>
+<a href="#VanHalen[EEUU]"> Van Halen [EEUU]</a>
+<a href="#Vogelfrey[Alemania]"> Vogelfrey [Alemania]</a>
+<a href="#Warcry[España]"> Warcry [España]</a>
+<a href="#Warmen[Finlandia]"> Warmen [Finlandia]</a>
+<a href="#WindRose[Italia]"> Wind Rose [Italia]</a>
+<a href="#Windir[Noruega]"> Windir [Noruega]</a>
+<a href="#Windrow[Italia]"> Windrow [Italia]</a>
+<a href="#Wintersun[Finlandia]"> Wintersun [Finlandia]</a>
+<a href="#WithinTemptation[PaísesBajos]"> Within Temptation [Países Bajos]</a>
+<a href="#Wolfchant[Alemania]"> Wolfchant [Alemania]</a>
+<a href="#Wolfheart[Finlandia]"> Wolfheart [Finlandia]</a>
+<a href="#XJapan[Japón]"> X Japan [Japón]</a>
+		</nav>
+
+		<a class="up" href="#up">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="arrow-up" viewBox="0 0 16 16">
+		  		<path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+			</svg>
+		</a>
+
+<section>
+</ul></section><h3 id="Ablaze[Japón]"> Ablaze [Japón]</h3><section><ul><li>[2003] Grand Tears Of Stigmata<i>6</i></li>
+</ul></section><h3 id="Accept[Alemania]"> Accept [Alemania]</h3><section><ul><li class="subi">[0000] Best Of Accept (Recop)</li>
+<li>CD1<i>25</i></li>
+<li>CD2<i>25</i></li>
+</ul></section><h3 id="AC-DC[Australia]"> AC-DC [Australia]</h3><section><ul><li>[1975] High Voltage<i>9</i></li>
+<li>[1975] T.N.T<i>9</i></li>
+<li>[1976] Dirty Deeds Done Dirt Cheap<i>9</i></li>
+</ul><ul>
+<li>[1977] Let There Be Rock<i>8</i></li>
+<li>[1978] Powerage<i>9</i></li>
+<li>[1979] Highway to Hell<i>10</i></li>
+<li>[1980] Back in Black<i>10</i></li>
+<li>[1981] For Those About to Rock<i>10</i></li>
+<li>[1983] Flick of the Switch<i>10</i></li>
+<li>[1985] Fly on the Wall<i>10</i></li>
+<li>[1988] Blow Up Your Video<i>10</i></li>
+<li>[1990] The Razors Edge<i>12</i></li>
+<li>[1992] Live (Live)<i>14</i></li>
+<li>[1995] Ballbreaker<i>9</i></li>
+<li class="subi">[1997] Bonfire - Let There Be Rock-The Movie-Live In Paris</li>
+<li>CD1<i>6</i></li>
+<li>CD2<i>8</i></li>
+<li>[1997] Bonfire - Live From Atlantic Studios<i>8</i></li>
+<li>[1997] Bonfire - Volts<i>10</i></li>
+<li>[2000] Stiff Upper Lip<i>12</i></li>
+<li>[2008] Black Ice<i>15</i></li>
+<li>[2010] Iron Man 2<i>15</i></li>
+<li class="subi">[2012] Live at River Plate (Live)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>9</i></li>
+</ul><ul>
+<li>[2014] Rock or Bust<i>11</i></li>
+<li>[2020] Power Up<i>12</i></li>
+</ul></section><h3 id="Adgar[España]"> Adgar [España]</h3><section><ul><li>[2004] Más Allá Del Sol<i>10</i></li>
+<li>[2006] Seguimos en pie<i>16</i></li>
+<li>[2008] Tiempos de cambio<i>11</i></li>
+</ul></section><h3 id="AdrianVonZiegler[Suiza]"> Adrian Von Ziegler [Suiza]</h3><section><ul><li>[2010] Lifeclock<i>17</i></li>
+<li>[2010] Requiem<i>18</i></li>
+<li>[2011] Across Acheron<i>16</i></li>
+</ul></section><h3 id="Aephanemer[Francia]"> Aephanemer [Francia]</h3><section><ul></ul><ul>
+<li>[2014] Know Thyself<i>7</i></li>
+<li>[2016] Memento Mori<i>10</i></li>
+<li>[2019] Prokopton<i>1</i></li>
+<li class="subi">[2021] A Dream Of Wilderness</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>7</i></li>
+</ul></section><h3 id="Aerosmith[EEUU]"> Aerosmith [EEUU]</h3><section><ul><li class="subi">[2008] Greatest Hits (Recop)</li>
+<li>CD1<i>18</i></li>
+</ul></section><h3 id="ÆtherRealm[EEUU]"> Æther Realm [EEUU]</h3><section><ul><li>[2017] Tarot<i>11</i></li>
+</ul><ul>
+<li>[2020] Redneck Vikings From Hell<i>11</i></li>
+</ul></section><h3 id="Aeveron[Alemania]"> Aeveron [Alemania]</h3><section><ul><li>[2004] Construality<i>9</i></li>
+<li>[2006] The Ancient Realm<i>5</i></li>
+<li>[2008] Existential Dead End<i>9</i></li>
+<li>[2011] Impending Doom<i>10</i></li>
+<li>[2015] VVD - Destination Annihilation<i>10</i></li>
+</ul></section><h3 id="Alestorm[Escocia]"> Alestorm [Escocia]</h3><section><ul><li>[2008] Captain Morgan's Revenge<i>10</i></li>
+<li>[2009] Black Sails at Midnight<i>10</i></li>
+<li>[2011] Back Through Time<i>11</i></li>
+<li class="subi">[2014] Sunset On The Golden Age (Limited Edition)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>6</i></li>
+<li class="subi">[2017] No Grave But The Sea (Deluxe Edition)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+<li class="subi">[2020] Curse of the Crystal Coconut (Deluxe)</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>11</i></li>
+<li class="subi">[2022] Seventh Rum of a Seventh Rum (Deluxe)</li>
+<li>CD1<i>11</i></li>
+</ul><ul>
+<li>CD2<i>11</i></li>
+<li>CD3<i>11</i></li>
+</ul></section><h3 id="AliceCooper[EEUU]"> Alice Cooper [EEUU]</h3><section><ul><li>[1989] Trash<i>10</i></li>
+</ul></section><h3 id="Amaranthe[Suecia]"> Amaranthe [Suecia]</h3><section><ul><li>[2011] Amaranthe (Deluxe Edition)<i>16</i></li>
+<li>[2013] The Nexus (Deluxe Edition)<i>17</i></li>
+<li>[2014] Massive Addictive (Deluxe Edition)<i>14</i></li>
+<li>[2016] Maximalism<i>12</i></li>
+<li>[2018] Helix<i>12</i></li>
+<li>[2020] Manifest<i>12</i></li>
+</ul></section><h3 id="AmberianDawn[Finlandia]"> Amberian Dawn [Finlandia]</h3><section><ul><li>[2008] River of Tuoni<i>10</i></li>
+</ul></section><h3 id="AmonAmarth[Suecia]"> Amon Amarth [Suecia]</h3><section><ul><li>[2006] With Oden on Our Side<i>9</i></li>
+<li>[2008] Twilight of the Thunder God<i>10</i></li>
+<li>[2011] Surtur Rising<i>10</i></li>
+<li>[2013] Deceiver of the Gods<i>10</i></li>
+<li>[2016] Jomsviking<i>11</i></li>
+<li>[2019] Berserker<i>12</i></li>
+<li>[2022] The Great Heathen Army<i>9</i></li>
+</ul></section><h3 id="Amorphis[Finlandia]"> Amorphis [Finlandia]</h3><section><ul></ul><ul>
+<li>[2011] The Beginning of Times<i>13</i></li>
+<li>[2013] Circle<i>10</i></li>
+<li>[2015] Under the Red Cloud (Limited Edition)<i>12</i></li>
+<li>[2018] Queen Of Time (Japan Edition)<i>13</i></li>
+<li>[2022] Halo<i>11</i></li>
+</ul></section><h3 id="Ankhara[España]"> Ankhara [España]</h3><section><ul><li>[1999] Dueño del Tiempo<i>11</i></li>
+<li>[2000] II<i>11</i></li>
+<li>[2003] Sombras del Pasado<i>12</i></li>
+<li>[2018] Sinergia<i>9</i></li>
+<li>[2021] Premonición<i>10</i></li>
+</ul></section><h3 id="ApocalypseOrchestra[Suecia]"> Apocalypse Orchestra [Suecia]</h3><section><ul><li>[2017] The End Is Nigh<i>8</i></li>
+</ul></section><h3 id="ArchEnemy[Suecia]"> Arch Enemy [Suecia]</h3><section><ul><li>[1996] Black Earth<i>12</i></li>
+<li>[1998] Stigmata<i>16</i></li>
+<li>[1999] Burning Bridges<i>17</i></li>
+<li class="subi">[2001] Wages Of Sin</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>7</i></li>
+<li class="subi">[2003] Anthems Of Rebellion</li>
+<li>CD1<i>13</i></li>
+</ul><ul>
+<li>CD2 (Live)<i>6</i></li>
+<li>[2005] Doomsday Machine<i>13</i></li>
+<li>[2007] Rise Of The Tyrant<i>12</i></li>
+<li class="subi">[2008] Tyrants Of The Rising Sun (Live)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+<li>[2009] The Root Of All Evil<i>16</i></li>
+<li>[2011] Khaos Legions<i>14</i></li>
+<li class="subi">[2013] Black Earth</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>9</i></li>
+</ul><ul>
+<li>[2014] War Eternal<i>13</i></li>
+<li>[2017] Will to Power<i>12</i></li>
+<li>[2022] Deceivers<i>11</i></li>
+</ul></section><h3 id="Archeon[Polonia]"> Archeon [Polonia]</h3><section><ul><li>[2005] End Of The Weakness<i>9</i></li>
+</ul></section><h3 id="Arkona[Rusia]"> Arkona [Rusia]</h3><section><ul><li>[2009] Goi, Rode, Goi!<i>14</i></li>
+</ul></section><h3 id="Athena[Italia]"> Athena [Italia]</h3><section><ul><li>[1998] A New religion<i>10</i></li>
+<li>[2001] Twilight Of Days<i>12</i></li>
+</ul></section><h3 id="AutumnNostalgie[Eslovaquia]"> Autumn Nostalgie [Eslovaquia]</h3><section><ul></ul><ul>
+<li>[2020] Esse Est Percipi<i>7</i></li>
+<li>[2021] Ataraxia<i>1</i></li>
+</ul></section><h3 id="Avalanch[España]"> Avalanch [España]</h3><section><ul><li>[1997] Eternal Flame<i>13</i></li>
+<li>[1997] La Llama Eterna<i>13</i></li>
+<li>[1999] Llanto de un Héroe<i>12</i></li>
+<li>[2001] El Angel Caido<i>10</i></li>
+</ul></section><h3 id="Avantasia[Alemania]"> Avantasia [Alemania]</h3><section><ul><li>[2001] The Metal Opera<i>13</i></li>
+<li>[2002] The Metal Opera Pt. II<i>10</i></li>
+<li class="subi">[2007] Lost In Space</li>
+</ul><ul>
+<li>CD1<i>6</i></li>
+<li>CD2<i>6</i></li>
+<li>[2008] The Scarecrow<i>11</i></li>
+<li>[2010] Angel Of Babylon<i>11</i></li>
+<li>[2010] The Wicked Symphony<i>11</i></li>
+<li>[2013] The mystery of time<i>10</i></li>
+<li>[2016] Ghostlights<i>13</i></li>
+<li>[2019] Moonglow<i>12</i></li>
+<li>[2022] A Paranormal Evening with the Moonflower Society<i>11</i></li>
+</ul></section><h3 id="AvengedSevenfold[EEUU]"> Avenged Sevenfold [EEUU]</h3><section><ul><li>[0000] Avenged sevenfold (Recop)<i>20</i></li>
+</ul></section><h3 id="Axenstar[Suecia]"> Axenstar [Suecia]</h3><section><ul><li>[2002] Perpetual Twilight<i>10</i></li>
+<li>[2003] Far From Heaven<i>10</i></li>
+<li>[2005] The Inquisition<i>8</i></li>
+</ul></section><h3 id="BarónRojo[España]"> Barón Rojo [España]</h3><section><ul><li class="subi">[1995] Larga vida al Barón (Recop)</li>
+<li>CD1<i>13</i></li>
+<li>CD2<i>11</i></li>
+</ul></section><h3 id="BeastInBlack[Finlandia]"> Beast In Black [Finlandia]</h3><section><ul><li>[2017] Berserker<i>12</i></li>
+<li>[2019] From Hell With Love<i>13</i></li>
+</ul><ul>
+<li>[2021] Dark Connection<i>13</i></li>
+</ul></section><h3 id="BeethovenR[España]"> Beethoven R [España]</h3><section><ul><li>[2008] Larga vida (Recop)<i>14</i></li>
+</ul></section><h3 id="BeforetheDawn[Finlandia]"> Before the Dawn [Finlandia]</h3><section><ul><li>[2011] Deathstar Rising (Limited Edition)<i>14</i></li>
+</ul></section><h3 id="Be'Lakor[Australia]"> Be'Lakor [Australia]</h3><section><ul><li>[2007] The Frail Tide<i>6</i></li>
+<li>[2009] Stone's Reach<i>8</i></li>
+<li>[2012] Of Breath and Bone<i>8</i></li>
+<li>[2016] Vessels<i>8</i></li>
+<li>[2021] Coherence<i>8</i></li>
+</ul></section><h3 id="BlackMessiah[Alemania]"> Black Messiah [Alemania]</h3><section><ul><li>[2005] Oath of a Warrior<i>9</i></li>
+<li>[2006] Of Myths And Legends<i>11</i></li>
+<li>[2009] First War Of The World<i>13</i></li>
+<li>[2012] The Final Journey<i>10</i></li>
+<li>[2013] Heimweh<i>8</i></li>
+<li>[2017] Walls of Vanaheim<i>15</i></li>
+</ul></section><h3 id="BlackSabbath[ReinoUnido]"> Black Sabbath [Reino Unido]</h3><section><ul><li>[2009] Greatest Hits<i>14</i></li>
+</ul></section><h3 id="BlackVeilBrides[EEUU]"> Black Veil Brides [EEUU]</h3><section><ul><li>[2014] Wretched and Divine - The Story of the Wild Ones<i>19</i></li>
+</ul></section><h3 id="BlackBriar[Holanda]"> BlackBriar [Holanda]</h3><section><ul><li>[2021] The Cause Of Shipwreck<i>10</i></li>
+</ul></section><h3 id="Blackguard[Canadá]"> Blackguard [Canadá]</h3><section><ul><li>[2009] Profugus Mortis<i>9</i></li>
+<li>[2011] Firefight<i>10</i></li>
+<li>[2020] Storm (youtube)<i>1</i></li>
+</ul></section><h3 id="BlindGuardian[Alemania]"> Blind Guardian [Alemania]</h3><section><ul><li>[1988] Battalions Of Fear<i>9</i></li>
+<li>[1989] Follow The Blind<i>10</i></li>
+<li>[1990] Tales From The Twilight World<i>10</i></li>
+<li>[1992] Somewhere Far Beyond<i>10</i></li>
+</ul><ul>
+<li>[1993] Tokyo Tales<i>12</i></li>
+<li>[1995] A Past and Future Secret<i>4</i></li>
+<li>[1995] Bright Eyes<i>5</i></li>
+<li>[1995] Imaginations From The Other Side<i>9</i></li>
+<li>[1996] Mr. Sandman<i>5</i></li>
+<li>[1996] The forgotten tales<i>13</i></li>
+<li>[1998] Mirror Mirror<i>4</i></li>
+<li>[1998] Nightfall In Middle-Earth<i>22</i></li>
+<li>[2001] And Then There Was Silence<i>2</i></li>
+<li>[2002] A Night At The Opera<i>10</i></li>
+<li class="subi">[2003] Blind Guardian LIVE</li>
+</ul><ul>
+<li>CD1<i>11</i></li>
+<li>CD2<i>11</i></li>
+<li>[2003] The Bard's Song (In the Forest)<i>4</i></li>
+<li>[2004] Imaginations Through the Looking Glass<i>24</i></li>
+<li>[2006] A Twist In The Myst<i>12</i></li>
+<li>[2007] Another Stranger Me (Single)<i>5</i></li>
+<li class="subi">[2010] At The Edge Of Time</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>6</i></li>
+<li class="subi">[2012] Memories Of A Time To Come</li>
+<li>CD1<i>8</i></li>
+</ul><ul>
+<li>CD2<i>8</i></li>
+<li>[2015] Beyond the Red Mirror<i>10</i></li>
+<li>[2019] Legacy of the Dark Lands<i>36</i></li>
+<li>[2022] The God Machine<i>9</i></li>
+</ul></section><h3 id="BlindedColony[Suecia]"> Blinded Colony [Suecia]</h3><section><ul><li>[2007] Bedtime Prayers<i>9</i></li>
+</ul></section><h3 id="BloodStainChild[Japón]"> Blood Stain Child [Japón]</h3><section><ul><li>[2002] Silence Of The Northern Hell<i>7</i></li>
+<li>[2003] Mystic Your Heart<i>10</i></li>
+<li>[2005] Idolator<i>12</i></li>
+<li>[2007] Mozaiq<i>12</i></li>
+</ul></section><h3 id="Bloodbound[Suecia]"> Bloodbound [Suecia]</h3><section><ul><li>[2005] Nosferatu<i>11</i></li>
+<li>[2007] Book Of The Dead<i>11</i></li>
+<li>[2009] Tabula Rasa<i>11</i></li>
+<li>[2011] Unholy Cross<i>11</i></li>
+<li>[2012] In The Name Of Metal<i>12</i></li>
+<li>[2014] Stormborn<i>11</i></li>
+<li>[2017] War Of Dragons<i>12</i></li>
+<li>[2019] Rise Of The Dragon Empire (youtube)<i>11</i></li>
+<li>[2021] Creatures of the Dark Realm (Japanese Edition)<i>14</i></li>
+</ul></section><h3 id="BodomAfterMidnight[Finlandia]"> Bodom After Midnight [Finlandia]</h3><section><ul></ul><ul>
+<li>[2020] Paint The Sky With Blood<i>1</i></li>
+</ul></section><h3 id="Boikot[España]"> Boikot [España]</h3><section><ul><li>[1990] Los ojos de la calle<i>10</i></li>
+<li>[1992] ...Con perdón de los payasos<i>11</i></li>
+<li>[1995] Cría cuervos<i>14</i></li>
+<li>[1996] Tu condena<i>13</i></li>
+<li>[1997] La ruta del Che. No mirar<i>8</i></li>
+<li>[1998] La ruta del Che. No escuchar<i>10</i></li>
+<li>[1999] La ruta del Che. No callar<i>12</i></li>
+<li>[2002] De espaldas al mundo<i>14</i></li>
+<li>[2004] Tus problemas crecen<i>12</i></li>
+</ul><ul>
+<li>[2008] Amaneció<i>13</i></li>
+<li>[2012] Lágrimas de rabia<i>13</i></li>
+</ul></section><h3 id="BonJovi[EEUU]"> Bon Jovi [EEUU]</h3><section><ul><li>[1994] Cross Road<i>15</i></li>
+</ul></section><h3 id="Brymir[Finlandia]"> Brymir [Finlandia]</h3><section><ul><li>[2011] Breathe Fire To The Sun<i>10</i></li>
+<li>[2019] Wings of Fire<i>11</i></li>
+</ul></section><h3 id="BucketHead[EEUU]"> BucketHead [EEUU]</h3><section><ul><li>[0000] BucketHead (Recop)<i>23</i></li>
+</ul></section><h3 id="BulletforMyValentine[ReinoUnido]"> Bullet for My Valentine [Reino Unido]</h3><section><ul><li>[2005] The Poison<i>13</i></li>
+</ul><ul>
+<li>[2008] Scream Aim Fire<i>12</i></li>
+<li>[2010] Fever<i>12</i></li>
+<li>[2013] Temper Temper (deluxe version)<i>11</i></li>
+<li>[2015] Venom<i>20</i></li>
+<li>[2018] Gravity<i>11</i></li>
+<li>[2021] Bullet For My Valentine (Deluxe)<i>15</i></li>
+</ul></section><h3 id="Cadacross[Finlandia]"> Cadacross [Finlandia]</h3><section><ul><li>[2001] So Pale Is The Light<i>7</i></li>
+<li>[2002] Corona Borealis<i>10</i></li>
+</ul></section><h3 id="Catamenia[Finlandia]"> Catamenia [Finlandia]</h3><section><ul><li>[2003] Chaos Born<i>10</i></li>
+</ul><ul>
+<li>[2005] Winternight Tragedies<i>10</i></li>
+<li>[2006] Location Cold<i>10</i></li>
+<li>[2008] VIII The Time Unchained<i>10</i></li>
+<li>[2010] Cavalcade<i>10</i></li>
+<li>[2012] The Rewritten Chapters<i>15</i></li>
+</ul></section><h3 id="Celesty[Finlandia]"> Celesty [Finlandia]</h3><section><ul><li>[2002] Times Before The Ice (Demo)<i>5</i></li>
+<li>[2006] Mortal mind creation<i>9</i></li>
+<li>[2009] Vendetta<i>12</i></li>
+</ul></section><h3 id="Celtian[España]"> Celtian [España]</h3><section><ul><li>[2019] En Tierra De Hadas<i>9</i></li>
+</ul><ul>
+<li>[2021] Sendas de Leyenda<i>12</i></li>
+</ul></section><h3 id="ChildrenofBodom[Finlandia]"> Children of Bodom [Finlandia]</h3><section><ul><li>[2000] Follow The Reaper<i>10</i></li>
+<li>[2003] Hate Crew Deathroll<i>11</i></li>
+<li>[2005] Are You Dead Yet<i>9</i></li>
+<li class="subi">[2008] Blooddrunk</li>
+<li>Children Of Bodom - Blooddrunk (2008<i>9</i></li>
+<li>[2010] Skeletons In The Closet (Recop)<i>16</i></li>
+<li>[2011] Relentless Reckless Forever<i>9</i></li>
+<li>[2013] Halo Of Blood<i>11</i></li>
+<li>[2015] I Worship Chaos (Deluxe)<i>13</i></li>
+</ul><ul>
+<li>[2019] Hexed<i>14</i></li>
+</ul></section><h3 id="ConcertoMoon[Japón]"> Concerto Moon [Japón]</h3><section><ul><li>[1999] Rain Forest<i>1</i></li>
+</ul></section><h3 id="Conquest[Ucrania]"> Conquest [Ucrania]</h3><section><ul><li>[2002] Endless Power<i>14</i></li>
+<li>[2005] Frozen Sky<i>11</i></li>
+<li>[2009] Empire<i>10</i></li>
+<li>[2011] IV<i>13</i></li>
+<li>[2012] Few Moments Of Our Life<i>12</i></li>
+<li>[2015] Taste of Life<i>10</i></li>
+</ul></section><h3 id="CountlessSkies[ReinoUnido]"> Countless Skies [Reino Unido]</h3><section><ul></ul><ul>
+<li>[2016] New Dawn (Youtube)<i>8</i></li>
+<li>[2020] Glow (Youtube)<i>1</i></li>
+</ul></section><h3 id="CradleofFilth[Inglaterra]"> Cradle of Filth [Inglaterra]</h3><section><ul><li class="subi">[2004] Nymphetamine</li>
+<li>CD1<i>14</i></li>
+<li>CD2<i>6</i></li>
+<li>[2006] Thornography<i>19</i></li>
+<li class="subi">[2008] Godspeed on the devil's thunder</li>
+<li>CD1<i>13</i></li>
+<li>CD2<i>10</i></li>
+<li>[2017] Cryptoriana<i>10</i></li>
+</ul></section><h3 id="CrownOfGlory[Suiza]"> Crown Of Glory [Suiza]</h3><section><ul><li>[2008] A Deep Breath Of Life<i>11</i></li>
+</ul></section><h3 id="DarkMoor[España]"> Dark Moor [España]</h3><section><ul><li class="subi">[1999] Shadowland (Limited)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>7</i></li>
+<li>[2000] The Hall Of The Olden Dreams<i>10</i></li>
+<li>[2002] Gates Of Oblivion<i>12</i></li>
+<li>[2003] Dark Moor (Russian Edition)<i>13</i></li>
+<li>[2007] Tarot (Japanese Edition)<i>11</i></li>
+<li>[2009] Autumnal (Japanese Edition)<i>11</i></li>
+</ul><ul>
+<li>[2010] Ancestral Romance (Japanese Edition)<i>11</i></li>
+<li class="subi">[2013] Ars Musica (Japanese Edition)</li>
+<li>CD1<i>13</i></li>
+<li>CD2<i>5</i></li>
+<li class="subi">[2015] Project X (Japanese)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>5</i></li>
+<li class="subi">[2018] Origins (Japanese Edition)</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>7</i></li>
+</ul></section><h3 id="DarkTranquillity[Suecia]"> Dark Tranquillity [Suecia]</h3><section><ul></ul><ul>
+<li>[1992] A Moonclad Reflection (Ep)<i>2</i></li>
+<li>[1993] Skydancer<i>9</i></li>
+<li>[1994] Of Chaos and Eternal Night (Ep)<i>4</i></li>
+<li>[1995] The Gallery<i>16</i></li>
+<li>[1996] Enter Suicidal Angels (Ep)<i>4</i></li>
+<li>[1997] The Mind's I<i>15</i></li>
+<li>[1999] Projector<i>14</i></li>
+<li>[2000] Haven<i>15</i></li>
+<li>[2002] Damage Done<i>15</i></li>
+<li>[2004] Lost To Apathy (Ep)<i>4</i></li>
+<li>[2005] Character<i>11</i></li>
+</ul><ul>
+<li>[2007] Fiction<i>10</i></li>
+<li class="subi">[2009] Where Death Is Most Alive (Live)</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>10</i></li>
+<li>[2010] We Are The Void<i>13</i></li>
+<li>[2012] Zero Distance (Ep)<i>5</i></li>
+<li class="subi">[2013] Construct</li>
+<li>CD1<i>12</i></li>
+<li>CD2 (Live)<i>14</i></li>
+<li class="subi">[2016] Atoma</li>
+<li>CD1<i>12</i></li>
+</ul><ul>
+<li>CD2<i>2</i></li>
+<li class="subi">[2020] Moment (Limited Edition)</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>2</i></li>
+</ul></section><h3 id="DawnofTears[España]"> Dawn of Tears [España]</h3><section><ul><li>[2007] Descent<i>9</i></li>
+<li>[2013] Act III The Dying Eve (youtube)<i>9</i></li>
+</ul></section><h3 id="DefaultDimension[España]"> Default Dimension [España]</h3><section><ul><li>[2020] Lazaerus (Youtube)<i>6</i></li>
+<li>[2021] Sixth Mass Extinction (Youtube)<i>4</i></li>
+</ul></section><h3 id="Delirion[España]"> Delirion [España]</h3><section><ul></ul><ul>
+<li>[2009] Silent symphony<i>11</i></li>
+<li>[2010] Lotus<i>12</i></li>
+</ul></section><h3 id="Demons&Wizards[Alemania-EEUU]"> Demons & Wizards [Alemania - EEUU]</h3><section><ul><li>[1999] Demons & Wizards<i>13</i></li>
+<li>[2005] Touched By The Crimson King<i>14</i></li>
+<li>[2020] III<i>13</i></li>
+</ul></section><h3 id="Descending‎[Grecia]"> Descending ‎[Grecia]</h3><section><ul><li>[2008] Enter Annihilation (youtube)<i>12</i></li>
+</ul></section><h3 id="DevilInTheKitchen[EEUU]"> Devil In The Kitchen [EEUU]</h3><section><ul><li>[2004] Wizard's Walk (EP)<i>7</i></li>
+</ul></section><h3 id="DimmuBorgir[Noruega]"> Dimmu Borgir [Noruega]</h3><section><ul></ul><ul>
+<li>[0000] Dimmu Borgir (Recop)<i>6</i></li>
+<li>[1997] Enthrone Darkness Triumphant<i>10</i></li>
+<li>[2018] Eonian<i>10</i></li>
+</ul></section><h3 id="Dio[EEUU]"> Dio [EEUU]</h3><section><ul><li>[1983] Holy Diver<i>9</i></li>
+</ul></section><h3 id="Dissection[Suecia]"> Dissection [Suecia]</h3><section><ul><li class="subi">[1993] The Somberlain (Rem)</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>13</i></li>
+<li>[2006] Reinkaos (Youtube)<i>1</i></li>
+</ul></section><h3 id="DistantDream[Polonia]"> Distant Dream [Polonia]</h3><section><ul></ul><ul>
+<li>[2017] It All Starts From Pieces (youtube)<i>1</i></li>
+<li>[2020] Point of View<i>10</i></li>
+</ul></section><h3 id="Disturbed[EEUU]"> Disturbed [EEUU]</h3><section><ul><li>[2000] The Sickness<i>12</i></li>
+<li>[2008] Indestructible<i>12</i></li>
+</ul></section><h3 id="Dover[España]"> Dover [España]</h3><section><ul><li>[1995] Sister<i>16</i></li>
+<li>[1997] Devil Came to Me<i>12</i></li>
+<li>[1999] Late at Night<i>13</i></li>
+<li>[2001] I Was Dead for 7 Weeks in the City of Angels<i>15</i></li>
+<li>[2003] The Flame<i>12</i></li>
+</ul><ul>
+<li>[2006] Follow the city lights<i>10</i></li>
+<li>[2010] I ka kené<i>11</i></li>
+<li>[2015] Complications<i>10</i></li>
+</ul></section><h3 id="Dragonfly[Argentina]"> Dragonfly [Argentina]</h3><section><ul><li>[2006] Domine<i>13</i></li>
+</ul></section><h3 id="DragonForce[ReinoUnido]"> DragonForce [Reino Unido]</h3><section><ul><li>[2003] Valley Of The Damned<i>10</i></li>
+<li>[2004] Sonic Firestorm<i>9</i></li>
+<li>[2006] Inhuman Rampage<i>9</i></li>
+<li>[2008] Ultra Beatdown<i>11</i></li>
+<li>[2012] The Power Within<i>13</i></li>
+</ul><ul>
+<li>[2014] Maximum Overload<i>16</i></li>
+<li class="subi">[2016] Killer Elite (Recop)</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>10</i></li>
+<li>[2017] Reaching into Infinity<i>12</i></li>
+<li>[2019] Extreme Power Metal<i>10</i></li>
+</ul></section><h3 id="Dragonland[Suecia]"> Dragonland [Suecia]</h3><section><ul><li>[2004] Starfall<i>11</i></li>
+<li>[2006] Astronomy<i>10</i></li>
+<li>[2011] Under The Grey Banner (youtube)<i>12</i></li>
+<li>[2022] The Power of the Nightstar<i>13</i></li>
+</ul></section><h3 id="DreamEvil[Suecia]"> Dream Evil [Suecia]</h3><section><ul><li>[2002] Dragon Slayer<i>14</i></li>
+<li>[2003] Evilized<i>14</i></li>
+<li>[2004] The Book Of Heavy Metal (EP)<i>13</i></li>
+<li>[2006] United<i>20</i></li>
+<li>[2010] In The Night<i>14</i></li>
+</ul></section><h3 id="DreamsofTears[Venezuela]"> Dreams of Tears [Venezuela]</h3><section><ul><li>[2009] The New Time Of Chaos (EP)<i>4</i></li>
+</ul></section><h3 id="Dreamtale[Finlandia]"> Dreamtale [Finlandia]</h3><section><ul><li>[2002] Beyond Reality<i>12</i></li>
+<li>[2003] Ocean's Heart<i>14</i></li>
+</ul><ul>
+<li>[2005] Difference<i>11</i></li>
+<li>[2008] Phoenix<i>12</i></li>
+<li>[2011] Epsilon<i>10</i></li>
+<li>[2013] World Changed Forever<i>12</i></li>
+<li class="subi">[2016] Seventhian ...Memories of Time</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>8</i></li>
+<li>[2022] Everlasting Flame<i>14</i></li>
+</ul></section><h3 id="DropkickMurphys[EEUU]"> Dropkick Murphys [EEUU]</h3><section><ul><li>[0000] Dropkick Murphys (Recop)<i>4</i></li>
+</ul></section><h3 id="Dünedain[España]"> Dünedain [España]</h3><section><ul></ul><ul>
+<li>[2019] Memento Mori<i>9</i></li>
+</ul></section><h3 id="Edguy[Alemania]"> Edguy [Alemania]</h3><section><ul><li>[2001] Mandrake<i>11</i></li>
+</ul></section><h3 id="Ekyrian[España]"> Ekyrian [España]</h3><section><ul><li>[2019] Más Allá de la Tempestad (Youtube)<i>1</i></li>
+</ul></section><h3 id="Eluveitie[Suiza]"> Eluveitie [Suiza]</h3><section><ul><li>[2004] Ven (Demo)<i>6</i></li>
+<li>[2006] Spirit<i>11</i></li>
+<li>[2008] Live at Metalcamp (Live)<i>13</i></li>
+<li>[2008] Slania<i>13</i></li>
+<li>[2009] Evocation I - The Arcane Dominion<i>15</i></li>
+</ul><ul>
+<li>[2009] Omnos<i>2</i></li>
+<li>[2010] Everything Remains as It Never Was<i>15</i></li>
+<li>[2012] Helvetios<i>18</i></li>
+<li>[2014] 0rigins<i>16</i></li>
+<li>[2017] Evocation II - Pantheon<i>18</i></li>
+<li>[2019] Ategnatos (Limited Edition)<i>19</i></li>
+</ul></section><h3 id="Elvenking[Italia]"> Elvenking [Italia]</h3><section><ul><li>[2006] The winter wake<i>12</i></li>
+<li>[2007] The Scythe<i>10</i></li>
+<li>[2012] Era<i>15</i></li>
+<li>[2014] The Pagan Manifesto<i>16</i></li>
+<li class="subi">[2015] The Night Of Nights (Live)</li>
+<li>CD1<i>15</i></li>
+<li>CD2<i>10</i></li>
+<li>[2017] Secrets of the Magick Grimoire<i>16</i></li>
+<li>[2019] Reader of the Runes - Divination<i>12</i></li>
+</ul></section><h3 id="Ensiferum[Finlandia]"> Ensiferum [Finlandia]</h3><section><ul><li>[1999] Hero in a Dream (Demo)<i>5</i></li>
+<li>[2001] Ensiferum<i>12</i></li>
+<li>[2004] Iron<i>11</i></li>
+<li>[2004] Tale Of Revenge (Single)<i>2</i></li>
+<li>[2006] Dragonheads (Ep)<i>6</i></li>
+</ul><ul>
+<li>[2007] One More Magic Potion (Single)<i>2</i></li>
+<li>[2007] Victory Songs<i>9</i></li>
+<li>[2009] From Afar<i>9</i></li>
+<li>[2012] Unsung heroes<i>11</i></li>
+<li>[2015] One Man Army<i>15</i></li>
+<li>[2017] Two Paths<i>13</i></li>
+<li>[2020] Thalassic<i>9</i></li>
+</ul></section><h3 id="Equilibrium[Alemania]"> Equilibrium [Alemania]</h3><section><ul><li>[2005] Turis Fratyr<i>12</i></li>
+<li>[2008] Sagas<i>13</i></li>
+<li>[2010] Rekreatur<i>14</i></li>
+<li class="subi">[2014] Erdentempel (Limited Edition)</li>
+<li>CD1<i>13</i></li>
+<li>CD2<i>12</i></li>
+<li class="subi">[2016] Armageddon</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>11</i></li>
+<li class="subi">[2019] Renegades</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>9</i></li>
+</ul></section><h3 id="EternalLegacy[EEUU]"> Eternal Legacy [EEUU]</h3><section><ul><li>[2007] The Coming Of The Tempest<i>12</i></li>
+</ul></section><h3 id="EternalTearsofSorrow[Finlandia]"> Eternal Tears of Sorrow [Finlandia]</h3><section><ul><li>[1997] Sinner's Serenade<i>11</i></li>
+<li>[1998] Vilda Mannu<i>10</i></li>
+<li>[2000] Chaotic Beauty<i>9</i></li>
+<li>[2001] A Virgin And A Whore<i>11</i></li>
+<li>[2006] Before the Bleeding Sun<i>9</i></li>
+<li>[2009] Children of the Dark Waters<i>10</i></li>
+<li>[2013] Saivon Lapsi<i>13</i></li>
+</ul></section><h3 id="Euphoreon[Alemania-NuevaZelanda]"> Euphoreon [Alemania - Nueva Zelanda]</h3><section><ul><li>[2011] Euphoreon<i>8</i></li>
+<li>[2018] Ends of the Earth<i>7</i></li>
+</ul></section><h3 id="Europe[Suecia]"> Europe [Suecia]</h3><section><ul><li class="subi">[2009] The Best of Europe</li>
+<li>CD1<i>18</i></li>
+<li>CD2<i>18</i></li>
+</ul></section><h3 id="Evanescence[EEUU]"> Evanescence [EEUU]</h3><section><ul><li>[2000] Origin<i>12</i></li>
+<li>[2003] Fallen<i>12</i></li>
+<li>[2006] The Open Door<i>13</i></li>
+<li>[2011] Deluxe<i>16</i></li>
+<li>[2017] Synthesis<i>16</i></li>
+<li>[2021] The Bitter Truth<i>12</i></li>
+</ul></section><h3 id="ExtrechinatoyTú[España]"> Extrechinato y Tú [España]</h3><section><ul><li>[2001] Poesía Básica<i>10</i></li>
+</ul></section><h3 id="Extremoduro[España]"> Extremoduro [España]</h3><section><ul><li>[0000] Extremoduro (Recop)<i>27</i></li>
+<li>[1990] Maquetas<i>11</i></li>
+<li>[1991] Somos unos animales<i>10</i></li>
+<li>[1992] Deltoya<i>12</i></li>
+<li>[1993] Dónde están mis amigos<i>10</i></li>
+<li>[1994] Rock transgresivo<i>10</i></li>
+<li>[1995] Pedrá<i>1</i></li>
+<li>[1996] Agíla<i>13</i></li>
+</ul><ul>
+<li>[1997] Directo en las Ventas<i>13</i></li>
+<li>[1997] Iros todos a tomar por culo (Live)<i>14</i></li>
+<li>[1998] Canciones prohibidas<i>9</i></li>
+<li>[2002] Yo, minoría Absoluta<i>10</i></li>
+<li class="subi">[2004] Grandes exitos y fracasos</li>
+<li>CD1<i>15</i></li>
+<li>CD2<i>18</i></li>
+<li>[2008] La Ley Innata<i>6</i></li>
+<li>[2011] Material defectuoso<i>6</i></li>
+<li>[2013] Para todos los publicos<i>9</i></li>
+</ul></section><h3 id="Fairyland[Francia]"> Fairyland [Francia]</h3><section><ul></ul><ul>
+<li>[2003] Of Wars In Osyrhia<i>11</i></li>
+<li>[2006] The Fall Of An Empire<i>14</i></li>
+<li>[2009] Score to a New Beginning<i>9</i></li>
+<li>[2020] Osyrhianta<i>10</i></li>
+</ul></section><h3 id="Falkenbach[Alemania]"> Falkenbach [Alemania]</h3><section><ul><li>[1989] Havamal (Demo)<i>3</i></li>
+<li>[1995] Laeknishendr (demo)<i>6</i></li>
+<li>[1995] Promo '95<i>2</i></li>
+<li>[1996] En Their Medh Riki Fara<i>7</i></li>
+<li>[1998] Magni Blandinn Ok Megintiri<i>6</i></li>
+<li>[2003] Ok Nefna Tysvar Ty<i>7</i></li>
+</ul><ul>
+<li>[2005] Heralding The Fireblade<i>9</i></li>
+<li>[2011] Tiurida<i>8</i></li>
+<li>[2013] Asa<i>13</i></li>
+<li>[2013] Eweroun (Single)<i>1</i></li>
+</ul></section><h3 id="Faun[Alemania]"> Faun [Alemania]</h3><section><ul><li>[2007] Totem<i>10</i></li>
+<li>[2013] Von Den Elben<i>13</i></li>
+<li>[2016] Midgard (Deluxe Edition)<i>15</i></li>
+<li>[2022] Pagan<i>15</i></li>
+</ul></section><h3 id="Finntroll[Finlandia]"> Finntroll [Finlandia]</h3><section><ul><li>[1988] Rivfader<i>6</i></li>
+</ul><ul>
+<li>[1999] Midnattens Widunder<i>9</i></li>
+<li>[2001] Jaktens tid<i>13</i></li>
+<li>[2003] Visor om slutet<i>11</i></li>
+<li>[2004] Nattfödd<i>10</i></li>
+<li>[2004] Trollhammaren<i>5</i></li>
+<li>[2007] Ur jordens djup<i>11</i></li>
+<li>[2010] Nifelvind<i>12</i></li>
+<li>[2013] Blodsvept<i>11</i></li>
+<li>[2020] Vredesvävd<i>11</i></li>
+</ul></section><h3 id="Firewind[Grecia]"> Firewind [Grecia]</h3><section><ul><li>[2004] Forged By Fire (Japanese Version)<i>11</i></li>
+</ul><ul>
+<li>[2017] Immortals<i>11</i></li>
+<li>[2020] Firewind (youtube)<i>11</i></li>
+</ul></section><h3 id="Fito&Fitipaldis[España]"> Fito & Fitipaldis [España]</h3><section><ul><li>[1998] A puerta cerrada<i>10</i></li>
+<li>[2001] Los sueños locos<i>10</i></li>
+<li>[2003] Lo mas lejos a tu lado<i>12</i></li>
+<li>[2004] Vivo... para contarlo (Live)<i>15</i></li>
+<li>[2006] Por la boca vive el pez<i>14</i></li>
+<li>[2008] Dos son multitud (Live)<i>13</i></li>
+<li>[2009] Antes de que cuente diez<i>10</i></li>
+<li>[2014] Huyendo conmigo de mí<i>10</i></li>
+</ul><ul>
+<li>[2017] Fitografía (Recop)<i>53</i></li>
+</ul></section><h3 id="FlotsamAndJetsam[EEUU]"> Flotsam And Jetsam [EEUU]</h3><section><ul><li>[1986] Doomsday For The Deceiver (youtube)<i>1</i></li>
+</ul></section><h3 id="Followbane[Japón]"> Followbane [Japón]</h3><section><ul><li>[2006] Dead Fantasia<i>9</i></li>
+</ul></section><h3 id="ForMyPain[Finlandia]"> For My Pain [Finlandia]</h3><section><ul><li>[2003] Fallen<i>10</i></li>
+<li>[2004] Killing Romance (Single)<i>3</i></li>
+</ul></section><h3 id="Frosttide[Finlandia]"> Frosttide [Finlandia]</h3><section><ul><li>[2013] Awakening (youtube)<i>1</i></li>
+<li>[2015] Blood Oath (youtube)<i>1</i></li>
+</ul></section><h3 id="FrozenCrown[Italia]"> Frozen Crown [Italia]</h3><section><ul><li>[2018] The Fallen King (Japanese Edition)<i>11</i></li>
+<li>[2019] Crowned in Frost<i>11</i></li>
+<li>[2021] Winterbane<i>10</i></li>
+</ul></section><h3 id="GaiaPrelude[Japón]"> Gaia Prelude [Japón]</h3><section><ul><li>[2006] To Beyond of the Infinity<i>10</i></li>
+<li>[2008] Promised Land<i>11</i></li>
+<li>[2010] Another<i>13</i></li>
+</ul></section><h3 id="Galar[Noruega]"> Galar [Noruega]</h3><section><ul><li>[2015] De gjenlevende<i>1</i></li>
+</ul></section><h3 id="GallowsEnd[Suecia]"> Gallows End [Suecia]</h3><section><ul></ul><ul>
+<li>[2010] Nemesis Divine<i>12</i></li>
+</ul></section><h3 id="GammaRay[Alemania]"> Gamma Ray [Alemania]</h3><section><ul><li>[1999] Power Plant<i>11</i></li>
+<li>[2005] Majestic<i>11</i></li>
+</ul></section><h3 id="Ghost[Suecia]"> Ghost [Suecia]</h3><section><ul><li>[2010] Opvs Eponymovs<i>10</i></li>
+<li>[2013] Infestissumam<i>10</i></li>
+<li>[2015] Meliora<i>10</i></li>
+<li>[2018] Prequelle (Deluxe)<i>12</i></li>
+<li>[2022] Impera<i>12</i></li>
+</ul></section><h3 id="Gloryhammer[ReinoUnido]"> Gloryhammer [Reino Unido]</h3><section><ul></ul><ul>
+<li>[2019] Legends from Beyond the Galactic Terrorvortex (Deluxe Edition)<i>10</i></li>
+</ul></section><h3 id="Grajo[España]"> Grajo [España]</h3><section><ul><li>[2016] Grajo (Youtube)<i>1</i></li>
+</ul></section><h3 id="GreenDay[EEUU]"> Green Day [EEUU]</h3><section><ul><li class="subi">[2013] Greatest Hits</li>
+<li>CD1<i>25</i></li>
+<li>CD2<i>26</i></li>
+</ul></section><h3 id="GunsN'Roses[EEUU]"> Guns N' Roses [EEUU]</h3><section><ul><li>[2004] Greatest Hits<i>14</i></li>
+</ul></section><h3 id="Haggard[Alemania]"> Haggard [Alemania]</h3><section><ul><li>[1994] Progressive (EP)<i>5</i></li>
+</ul><ul>
+<li>[1995] Once... Upon A December's Dawn<i>1</i></li>
+<li>[1996] Die Irae Dies Illa (EP)<i>5</i></li>
+<li>[1997] And Thou Shalt Trust... The Seer<i>6</i></li>
+<li>[2000] Awaking the Centuries<i>11</i></li>
+<li>[2001] Awaking the Gods (Live)<i>11</i></li>
+<li>[2004] Eppur Si Muove<i>10</i></li>
+<li>[2008] Tales Of Ithiria<i>11</i></li>
+</ul></section><h3 id="HammerFall[Suecia]"> HammerFall [Suecia]</h3><section><ul><li>[1997] Glory To The Brave<i>12</i></li>
+<li>[1998] Legacy Of Kings<i>10</i></li>
+<li>[2000] Renegade (Russian Edition)<i>13</i></li>
+</ul><ul>
+<li>[2002] Crimson Thunder<i>12</i></li>
+<li>[2005] Chapter V Unbent, Unbowed, Unbroken<i>10</i></li>
+<li>[2006] Threshold<i>11</i></li>
+<li>[2009] No Sacrifice, No Victory (Limited Edition)<i>11</i></li>
+<li>[2011] Infected (Limited Edition)<i>13</i></li>
+<li>[2014] rEvolution<i>11</i></li>
+<li>[2016] Built To Last<i>10</i></li>
+<li>[2019] Dominion (youtube)<i>1</i></li>
+<li>[2022] Hammer of Dawn<i>10</i></li>
+</ul></section><h3 id="Hazzerd[Canada]"> Hazzerd [Canada]</h3><section><ul><li>[2017] Misleading Evil (youtube)<i>1</i></li>
+</ul><ul>
+<li>[2020] Delirium<i>10</i></li>
+</ul></section><h3 id="Heavenly[Francia]"> Heavenly [Francia]</h3><section><ul><li>[2000] Coming From The Sky<i>12</i></li>
+<li>[2001] Sign of the Winner<i>10</i></li>
+<li>[2004] Dust to Dust<i>13</i></li>
+<li>[2006] Virus<i>11</i></li>
+<li>[2009] Carpe Diem (Japanese Edition)<i>10</i></li>
+</ul></section><h3 id="Heidra[Dinamarca]"> Heidra [Dinamarca]</h3><section><ul><li>[2014] Awaiting Dawn<i>9</i></li>
+<li>[2018] The Blackening Tide (youtube)<i>8</i></li>
+</ul></section><h3 id="Helloween[Alemania]"> Helloween [Alemania]</h3><section><ul></ul><ul>
+<li>[1985] Helloween (EP)<i>5</i></li>
+<li>[1985] Walls Of Jericho<i>10</i></li>
+<li>[1987] Keeper of the Seven Key (Pt.1)<i>8</i></li>
+<li>[1988] Keeper Of The Seven Keys (Pt.2)<i>9</i></li>
+<li>[1991] Pink Bubbles Go Ape<i>11</i></li>
+<li>[1993] Chameleon<i>12</i></li>
+<li>[1994] Master Of The Rings<i>11</i></li>
+<li>[1996] The Time Of The Oath (Expanded Edition)<i>20</i></li>
+<li>[1998] Better Than Raw (Expanded Edition)<i>15</i></li>
+<li>[2000] The Dark Ride<i>13</i></li>
+<li>[2003] Rabbit Don't Come Easy<i>13</i></li>
+<li class="subi">[2005] Keeper Of The Seven Keys - The Legacy</li>
+<li>CD1<i>6</i></li>
+<li>CD2<i>8</i></li>
+<li>[2007] Gambling With The Devil<i>14</i></li>
+<li>[2010] 7 Sinners<i>14</i></li>
+<li>[2013] Straight out of Hell<i>15</i></li>
+<li>[2015] My God-Given Right (Deluxe Edition)<i>16</i></li>
+<li>[2021] Helloween<i>12</i></li>
+</ul></section><h3 id="HeroesdelSilencio[España]"> Heroes del Silencio [España]</h3><section><ul><li class="subi">[2007] Tour</li>
+<li>CD1<i>14</i></li>
+</ul><ul>
+<li>CD2<i>14</i></li>
+</ul></section><h3 id="Humanerror[Australia]"> Human error [Australia]</h3><section><ul><li>[2009] Memories of the afterlife<i>11</i></li>
+</ul></section><h3 id="IcedEarth[EEUU]"> Iced Earth [EEUU]</h3><section><ul><li class="subi">[1999] Alive In Athens</li>
+<li>CD1<i>10</i></li>
+<li>CD3<i>9</i></li>
+<li>CD4<i>12</i></li>
+</ul></section><h3 id="Illnath[Dinamarca]"> Illnath [Dinamarca]</h3><section><ul><li>[2001] Angelic Voices Calling (EP)<i>5</i></li>
+<li>[2003] Cast Into Fields Of Evil Pleasure<i>9</i></li>
+</ul><ul>
+<li>[2006] Second Skin of Harlequin<i>9</i></li>
+</ul></section><h3 id="Imperanon[Finlandia]"> Imperanon [Finlandia]</h3><section><ul><li>[2003] Imperanon (Demo)<i>5</i></li>
+<li>[2003] Until The End (Demo)<i>3</i></li>
+<li>[2004] Stained<i>11</i></li>
+</ul></section><h3 id="InFlames[Suecia]"> In Flames [Suecia]</h3><section><ul><li>[1994] Lunar Strain (2004 Reissue)<i>14</i></li>
+<li>[2000] Clayman<i>12</i></li>
+<li>[2002] Reroute to Remain<i>14</i></li>
+<li>[2004] Soundtrack to Your Escape (Korean Edition)<i>14</i></li>
+<li>[2006] Come clarity<i>13</i></li>
+</ul><ul>
+<li>[2008] A sense of purpose<i>15</i></li>
+<li>[2011] Sounds of a playground fading<i>13</i></li>
+<li>[2014] Siren Charms (Limited Edition)<i>12</i></li>
+<li>[2016] Battles (Limited Edition)<i>14</i></li>
+<li>[2019] I, the Mask<i>13</i></li>
+<li>[2023] Foregone (Limited Edition)<i>13</i></li>
+</ul></section><h3 id="Inexist[Rusia]"> Inexist [Rusia]</h3><section><ul><li>[2004] Am I Senseless<i>12</i></li>
+<li>[2006] Relax and Feel Free<i>11</i></li>
+<li>[2008] 2000 км (EP)<i>5</i></li>
+<li>[2008] Навстречу Мечте<i>11</i></li>
+</ul></section><h3 id="Insania[Suecia]"> Insania [Suecia]</h3><section><ul><li>[2001] Sunrise in Riverland<i>12</i></li>
+<li>[2002] Fantasy<i>8</i></li>
+<li>[2007] Agony Gift of Life<i>10</i></li>
+</ul></section><h3 id="Insomnium[Finlandia]"> Insomnium [Finlandia]</h3><section><ul><li>[2002] In The Halls Of Awaiting<i>10</i></li>
+<li>[2004] Since the Day It All Came Down<i>11</i></li>
+<li>[2006] Above the Weeping World<i>9</i></li>
+<li>[2009] Across The Dark<i>10</i></li>
+<li>[2011] One For Sorrow<i>10</i></li>
+<li>[2013] Ephemeral (EP)<i>4</i></li>
+</ul><ul>
+<li>[2014] Shadows Of The Dying Sun<i>10</i></li>
+<li>[2016] Winter's Gate<i>7</i></li>
+<li>[2019] Heart Like a Grave<i>12</i></li>
+</ul></section><h3 id="IronMaiden[ReinoUnido]"> Iron Maiden [Reino Unido]</h3><section><ul><li>[1980] Iron Maiden<i>8</i></li>
+<li>[1981] Killers<i>10</i></li>
+<li>[1982] The Number Of The Beast<i>8</i></li>
+<li>[1983] Piece Of Mind<i>9</i></li>
+<li>[1984] Powerslave<i>8</i></li>
+<li>[1986] Somewhere in time<i>8</i></li>
+<li>[1988] Seventh son of a seventh son<i>8</i></li>
+</ul><ul>
+<li>[1990] No Prayer For The Dying<i>10</i></li>
+<li>[1992] Fear of the dark<i>9</i></li>
+<li>[1995] The X Factor<i>11</i></li>
+<li>[1998] A Call to Irons (Vol 1)<i>11</i></li>
+<li>[1998] Virtual XI<i>8</i></li>
+<li>[1999] A Call to Irons (Vol 2)<i>13</i></li>
+<li>[2000] Brave New World<i>10</i></li>
+<li>[2003] Dance Of Death<i>10</i></li>
+<li>[2005] Worlds Only Female Tribute To Iron Maiden<i>9</i></li>
+<li>[2006] A Matter of Life And Death<i>10</i></li>
+<li>[2010] The Final Frontier<i>10</i></li>
+</ul><ul>
+<li>[2015] The book of souls<i>11</i></li>
+<li class="subi">[2021] Senjutsu</li>
+<li>CD1<i>6</i></li>
+<li>CD2<i>4</i></li>
+</ul></section><h3 id="JohnPetrucci[EEUU]"> John Petrucci [EEUU]</h3><section><ul><li>[2005]‎ Suspended Animation (youtube)<i>1</i></li>
+<li>[2020] Terminal Velocity<i>9</i></li>
+</ul></section><h3 id="JudasPriest[ReinoUnido]"> Judas Priest [Reino Unido]</h3><section><ul><li>[1974] Rocka Rolla<i>11</i></li>
+<li>[1976] Sad Wings Of Destiny<i>9</i></li>
+<li>[1977] Sin After Sin<i>10</i></li>
+</ul><ul>
+<li>[1978] Killing Machine<i>10</i></li>
+<li>[1978] Stained Class<i>10</i></li>
+<li>[1980] British Steel<i>11</i></li>
+<li>[1981] Point Of Entry<i>11</i></li>
+<li>[1982] Screaming For Vengeance<i>11</i></li>
+<li>[1984] Defenders Of The Faith<i>11</i></li>
+<li>[1986] Turbo<i>10</i></li>
+<li>[1988] Ram It Down<i>11</i></li>
+<li>[1990] Painkiller<i>11</i></li>
+<li>[1997] Jugulator<i>10</i></li>
+<li>[2001] Demolition<i>14</i></li>
+</ul><ul>
+<li>[2005] Angel Of Retribution<i>10</i></li>
+<li>[2006] The Essential (Recop)<i>34</i></li>
+<li class="subi">[2008] Nostradamus</li>
+<li>CD1<i>13</i></li>
+<li>CD2<i>10</i></li>
+<li>[2014] Redeemer Of Souls<i>18</i></li>
+<li>[2018] Firepower<i>14</i></li>
+</ul></section><h3 id="Kaliban[Finlandia]"> Kaliban [Finlandia]</h3><section><ul><li>[2002] The Tempest of Thoughts<i>9</i></li>
+</ul></section><h3 id="Kalmah[Finlandia]"> Kalmah [Finlandia]</h3><section><ul><li>[1999] Svieri Obraza (Demo)<i>3</i></li>
+</ul><ul>
+<li>[2000] Swamplord<i>8</i></li>
+<li>[2002] They Will Return<i>9</i></li>
+<li>[2003] Swampsong<i>10</i></li>
+<li>[2006] The Black Waltz<i>11</i></li>
+<li>[2008] For The Revolution<i>9</i></li>
+<li>[2010] 12 gauge (Edit JP)<i>10</i></li>
+<li>[2013] Seventh Swamphony<i>8</i></li>
+<li>[2018] Palo<i>10</i></li>
+</ul></section><h3 id="Kälter[Canadá]"> Kälter [Canadá]</h3><section><ul><li>[2009] Spiritual Angel<i>8</i></li>
+<li>[2012] Ubuntu (youtube)<i>1</i></li>
+</ul></section><h3 id="Kamelot[EEUU]"> Kamelot [EEUU]</h3><section><ul><li>[0000] Kamelot (Recop)<i>3</i></li>
+</ul></section><h3 id="Kiss[EEUU]"> Kiss [EEUU]</h3><section><ul><li class="subi">[1997] The Greatest Hits</li>
+<li>CD1<i>17</i></li>
+<li>CD2<i>17</i></li>
+</ul></section><h3 id="Korn[EEUU]"> Korn [EEUU]</h3><section><ul><li class="subi">[2008] Greatest Hits</li>
+<li>CD1<i>21</i></li>
+<li>CD2<i>19</i></li>
+</ul></section><h3 id="Korpiklaani[Finlandia]"> Korpiklaani [Finlandia]</h3><section><ul></ul><ul>
+<li>[2003] Spirit of the Forest<i>14</i></li>
+<li>[2005] Voice of Wilderness<i>11</i></li>
+<li>[2006] Tales Along This Road<i>11</i></li>
+<li>[2007] Tervaskanto<i>11</i></li>
+<li>[2008] Korven Kuningas<i>15</i></li>
+<li>[2009] Karkelo<i>12</i></li>
+<li>[2011] Ukon Wacka<i>11</i></li>
+<li class="subi">[2012] Manala</li>
+<li>CD1<i>12</i></li>
+<li>CD2<i>11</i></li>
+<li>[2015] Noita<i>11</i></li>
+</ul><ul>
+<li>[2018] Kulkija<i>14</i></li>
+<li>[2021] Jylhä<i>13</i></li>
+</ul></section><h3 id="Kotipelto[Finlandia]"> Kotipelto [Finlandia]</h3><section><ul><li>[2007] Serenity<i>1</i></li>
+</ul></section><h3 id="Kromlek[Alemania]"> Kromlek [Alemania]</h3><section><ul><li>[2005] Kveldridhur<i>7</i></li>
+<li>[2007] Strange Rumours... distant Tremors<i>10</i></li>
+<li>[2011] Finis Terrae<i>13</i></li>
+</ul></section><h3 id="Krusader[Brasil]"> Krusader [Brasil]</h3><section><ul><li>[2009] Angus<i>16</i></li>
+</ul></section><h3 id="LaFuga[España]"> La Fuga [España]</h3><section><ul></ul><ul>
+<li>[2011] Raices<i>11</i></li>
+</ul></section><h3 id="LeatherNunn[EEUU]"> Leather Nunn [EEUU]</h3><section><ul><li>[1986] Take The Night<i>1</i></li>
+</ul></section><h3 id="LedZeppelin[ReinoUnido]"> Led Zeppelin [Reino Unido]</h3><section><ul><li>[2008] Greatest Hits<i>31</i></li>
+</ul></section><h3 id="Lemuria[Bélgica]"> Lemuria [Bélgica]</h3><section><ul><li>[2005] Tales, Ale and Fire<i>9</i></li>
+<li>[2010] Chanson de la Croisade<i>12</i></li>
+<li>[2019] The Hysterical Hunt (youtube)<i>12</i></li>
+</ul></section><h3 id="LennyKravitz[EEUU]"> Lenny Kravitz [EEUU]</h3><section><ul><li>[2000] Greatest Hits (Recop)<i>15</i></li>
+</ul></section><h3 id="Lèpoka[España]"> Lèpoka [España]</h3><section><ul><li>[2014] Folkoholic Metal<i>10</i></li>
+<li>[2016] Beerserkers<i>11</i></li>
+<li>[2018] Vivere<i>13</i></li>
+<li>[2020] El Baile de los Caídos<i>11</i></li>
+</ul></section><h3 id="Lindemann[Alemania-Suecia]"> Lindemann [Alemania - Suecia]</h3><section><ul><li>[2015] Skills In Pills<i>11</i></li>
+<li>[2019] F & M<i>13</i></li>
+</ul></section><h3 id="LinkinPark[EEUU]"> Linkin Park [EEUU]</h3><section><ul><li>[2000] Hybrid Theory<i>12</i></li>
+<li>[2003] Meteora<i>13</i></li>
+</ul><ul>
+<li>[2007] Minutes To Midnight<i>12</i></li>
+<li>[2010] A Thousand Suns<i>16</i></li>
+<li>[2012] Living Things (Deluxe Edition)<i>15</i></li>
+<li class="subi">[2014] The Hunting Party (Deluxe Edition)</li>
+<li>CD1<i>16</i></li>
+<li>CD2<i>11</i></li>
+<li>[2017] One More Light<i>10</i></li>
+</ul></section><h3 id="Lordi[Finlandia]"> Lordi [Finlandia]</h3><section><ul><li>[1999] Bend Over And Pray The Lord<i>13</i></li>
+<li>[2002] Get Heavy<i>13</i></li>
+<li>[2004] The Monsterican Dream<i>13</i></li>
+</ul><ul>
+<li>[2006] The Arockalypse<i>12</i></li>
+<li>[2008] Deadache<i>13</i></li>
+<li>[2010] Babez For Breakfast<i>15</i></li>
+<li>[2013] To Beast Or Not To Beast<i>12</i></li>
+<li>[2014] Scare Force One<i>13</i></li>
+<li>[2016] Monstereophonic<i>14</i></li>
+<li>[2018] Sexorcism<i>13</i></li>
+<li>[2020] Killection<i>15</i></li>
+<li>[2021] Lordiversity<i>11</i></li>
+</ul></section><h3 id="LostDreams[Austria]"> Lost Dreams [Austria]</h3><section><ul><li>[2008] End of Time<i>12</i></li>
+</ul></section><h3 id="MadeofHate[Polonia]"> Made of Hate [Polonia]</h3><section><ul><li>[2008] Bullet In Your Head<i>9</i></li>
+<li>[2010] Pathogen<i>9</i></li>
+<li class="subi">[2014] Out of Hate</li>
+<li>CD1<i>9</i></li>
+<li>CD2 (Instrumental Mixdown)<i>9</i></li>
+</ul></section><h3 id="MagoDeOz[España]"> Mago De Oz [España]</h3><section><ul><li>[1994] Mago de Oz<i>10</i></li>
+<li>[1996] Jesús de Chamberí<i>14</i></li>
+<li>[1997] La Bruja<i>5</i></li>
+<li>[1998] La Leyenda de la Mancha<i>13</i></li>
+<li class="subi">[2000] Finisterra</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+<li>[2003] Gaia<i>12</i></li>
+<li>[2004] Belfast<i>12</i></li>
+<li class="subi">[2005] Gaia II La Voz Dormida</li>
+<li>CD1<i>9</i></li>
+<li>CD2<i>8</i></li>
+<li class="subi">[2006] Rarezas</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+</ul><ul>
+<li>[2006] The Best Oz<i>24</i></li>
+<li>[2007] La Ciudad De Los Árboles<i>13</i></li>
+<li>[2008] Barakaldo DF (Live)<i>11</i></li>
+<li>[2010] Gaia Epilogo<i>10</i></li>
+<li>[2010] Gaia III Atlantia<i>16</i></li>
+<li>[2012] Hechizos, pócimas y brujería<i>13</i></li>
+<li>[2014] Ilussia<i>13</i></li>
+<li>[2019] Ira Dei<i>18</i></li>
+<li>[2021] Bandera Negra<i>15</i></li>
+</ul></section><h3 id="Majestic[Suecia]"> Majestic [Suecia]</h3><section><ul><li>[1999] Abstract Symphony<i>12</i></li>
+</ul></section><h3 id="Manegarm[Suecia]"> Manegarm [Suecia]</h3><section><ul><li>[2007] Vargstenen<i>12</i></li>
+<li>[2009] Nattvasen<i>9</i></li>
+<li>[2013] Legions Of The North<i>13</i></li>
+<li>[2015] Manegarm<i>12</i></li>
+<li>[2019] Fornaldarsagor<i>10</i></li>
+<li>[2022] Ynglingaättens öde<i>9</i></li>
+</ul></section><h3 id="Manowar[EEUU]"> Manowar [EEUU]</h3><section><ul><li>[2002] Warrios Of The World<i>11</i></li>
+</ul></section><h3 id="Marea[España]"> Marea [España]</h3><section><ul><li>[2007] Secos Los Pies (Recop)<i>14</i></li>
+</ul></section><h3 id="MartyFriedman[EEUU]"> Marty Friedman [EEUU]</h3><section><ul><li>[2014] Inferno<i>12</i></li>
+</ul></section><h3 id="MedinaAzahara[España]"> Medina Azahara [España]</h3><section><ul><li class="subi">[2012] Marcando El Tiempo (Recop)</li>
+<li>CD1<i>16</i></li>
+<li>CD2<i>15</i></li>
+</ul></section><h3 id="Megadeth[EEUU]"> Megadeth [EEUU]</h3><section><ul><li>[1985] Killing is My Business...and Business is Good!<i>8</i></li>
+<li>[1986] Peace Sells...But Who's Buying<i>8</i></li>
+<li>[1988] So Far, So Good...So What!<i>8</i></li>
+<li>[1990] Rust in Peace<i>9</i></li>
+</ul><ul>
+<li>[1992] Countdown To Extinction<i>15</i></li>
+<li>[1994] Youthanasia<i>12</i></li>
+<li>[1997] Cryptic Writings<i>12</i></li>
+<li>[1999] Risk<i>12</i></li>
+<li>[2001] The World Needs a Hero<i>12</i></li>
+<li>[2004] The System Has Failed<i>12</i></li>
+<li>[2005] Back To The Start (Recop)<i>17</i></li>
+<li>[2007] United Abominations<i>11</i></li>
+<li>[2009] Endgame<i>11</i></li>
+<li>[2011] Thirteen<i>13</i></li>
+<li>[2013] Super Collider<i>11</i></li>
+</ul><ul>
+<li>[2016] Dystopia<i>12</i></li>
+<li>[2022] The Sick, the Dying... and the Dead!<i>14</i></li>
+</ul></section><h3 id="MetalHawk[España]"> MetalHawk [España]</h3><section><ul><li>[2019] Shaman (youtube)<i>1</i></li>
+</ul></section><h3 id="Metallica[EEUU]"> Metallica [EEUU]</h3><section><ul><li>[1983] Kill 'Em All<i>10</i></li>
+<li>[1984] Ride The Lightning<i>8</i></li>
+<li>[1986] Master of Puppets<i>8</i></li>
+<li>[1988] ...And Justice for All<i>9</i></li>
+<li>[1991] The Black Album<i>12</i></li>
+<li>[1996] Load<i>14</i></li>
+</ul><ul>
+<li>[1997] Reload<i>13</i></li>
+<li>[2003] St. Anger<i>11</i></li>
+<li>[2008] Death Magnetic<i>10</i></li>
+<li class="subi">[2016] Hardwired…To Self-Destruct (Limited Deluxe Edition)</li>
+<li>CD1<i>6</i></li>
+<li>CD2<i>6</i></li>
+<li>CD3<i>14</i></li>
+</ul></section><h3 id="Moonsorrow[Finlandia]"> Moonsorrow [Finlandia]</h3><section><ul><li>[2001] Voimasta Ja Kunniasta<i>6</i></li>
+<li>[2016] Jumalten Aika<i>5</i></li>
+</ul></section><h3 id="MorsPrincipiumEst[Finlandia]"> Mors Principium Est [Finlandia]</h3><section><ul></ul><ul>
+<li>[2003] Inhumanity<i>10</i></li>
+<li>[2020] Seven (Japan Edition)<i>11</i></li>
+<li>[2022] Liberate The Unborn Inhumanity<i>13</i></li>
+</ul></section><h3 id="Motörhead[ReinoUnido]"> Motörhead [Reino Unido]</h3><section><ul><li>[2015] The Best Of<i>40</i></li>
+</ul></section><h3 id="Muro[España]"> Muro [España]</h3><section><ul><li>[1986] Acero y Sangre<i>9</i></li>
+<li>[1988] Telón de acero<i>8</i></li>
+<li>[1989] Mutant Hunter<i>8</i></li>
+<li>[1992] Pacto de sangre<i>8</i></li>
+<li>[1995] Grandes Éxitos<i>14</i></li>
+</ul><ul>
+<li>[1999] Peligro inminente<i>11</i></li>
+<li>[2001] Corazón de Metal<i>13</i></li>
+<li>[2003] Este Muro No Se Cae<i>16</i></li>
+<li>[2004] Enterrados en vivo<i>13</i></li>
+</ul></section><h3 id="Muse[ReinoUnido]"> Muse [Reino Unido]</h3><section><ul><li>[2012] Greatest Hits<i>25</i></li>
+</ul></section><h3 id="MysticProphecy[Alemania]"> Mystic Prophecy [Alemania]</h3><section><ul><li>[2003] Regressus (Japanese Edition)<i>13</i></li>
+<li>[2006] Savage Souls (Japanese Edition)<i>12</i></li>
+<li class="subi">[2009] Fireangel (Japanese Edition)</li>
+<li>CD1<i>11</i></li>
+</ul><ul>
+<li>CD2<i>13</i></li>
+<li>[2018] Monuments Uncovered<i>11</i></li>
+<li>[2020] Metal Division<i>11</i></li>
+</ul></section><h3 id="Naildown[Finlandia]"> Naildown [Finlandia]</h3><section><ul><li>[2005] World Domination<i>10</i></li>
+</ul></section><h3 id="Nazgûl[Italia]"> Nazgûl [Italia]</h3><section><ul><li>[2002] De expugnatione elfmuth<i>14</i></li>
+</ul></section><h3 id="Nekrogoblikon[EEUU]"> Nekrogoblikon [EEUU]</h3><section><ul><li>[2013] Power<i>5</i></li>
+</ul></section><h3 id="Nightscape[Suecia]"> Nightscape [Suecia]</h3><section><ul><li>[2005] Symphony Of The Night<i>9</i></li>
+</ul></section><h3 id="Nightwish[Finlandia]"> Nightwish [Finlandia]</h3><section><ul><li>[1997] Angels Fall First<i>12</i></li>
+<li>[1998] Oceanborn<i>11</i></li>
+<li>[2000] Wishmaster<i>11</i></li>
+<li>[2001] Over The Hills And Far Away<i>14</i></li>
+<li>[2002] Century Child<i>12</i></li>
+<li>[2004] Once<i>14</i></li>
+<li>[2005] Bestwishes<i>17</i></li>
+<li>[2005] End Of An Era (Live)<i>17</i></li>
+<li>[2005] Highest Hopes (The Best Of Nightwish)<i>16</i></li>
+<li>[2007] Dark Passion Play<i>13</i></li>
+</ul><ul>
+<li>[2011] Imaginaerum<i>13</i></li>
+<li>[2011] Walking In The Air (The Greatest Ballads)<i>15</i></li>
+<li>[2013] Showtime, Storytime (Live)<i>16</i></li>
+<li>[2015] Endless Forms Most Beautiful<i>11</i></li>
+<li class="subi">[2020] Human. II Nature</li>
+<li>CD1<i>9</i></li>
+<li>CD2<i>8</i></li>
+<li>CD3<i>9</i></li>
+</ul></section><h3 id="Nirvana[EEUU]"> Nirvana [EEUU]</h3><section><ul><li>[1989] Bleach<i>13</i></li>
+<li>[1991] Nevermind<i>13</i></li>
+</ul><ul>
+<li>[1992] Hormoaning (EP)<i>6</i></li>
+<li>[1992] Incesticide (Recop)<i>14</i></li>
+<li>[1993] In Utero<i>13</i></li>
+<li>[1996] Singles<i>19</i></li>
+<li>[2002] Nirvana (Recop)<i>13</i></li>
+</ul></section><h3 id="NorifumiShima[Japón]"> Norifumi Shima [Japón]</h3><section><ul><li>[2009] From the Womb to the Tomb<i>10</i></li>
+</ul></section><h3 id="Norther[Finlandia]"> Norther [Finlandia]</h3><section><ul><li>[2002] Dreams Of Endless War<i>9</i></li>
+<li>[2003] Mirror Of Madness<i>9</i></li>
+<li>[2004] Death Unlimited<i>13</i></li>
+</ul><ul>
+<li>[2006] Till Death Unites Us<i>12</i></li>
+<li>[2008] N<i>12</i></li>
+<li>[2011] Circle Regenerated<i>13</i></li>
+</ul></section><h3 id="Northland[España]"> Northland [España]</h3><section><ul><li>[2010] Northland<i>11</i></li>
+<li>[2015] Downfall and Rebirth<i>11</i></li>
+</ul></section><h3 id="Nothgard[Alemania]"> Nothgard [Alemania]</h3><section><ul><li>[2011] Warhorns Of Midgard<i>12</i></li>
+<li>[2014] Age Of Pandora<i>10</i></li>
+<li>[2016] The Sinner's Sake<i>11</i></li>
+<li>[2018] Malady X<i>13</i></li>
+</ul></section><h3 id="Noumena[Finlandia]"> Noumena [Finlandia]</h3><section><ul><li>[2002] Pride Fall<i>10</i></li>
+<li>[2005] Absence<i>10</i></li>
+<li>[2006] Anatomy Of Life<i>9</i></li>
+<li>[2017] Myrrys<i>9</i></li>
+<li>[2020] Anima (youtube)<i>8</i></li>
+</ul></section><h3 id="Obtenebris[Canadá]"> Obtenebris [Canadá]</h3><section><ul><li>[2009] Dust of Time<i>11</i></li>
+</ul></section><h3 id="OmniumGatherum[Finlandia]"> Omnium Gatherum [Finlandia]</h3><section><ul><li>[2018] The Burning Cold<i>11</i></li>
+<li>[2021] Origin<i>10</i></li>
+</ul></section><h3 id="OrdenOgan[Alemania]"> Orden Ogan [Alemania]</h3><section><ul><li>[2017] Gunmen (Japan)<i>13</i></li>
+<li>[2021] Final Days<i>10</i></li>
+</ul></section><h3 id="OzzyOsbourne[ReinoUnido]"> Ozzy Osbourne [Reino Unido]</h3><section><ul><li>[1980] Blizzard of Ozz<i>10</i></li>
+<li>[1981] Diary Of A Madman<i>8</i></li>
+<li>[1983] Bark At The Moon<i>8</i></li>
+<li>[1986] The Ultimate Sin<i>9</i></li>
+<li>[1988] No Rest For The Wicked<i>9</i></li>
+<li>[1991] No More Tears<i>11</i></li>
+<li>[1995] Ozzmosis<i>10</i></li>
+</ul><ul>
+<li>[2001] Down to Earth<i>12</i></li>
+<li>[2005] Under Cover<i>13</i></li>
+<li>[2007] Black Rain<i>16</i></li>
+<li>[2010] Scream<i>11</i></li>
+<li>[2020] Ordinary Man<i>11</i></li>
+<li>[2022] Patient Number 9<i>13</i></li>
+</ul></section><h3 id="Pain[Suecia]"> Pain [Suecia]</h3><section><ul><li>[1997] Pain<i>11</i></li>
+<li>[2000] Rebirth<i>11</i></li>
+<li>[2002] Nothing Remains the Same<i>11</i></li>
+<li>[2006] Dancing with the Dead<i>12</i></li>
+</ul><ul>
+<li>[2007] Psalms of Extinction<i>12</i></li>
+<li>[2008] Cynic Paradise<i>15</i></li>
+<li>[2011] You Only Live Twice<i>18</i></li>
+<li>[2016] Coming Home<i>10</i></li>
+</ul></section><h3 id="ParasiteInc[Alemania]"> Parasite Inc [Alemania]</h3><section><ul><li>[2013] Time Tears Down<i>12</i></li>
+<li>[2018] Dead and Alive<i>1</i></li>
+<li>[2022] Cyan Night Dreams<i>10</i></li>
+</ul></section><h3 id="PimeaMetsa[España]"> Pimea Metsa [España]</h3><section><ul><li>[2013] Legacy of the Heathen North (youtube)<i>1</i></li>
+<li>[2016] No Blood, No Glory (youtube)<i>10</i></li>
+</ul></section><h3 id="PlateroyTú[España]"> Platero y Tú [España]</h3><section><ul><li>[1991] Voy a acabar borracho<i>12</i></li>
+<li>[1992] Burrock'n roll<i>10</i></li>
+<li>[1992] Muy deficiente<i>10</i></li>
+<li>[1993] Vamos Tirando<i>12</i></li>
+<li>[1994] Hay Poco Rock 'N' Roll<i>9</i></li>
+<li class="subi">[1996] A pelo (Live)</li>
+<li>CD1<i>14</i></li>
+<li>CD2<i>7</i></li>
+<li>[1997] 7<i>9</i></li>
+<li>[2000] Correos<i>11</i></li>
+</ul></section><h3 id="Powerwolf[Alemania]"> Powerwolf [Alemania]</h3><section><ul><li>[2005] Return In Bloodred<i>9</i></li>
+<li>[2007] Lupus Dei<i>11</i></li>
+<li>[2009] Bible of the Beast<i>12</i></li>
+<li class="subi">[2011] Blood Of The Saints</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>5</i></li>
+<li>[2011] EP In Bloodred (EP)<i>4</i></li>
+<li>[2011] Greatest Hits (Malasia Edit)<i>17</i></li>
+<li class="subi">[2013] Preachers Of The Night (Limited Edition)</li>
+<li>CD1<i>11</i></li>
+</ul><ul>
+<li>CD2<i>4</i></li>
+<li>[2015] Blessed and Possessed (Deluxe Edition)<i>21</i></li>
+<li>[2018] The Sacrament of Sin<i>21</i></li>
+<li class="subi">[2021] Call of the Wild (Deluxe Version)</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>10</i></li>
+<li>CD3<i>11</i></li>
+</ul></section><h3 id="Primalfrost‎[Canada]"> Primalfrost ‎[Canada]</h3><section><ul><li>[2012] Chapters Of Time (youtube)<i>1</i></li>
+<li>[2014] Prosperous Visions (youtube)<i>1</i></li>
+</ul></section><h3 id="Raintime[Italia]"> Raintime [Italia]</h3><section><ul></ul><ul>
+<li>[2005] Tales From Sadness<i>8</i></li>
+<li>[2007] Flies & Lies<i>11</i></li>
+</ul></section><h3 id="Rammstein[Alemania]"> Rammstein [Alemania]</h3><section><ul><li>[1995] Herzeleid<i>11</i></li>
+<li>[1997] Sehnsucht<i>11</i></li>
+<li>[2001] Mutter<i>18</i></li>
+<li>[2004] Reise, Reise<i>11</i></li>
+<li>[2005] Rosenrot<i>11</i></li>
+<li>[2006] Völkerball<i>16</i></li>
+<li>[2009] Liebe ist für alle da<i>17</i></li>
+<li>[2022] Zeit<i>11</i></li>
+</ul></section><h3 id="Ramones[EEUU]"> Ramones [EEUU]</h3><section><ul><li>[2003] The Best of The Ramones<i>31</i></li>
+</ul></section><h3 id="RataBlanca[Argentina]"> Rata Blanca [Argentina]</h3><section><ul><li>[1988] Rata Blanca<i>9</i></li>
+<li>[1990] Magos, espadas y rosas<i>9</i></li>
+<li>[1991] Guerrero del arco iris<i>9</i></li>
+<li>[1993] El libro oculto (EP)<i>5</i></li>
+<li>[1994] Entre el cielo y el infierno<i>11</i></li>
+<li>[1996] En vivo en Buenos Aires<i>10</i></li>
+<li>[1997] Rata Blanca VII<i>14</i></li>
+<li>[2000] Grandes Canciones (Recop)<i>12</i></li>
+</ul><ul>
+<li>[2001] La leyenda continúa (Tributo)<i>14</i></li>
+<li>[2002] El camino del fuego<i>10</i></li>
+<li>[2003] Poder Vivo (live)<i>10</i></li>
+<li>[2005] La Llave de La Puerta Secreta<i>11</i></li>
+<li>[2008] El Reino Olvidado<i>12</i></li>
+<li>[2009] The Forgotten Kingdom<i>12</i></li>
+<li>[2015] Tormenta Eléctrica<i>12</i></li>
+</ul></section><h3 id="RedHotChiliPeppers[EEUU]"> Red Hot Chili Peppers [EEUU]</h3><section><ul><li class="subi">[2008] Greatest Hits</li>
+<li>CD1<i>20</i></li>
+<li>CD2<i>20</i></li>
+</ul><ul>
+<li>CD3<i>2</i></li>
+</ul></section><h3 id="RedWine[España]"> Red Wine [España]</h3><section><ul><li>[2003] Sueños Y Locura (Youtube)<i>10</i></li>
+</ul></section><h3 id="ReignofFury[ReinoUnido]"> Reign of Fury [Reino Unido]</h3><section><ul><li>[2012] World Detonation (youtube)<i>1</i></li>
+<li>[2015] Death Be Thy Shepherd<i>1</i></li>
+<li>[2019] Exorcise Reality (youtube)<i>8</i></li>
+</ul></section><h3 id="Reincidentes[España]"> Reincidentes [España]</h3><section><ul><li>[1994] Nunca es tarde... si la dicha es buena<i>15</i></li>
+</ul></section><h3 id="RhapsodyofFire[Italia]"> Rhapsody of Fire [Italia]</h3><section><ul><li>[1997] Legendary Tales<i>13</i></li>
+</ul><ul>
+<li>[1998] Symphony Of Enchanted Lands<i>10</i></li>
+<li>[2000] Dawn of Victory<i>11</i></li>
+<li>[2001] Power Of The Dragonflame<i>5</i></li>
+<li>[2001] Rain Of A Thousand Flames EP<i>7</i></li>
+<li>[2004] Symphony Of Enchanted Lands II - The Dark Secret<i>12</i></li>
+<li>[2006] Triumph Or Agony<i>13</i></li>
+<li>[2010] The Cold Embrace of Fear (EP)<i>7</i></li>
+<li>[2010] The Frozen Tears of Angels<i>11</i></li>
+<li>[2011] From Chaos To Eternity<i>9</i></li>
+<li>[2013] Dark Wings of Steel<i>11</i></li>
+<li>[2016] Into the Legend<i>10</i></li>
+</ul><ul>
+<li>[2017] Legendary Years<i>14</i></li>
+<li>[2019] The Eighth Mountain<i>12</i></li>
+<li>[2021] Glory for Salvation<i>13</i></li>
+</ul></section><h3 id="Riot[EEUU]"> Riot [EEUU]</h3><section><ul><li>[2014] Unleash The Fire<i>13</i></li>
+</ul></section><h3 id="Sabaton[Suecia]"> Sabaton [Suecia]</h3><section><ul><li>[2001] Fist For Fight<i>11</i></li>
+<li>[2005] Primo Victoria<i>9</i></li>
+<li>[2006] Attero Dominatus<i>9</i></li>
+<li>[2007] Metalizer<i>15</i></li>
+<li>[2008] The Art of War<i>11</i></li>
+</ul><ul>
+<li>[2010] Coat of Arms<i>10</i></li>
+<li>[2012] Carolus Rex<i>12</i></li>
+<li>[2012] Metalus Hammerus Rex<i>10</i></li>
+<li>[2014] Heroes<i>10</i></li>
+<li>CD2<i>5</i></li>
+<li>[2016] The Last Stand (Limited Edition)<i>13</i></li>
+<li>[2019] The Great War<i>11</i></li>
+<li>[2022] The War To End All Wars<i>10</i></li>
+</ul></section><h3 id="Salduie[España]"> Salduie [España]</h3><section><ul><li>[2014] Imbolc<i>11</i></li>
+<li>[2019] Viros Veramos<i>1</i></li>
+</ul><ul>
+<li>[2021] Ambaxtos<i>10</i></li>
+</ul></section><h3 id="Saratoga[España]"> Saratoga [España]</h3><section><ul><li>[1995] Saratoga<i>10</i></li>
+<li>[1996] Tributo<i>11</i></li>
+<li>[1997] Mi ciudad<i>14</i></li>
+<li>[1999] Vientos de guerra<i>15</i></li>
+<li class="subi">[2000] Tiempos de directo</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>10</i></li>
+<li>[2002] Agotarás<i>14</i></li>
+<li>[2004] El clan de la lucha<i>13</i></li>
+</ul><ul>
+<li>[2005] Tierra de lobos<i>12</i></li>
+<li>[2006] The fighting clan<i>13</i></li>
+<li>[2007] VII<i>12</i></li>
+<li>[2009] Secretos y revelaciones<i>12</i></li>
+<li>[2012] Némesis<i>11</i></li>
+<li>[2016] Morir en el bien, Vivir en el mal<i>12</i></li>
+<li>[2018] Aeternus<i>10</i></li>
+<li>[2021] XXX<i>14</i></li>
+</ul></section><h3 id="Saurom[España]"> Saurom [España]</h3><section><ul><li>[2001] El guardián de las melodías perdidas<i>16</i></li>
+<li>[2002] Sombras del este<i>19</i></li>
+</ul><ul>
+<li>[2004] Legado de juglares<i>13</i></li>
+<li>[2006] Juglarmetal<i>11</i></li>
+<li>[2006] Sinfonías de los Bosques<i>9</i></li>
+<li>[2010] Maryam<i>16</i></li>
+<li>[2012] Vida<i>14</i></li>
+<li class="subi">[2015] Sueños</li>
+<li>CD1 - Las Caricias Del Alma<i>13</i></li>
+<li>CD2 - La Partitura Secreta<i>14</i></li>
+<li>[2017] La Magia de la Luna<i>12</i></li>
+<li>[2020] Música<i>15</i></li>
+</ul></section><h3 id="Scorpions[Alemania]"> Scorpions [Alemania]</h3><section><ul><li class="subi">[1995] Deadly Sting</li>
+<li>CD1<i>16</i></li>
+<li>CD2<i>17</i></li>
+</ul></section><h3 id="Shadow[Japón]"> Shadow [Japón]</h3><section><ul><li>[2008] Forever Chaos<i>11</i></li>
+</ul></section><h3 id="Shylmagoghnar[PaísesBajos]"> Shylmagoghnar [Países Bajos]</h3><section><ul><li>[2014] Emergence<i>9</i></li>
+<li>[2018] Transience<i>8</i></li>
+</ul></section><h3 id="Ska-P[España]"> Ska-P [España]</h3><section><ul><li>[1994] Ska-P<i>9</i></li>
+<li>[1996] Vals del Obrero<i>12</i></li>
+</ul><ul>
+<li>[1998] Eurosis<i>12</i></li>
+<li>[2000] Planeta Eskoria<i>14</i></li>
+<li>[2002] Que Corra La Voz<i>12</i></li>
+<li>[2008] Lagrimas Y Gozos<i>13</i></li>
+<li>[2013] 99%<i>15</i></li>
+<li>[2018] Game Over<i>12</i></li>
+</ul></section><h3 id="SkidRow[EEUU]"> Skid Row [EEUU]</h3><section><ul><li>[1989] Skid Row<i>11</i></li>
+</ul></section><h3 id="Skyfire[Suecia]"> Skyfire [Suecia]</h3><section><ul><li>[2001] Timeless Departure<i>9</i></li>
+<li>[2003] Haunted (EP)<i>6</i></li>
+</ul><ul>
+<li>[2003] Mind Revolution<i>10</i></li>
+<li>[2004] Spectral<i>9</i></li>
+<li>[2009] Esoteric<i>11</i></li>
+<li>[2009] Fractal (EP)<i>4</i></li>
+<li>[2017] Liberation in Death<i>4</i></li>
+</ul></section><h3 id="Skylark[Italia]"> Skylark [Italia]</h3><section><ul><li>[2004] Wings<i>8</i></li>
+</ul></section><h3 id="Slipknot[EEUU]"> Slipknot [EEUU]</h3><section><ul><li class="subi">[2012] Antennas to hell</li>
+<li>CD1<i>18</i></li>
+<li>CD2<i>17</i></li>
+</ul></section><h3 id="Sôber[España]"> Sôber [España]</h3><section><ul><li>[1997] Torcidos<i>10</i></li>
+<li>[1999] Morfología<i>11</i></li>
+<li>[2001] Synthesis<i>11</i></li>
+<li>[2002] Paradysso<i>11</i></li>
+<li>[2004] Reddo<i>10</i></li>
+<li>[2010] De Aquí a la Eternidad<i>17</i></li>
+<li>[2011] Superbia<i>12</i></li>
+<li>[2014] Letargo<i>12</i></li>
+<li>[2021] ELEGÍA<i>11</i></li>
+</ul></section><h3 id="Solerrain[Rusia]"> Solerrain [Rusia]</h3><section><ul></ul><ul>
+<li>[2007] Album Demo<i>3</i></li>
+<li>[2011] Fighting The Illusions (Japanese Edition)<i>1</i></li>
+</ul></section><h3 id="SonataArctica[Finlandia]"> Sonata Arctica [Finlandia]</h3><section><ul><li>[1999] Ecliptica<i>10</i></li>
+<li>[2000] Sucessor<i>7</i></li>
+<li>[2001] Silence<i>13</i></li>
+<li>[2003] Winterheart's Guild<i>10</i></li>
+<li>[2004] Reckoning Night<i>11</i></li>
+<li>[2006] The End of this Chapter (Recop JP)<i>17</i></li>
+<li>[2007] Unia<i>12</i></li>
+<li>[2008] Deliverance (Recop)<i>8</i></li>
+</ul><ul>
+<li>[2016] The Ninth Hour<i>11</i></li>
+<li>[2019] Talviyö<i>12</i></li>
+</ul></section><h3 id="Stormlord[Italia]"> Stormlord [Italia]</h3><section><ul><li>[1999] Supreme Art of War<i>8</i></li>
+<li>[2001] At The Gates Of Utopia<i>9</i></li>
+<li>[2001] The curse of Medusa (EP)<i>7</i></li>
+<li>[2004] The Gorgon Cult<i>11</i></li>
+</ul></section><h3 id="Stormwarrior[Alemania]"> Stormwarrior [Alemania]</h3><section><ul><li>[2001] Spikes and Leather (EP)<i>3</i></li>
+<li>[2002] Stormwarrior (Limited Edition)<i>12</i></li>
+<li>[2003] Heavy Metal Fire (EP)<i>8</i></li>
+<li class="subi">[2004] Northern Rage</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>4</i></li>
+<li>[2006] At Foreign Shores (Live)<i>11</i></li>
+<li>[2008] Heading Northe<i>11</i></li>
+<li>[2011] Heathen Warrior<i>12</i></li>
+<li>[2011] Wolfsnaechte (EP)<i>4</i></li>
+<li>[2014] Thunder & Steele (Japanese Edition)<i>11</i></li>
+</ul></section><h3 id="Stratovarius[Finlandia]"> Stratovarius [Finlandia]</h3><section><ul><li>[1989] Fright Night<i>9</i></li>
+<li>[1992] Twilight Time<i>8</i></li>
+</ul><ul>
+<li>[1994] Dreamspace<i>14</i></li>
+<li>[1995] Fourth Dimension<i>11</i></li>
+<li>[1996] Episode<i>12</i></li>
+<li>[1997] Visions<i>10</i></li>
+<li>[1998] Destiny<i>10</i></li>
+<li class="subi">[1998] Visions Of Europe (Live)</li>
+<li>Disc 01<i>9</i></li>
+<li>Disc 02<i>7</i></li>
+<li>[2000] Infinite<i>9</i></li>
+<li>[2001] Elements, Pt. 1<i>9</i></li>
+<li>[2001] Intermission<i>14</i></li>
+</ul><ul>
+<li>[2003] Elements, Pt. 2<i>9</i></li>
+<li>[2005] Stratovarius<i>9</i></li>
+<li>[2008] Revolution Renaissance<i>10</i></li>
+<li>[2009] Polaris<i>11</i></li>
+<li>[2011] Elysium<i>9</i></li>
+<li>[2013] Nemesis<i>11</i></li>
+<li>[2015] Eternal<i>10</i></li>
+<li>[2018] Enigma Intermission 2<i>16</i></li>
+<li class="subi">[2022] Survive</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>13</i></li>
+</ul></section><h3 id="Stravaganzza[España]"> Stravaganzza [España]</h3><section><ul><li>[2004] Primer Acto<i>11</i></li>
+<li>[2005] Sentimientos (Segundo Acto)<i>11</i></li>
+<li>[2007] Requiem (Tercer Acto)<i>13</i></li>
+<li>[2010] Raices (Cuarto Acto)<i>13</i></li>
+</ul></section><h3 id="StreamOfPassion[PaísesBajos]"> Stream Of Passion [Países Bajos]</h3><section><ul><li>[2014] A War Of Our Own<i>13</i></li>
+</ul></section><h3 id="SunlessRise[Rusia]"> Sunless Rise [Rusia]</h3><section><ul><li>[2015] Unrevealed<i>10</i></li>
+<li>[2019] Ultimacy (youtube)<i>12</i></li>
+</ul></section><h3 id="SystemofaDown[EEUU]"> System of a Down [EEUU]</h3><section><ul></ul><ul>
+<li>[1998] System Of A Down<i>13</i></li>
+<li>[2001] Toxicity<i>14</i></li>
+<li>[2002] Steal This Album<i>16</i></li>
+<li>[2002] Toxicity II<i>15</i></li>
+<li>[2005] Hypnotize<i>12</i></li>
+<li>[2005] Mezmerize<i>11</i></li>
+</ul></section><h3 id="Temperance[Italia]"> Temperance [Italia]</h3><section><ul><li>[2020] Viridian<i>12</i></li>
+<li>[2021] Diamanti<i>16</i></li>
+</ul></section><h3 id="TheHaloEffect[Suecia]"> The Halo Effect [Suecia]</h3><section><ul><li>[2022] Days of the Lost<i>10</i></li>
+</ul></section><h3 id="TheMisfits[EEUU]"> The Misfits [EEUU]</h3><section><ul><li>[0000] The Misfits (Recop)<i>31</i></li>
+</ul></section><h3 id="TheOffspring[EEUU]"> The Offspring [EEUU]</h3><section><ul><li>[2010] Happy Hour!<i>19</i></li>
+<li>[2011] Greatest Hits (Malasia Edit)<i>22</i></li>
+<li>[2021] Let the Bad Times Roll (Japan Edition)<i>14</i></li>
+</ul></section><h3 id="TheRollingStones[ReinoUnido]"> The Rolling Stones [Reino Unido]</h3><section><ul><li class="subi">[2008] Greatest Hits</li>
+<li>CD1<i>22</i></li>
+<li>CD2<i>19</i></li>
+<li>CD3<i>19</i></li>
+</ul></section><h3 id="TierraSanta[España]"> Tierra Santa [España]</h3><section><ul><li>[1997] Medieval<i>8</i></li>
+<li>[1999] Legendario<i>10</i></li>
+<li>[2000] Tierras de Leyenda<i>11</i></li>
+<li>[2001] Sangre de Reyes<i>11</i></li>
+<li>[2003] Indomable<i>10</i></li>
+<li class="subi">[2003] Las mil y una noches (Live)</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+<li>[2004] Apocalipsis<i>11</i></li>
+<li>[2006] Mejor morir en pie<i>11</i></li>
+<li class="subi">[2007] Grandes éxitos</li>
+<li>CD1<i>18</i></li>
+<li>CD2<i>17</i></li>
+<li>[2010] Caminos De Fuego<i>10</i></li>
+<li>[2013] Mi Nombre Sera Leyenda<i>11</i></li>
+<li>[2017] Quinto Elemento<i>10</i></li>
+<li>[2022] Destino<i>11</i></li>
+</ul></section><h3 id="Tool[EEUU]"> Tool [EEUU]</h3><section><ul><li>[2001] Lateralus<i>13</i></li>
+<li>[2019] Fear Inoculum<i>7</i></li>
+</ul></section><h3 id="Tracedawn[Alemania]"> Tracedawn [Alemania]</h3><section><ul></ul><ul>
+<li>[2008] Tracedawn (youtube)<i>1</i></li>
+</ul></section><h3 id="Trivium[EEUU]"> Trivium [EEUU]</h3><section><ul><li>[2013] Vengeance Falls (Delux)<i>13</i></li>
+<li>[2015] Silence In The Snow<i>11</i></li>
+<li>[2020] What The Dead Men Say<i>10</i></li>
+<li>[2021] In the Court of the Dragon<i>10</i></li>
+</ul></section><h3 id="Turisas[Finlandia]"> Turisas [Finlandia]</h3><section><ul><li>[2004] Battle metal<i>12</i></li>
+<li>[2007] The Varangian Way<i>11</i></li>
+<li>[2011] Stand Up And Fight (Limited Edition)<i>11</i></li>
+<li>[2013] Turisas2013<i>9</i></li>
+</ul></section><h3 id="TwistedSister[EEUU]"> Twisted Sister [EEUU]</h3><section><ul><li>[1990] Big hits and nasty cuts<i>15</i></li>
+</ul></section><h3 id="VanHalen[EEUU]"> Van Halen [EEUU]</h3><section><ul><li>[1996] Best of Volume 1<i>17</i></li>
+</ul></section><h3 id="Vogelfrey[Alemania]"> Vogelfrey [Alemania]</h3><section><ul><li>[2010] Wiegenfest<i>11</i></li>
+<li>[2012] Zwölf Schritte zum Strick<i>12</i></li>
+</ul></section><h3 id="Warcry[España]"> Warcry [España]</h3><section><ul><li>[2002] El sello de los tiempos<i>11</i></li>
+<li>[2002] Warcry<i>12</i></li>
+<li>[2004] Alea Jacta Est<i>10</i></li>
+</ul><ul>
+<li>[2005] Donde esta la luz<i>9</i></li>
+<li>[2006] La Quinta Esencia<i>11</i></li>
+</ul></section><h3 id="Warmen[Finlandia]"> Warmen [Finlandia]</h3><section><ul><li>[2000] Unknown Soldier<i>11</i></li>
+<li>[2005] Accept the fact<i>9</i></li>
+</ul></section><h3 id="WindRose[Italia]"> Wind Rose [Italia]</h3><section><ul><li>[2019] Wintersaga<i>9</i></li>
+<li class="subi">[2022] Warfront</li>
+<li>CD1<i>10</i></li>
+<li>CD2<i>10</i></li>
+</ul></section><h3 id="Windir[Noruega]"> Windir [Noruega]</h3><section><ul></ul><ul>
+<li>[2001] 1184 (youtube)<i>1</i></li>
+</ul></section><h3 id="Windrow[Italia]"> Windrow [Italia]</h3><section><ul><li>[2010] Dangerous Game<i>10</i></li>
+</ul></section><h3 id="Wintersun[Finlandia]"> Wintersun [Finlandia]</h3><section><ul><li>[2004] Wintersun<i>8</i></li>
+<li>[2012] Time I<i>5</i></li>
+<li class="subi">[2017] The Forest Seasons</li>
+<li>CD1<i>5</i></li>
+<li>CD2<i>5</i></li>
+<li>CD3<i>7</i></li>
+</ul></section><h3 id="WithinTemptation[PaísesBajos]"> Within Temptation [Países Bajos]</h3><section><ul></ul><ul>
+<li>[1997] Enter<i>8</i></li>
+<li>[2000] Mother Earth<i>10</i></li>
+<li>[2004] The Silent Force<i>13</i></li>
+<li>[2007] The Heart Of Everything<i>11</i></li>
+<li>[2011] The Unforgiving<i>12</i></li>
+<li>[2013] The Q Music Sessions (Recop)<i>11</i></li>
+<li>[2014] Hydra<i>10</i></li>
+<li>[2019] Resist<i>10</i></li>
+</ul></section><h3 id="Wolfchant[Alemania]"> Wolfchant [Alemania]</h3><section><ul><li>[2007] A Pagan Storm<i>11</i></li>
+<li>[2017] Bloodwinter<i>11</i></li>
+</ul><ul>
+<li>[2021] Omega Bestia<i>14</i></li>
+</ul></section><h3 id="Wolfheart[Finlandia]"> Wolfheart [Finlandia]</h3><section><ul><li>[2013] Winterborn<i>11</i></li>
+<li>[2015] Shadow World<i>8</i></li>
+<li>[2017] Tyhjyys<i>8</i></li>
+<li>[2020] Wolves of Karelia<i>8</i></li>
+<li>[2022] King of the North<i>9</i></li>
+</ul></section><h3 id="XJapan[Japón]"> X Japan [Japón]</h3><section><ul><li class="subi">[2014] The World</li>
+<li>CD1<i>11</i></li>
+<li>CD2<i>1</i></li>
+	</body>
+</html>

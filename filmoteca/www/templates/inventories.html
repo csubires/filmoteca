@@ -1,0 +1,68 @@
+{% extends 'index.html' %}
+
+{% block content%}
+<details class="maintenance-list">
+    <summary class="btn btn-primary">Listados</summary>
+    <div>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Libros.html"><strong>Libros</strong><p>Colección de libros en PDF</p></a>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Miscellaneous.html"><strong>Miscellaneous</strong><p>Canciones sueltas</p></a>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Música.html"><strong>Música</strong><p>Discografías de artístas</p></a>        
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Películas.html"><strong>Películas</strong><p>Películas en el disco interno</p></a>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Películas EXTRA.html"><strong>Películas EXTRA</strong><p>Películas de peor calidad</p></a>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Series.html"><strong>Series</strong><p>Listado de series por categorías</p></a>
+        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Series EXTRA.html"><strong>Series EXTRA</strong><p>Listado de series peor valoradas</p></a>   
+    </div>
+</details>
+
+{% if response[0] %}
+<h3 class="head-result">Películas propuestas para descargar</h3>
+<div class="head-result">
+    {% for data in response[0] %}
+    <a class="btn btn-primary-outline" href="/menu/ranking/{{ data[0] }}"><strong>{{ data[0] }} ({{ data[1] }})</strong></a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<section class="item-list"> 
+    {% if response[1] %}
+    
+        {#
+            0 id_rating
+            1 src_img
+            2 url
+            3 title
+            4 year
+            5 rating
+            6 is_present
+        #}
+
+        <table>
+            <caption>Películas de {{response[1][0][4]}}</caption>
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Rating</th>
+                <th>Presente</th>
+                <th>Opción</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in response[1] %}
+            <tr id="rating-tr-{{ data[0] }}">
+                <td><a target="_blank" href="https://www.filmaffinity.com{{ data[2] }}">{{ data[3] }}</a></td>
+                <td><strong>{{ data[5] }}</strong></td>
+                <td>{{ "SÍ" if data[6] else "NO" }} </td>
+                <td>
+                    {% if not data[6] %}
+                    <button class="btn btn-danger-outline" data-id-rating="{{ data[0] }}" data-csrf-token-form="{{ session['csrf_token_form'] }}"
+                    data-action="set-present">PRESENTE</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</section>
+    {% endif %}
+
+{% endblock %}

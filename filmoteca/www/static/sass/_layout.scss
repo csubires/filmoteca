@@ -1,0 +1,342 @@
+@use "constants" as c;
+@use "mixins";
+
+// Tema claro
+.theme {
+	--color-primary:#f8f9fa;
+	--color-secondary: #e9ecef;
+	--color-text: #000;
+
+	// Tema oscuro
+	&-dark {
+		--color-primary: #212529;
+		--color-secondary: #343a40;
+		--color-text: #e9ecef;
+	}
+}
+
+html {
+	scroll-behavior: smooth;
+	scrollbar-color: lighten(c.$bs-gray-900, 30%), c.$bs-gray-900;	
+}
+
+body {
+	background-color: var(--color-primary);
+	color: var(--color-text);
+	font-family: c.$bs-body-font-family;
+	font-size: c.$bs-body-font-size;
+	font-weight: c.$bs-body-font-weight;
+	line-height: c.$bs-body-line-height;
+	margin: 0;
+	padding: 0;
+}
+
+.noscript-warning {
+    background-color: #f5c2c7;
+    color: #842029;
+    text-align: center;
+    margin: 5rem 10rem;
+    padding: 1rem 1rem;
+}
+
+//  -----------------------------
+//  CABECERA CON MENÚS Y BUSCADOR
+//  -----------------------------
+
+header {
+	border-bottom: 1px solid c.$bs-gray-700;
+	box-shadow: 0 4px 2px -2px c.$bs-gray-500;
+	padding: 0.7rem;
+	background: linear-gradient(90deg, rgba(215, 205, 205, 0.16) 26%, rgba(160, 160, 202, 0.12) 73%);
+
+	nav {
+		background-color: transparent;
+		display: flex;
+		justify-content: space-around;
+
+		// Formulario de busqueda
+		form {
+			background-color: white;
+			border-radius: 5px;
+			border: 1px solid gray;
+			display: flex;
+			font-size: 1.5rem;
+			height: 100%;
+			justify-content: center;
+			z-index: 2;
+			&:hover {
+				scale: 1.4;
+			}
+
+			#text-search {
+				font-family: c.$bs-font-sans-serif;
+				padding: 0.3rem 0.5rem;
+				border: none;
+				outline: none;
+			}
+
+			#btn-search {
+				color: white;
+				letter-spacing: 2px;
+				padding: 0.5rem 0.5rem;
+				margin: 0.1rem;
+				border-radius: 5px;
+				&:hover {
+					background-color: c.$bs-dark;
+				}
+			}
+
+			#btn-clear {
+				background-size: 1.5rem;
+				padding: 0 1.5rem;
+				cursor:pointer;
+				&:hover {
+					background-color: c.$bs-gray-300;
+					border-radius: 50%;
+					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(93%) contrast(83%);
+				}
+			}
+		}	// form
+
+		// Menú de opciones
+		.menu {
+			display: inline-block;
+			font-size: 1rem;
+			font-weight: 500;
+			height: 100%;
+			line-height: 2rem;
+			position: relative;
+			text-align: center;
+			text-transform: capitalize;
+			align-self: center;
+			z-index: 5;
+			&:hover .container-left, 
+			&:hover .container-right {
+				display: block;    
+			}
+
+			i {
+				background-size: 2.5rem;
+				padding: 1rem 1.5rem;
+				cursor:pointer;
+				&:hover {
+					border-radius: 50%;
+					background-color: c.$bs-gray-300;
+					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(10%) contrast(83%);
+				}				
+			}
+
+			.container-left, 
+			.container-right {
+				background-color: c.$bs-gray-100;
+				border: 1px solid c.$bs-gray-500;  
+				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+				display: none;
+				margin-top: 0.5rem;
+				position: absolute;
+				width: 15rem;
+				z-index: 3;
+
+				.mark-opt {
+					@include mixins.make-alert(#084298, #cfe2ff, #b6d4fe);
+				}
+
+				a {
+					color: c.$bs-gray-800;
+					padding: 0.25rem 0rem;
+					text-decoration: none;
+					display: block;
+					&:hover {
+						background-color: c.$bs-gray-400;
+						border-left: solid 5px c.$bs-gray-600;
+						padding: 1rem;
+						font-size: 1.2rem;
+					}
+				}
+			}
+
+			.container-left {
+				padding-bottom: 1rem;
+			}
+
+			.container-right {
+				right: 0;
+				overflow-y: scroll;
+				max-height: 80vh;
+			}
+
+		}	// .menu
+	}	// nav
+}	// header
+
+
+//  -------------
+//  CAJA DE LOGIN
+//  -------------
+
+#form-login {
+	background-color: c.$bs-gray-100;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 2rem auto 2rem auto;
+	padding: 1.5rem 2.5rem 1rem 1.5rem;
+    border: 1px solid c.$bs-gray-200;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    width: 30vw;
+}
+
+//  ------------------------------
+//  AGRUPAR INPUT EN UN FORMULARIO
+//  ------------------------------
+
+.form-group {
+	position: relative;
+	
+	.form-control {
+		font-family: c.$bs-font-sans-serif;
+		height: calc(3.5rem + 2px);
+		width: 100%;
+		padding: 0.8rem 0.7rem 0rem 0.7rem;
+		font-size: 1.5rem;
+		border: 1px solid #ced4da;
+		border-radius: .375rem;
+		transition: border-color 0.5s ease-out;
+		
+	}
+
+	&:last-child {
+		display: flex;
+		flex-direction: row-reverse;
+	}	
+
+	input[type=checkbox] {
+		position: absolute;
+		left: 43%;
+		top: 27%;
+	}
+
+	input[type=password] {
+		font-size: 2rem;
+	}
+
+	label {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 1rem 0.75rem;
+		pointer-events: none;
+		transform-origin: 0 0;
+		transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+		opacity: 0.65;
+		transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);		
+	}
+}
+
+//  -------------
+//  MEDIA QUERIES
+//  -------------
+
+// Pantalla smartphone
+@media (max-width: 360px) {
+
+	nav {
+		form {
+			scale: .4;
+		}
+	}
+
+
+	section {
+		margin: 0;
+		padding: 0;
+		min-width: 100%;
+		
+		figure {
+			padding: 0;
+			min-width: calc(100vw - 6rem);
+			img {
+				min-width: calc(100vw);
+			}
+		}
+	}
+
+	figure {
+		padding: 0;
+	}
+}
+
+// Pantalla tableta
+@media screen and (max-width: 800px) {
+	nav {
+		flex-direction: column;
+		gap: 1rem;
+
+		.menu {
+			text-align: left;
+			width: 10% !important;
+			
+			.container-left,
+			.container-right {
+				left: 0 !important;
+				z-index: 99 !important;
+			}
+		}
+
+		form {
+			z-index: 2;
+			scale: .6;
+			justify-content: space-between;
+			align-self: center;
+			&:hover {
+				scale: 1 !important;
+			}
+		}
+	}
+
+	#form-login {
+		width: 80vw;
+	}
+
+	#form-advance-search {
+		div {
+			width: 100%;
+		}
+	}
+
+	#form-editor {
+		div {
+			width: inherit !important;
+		}
+	}
+
+	.card-subgenre a img {
+		width: 40vw;
+	}
+
+	section {
+		margin: 0;
+		padding: 0;
+		min-width: calc(100vw - 2rem);
+		
+		figure {
+			padding: 0;
+			width: 100%;
+			img {
+				min-width: calc(100vw - 2rem);
+			}
+		}
+	}
+}
+
+// Pantalla por defecto 800-1000
+
+// Pantalla monitor
+@media screen and (min-width: 1000px) {
+	// TODO
+	/* 
+	menu fijos a los lados
+	container al 80%
+	*/
+}

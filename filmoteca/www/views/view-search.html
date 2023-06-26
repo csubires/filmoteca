@@ -1,0 +1,308 @@
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <link rel="shortcut icon" href="../static/img/favicon.png">
+        <meta charset="utf-8"/>
+        
+        <title>Películas Encontradas</title>
+        
+        <meta name="title" content="Gestor de Películas">
+        <meta name="description" content="Web para gestionar las películas">     
+        <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/flags.css">
+        <script type="text/javascript" src="/static/js/main.js"></script>
+    </head>
+
+    <body class="theme-dark">
+       
+
+        <!-- Bloque principal -->
+        <section>
+            
+
+<div class="container-advance-search">
+    <details>
+        <summary class="btn btn-primary">Busqueda Avanzada</summary>    
+
+        <form id="form-advance-search" action="/auth/advanced" method="POST">
+
+            <input type="hidden" name="csrf_token_form" value="GljgZfzQQf5jkMK8JKvCmKU1rd5GKKq5n8v7TUe0_s0">
+
+            <div>
+                <label for="id_movie"><span>Por ID</span>
+                    <input type="number" id="id_movie" class="noborder" name="id_movie" size="8" minlength="1" maxlength="8">
+                </label>
+            </div>
+
+            <div>
+                <label for="quality"><span>Por calidad</span>
+                    <select id="quality" name="quality">
+                        <option value="">n/a</option>                    
+                        <option value="HDRip">HDRip</option>                    
+                        <option value="DVDRip">DVDRip</option>                    
+                        <option value="BRRip">BRRip</option>                    
+                        <option value="None">None</option>                    
+                        <option value="BR-SCR">BR-SCR</option>                    
+                        <option value="BrRip">BrRip</option>                    
+                        <option value="BDRip">BDRip</option>                    
+                        <option value="HDTV-SCR">HDTV-SCR</option>                    
+                        <option value="DVDrip">DVDrip</option>                    
+                        <option value="HDTV-SCS">HDTV-SCS</option>                    
+                        <option value="microHD">microHD</option>    
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="extension"><span>Por Extensión</span>
+                    <select id="extension" name="extension">                
+                        <option value="">n/a</option>                
+                        <option value="avi">avi</option>                
+                        <option value="mp4">mp4</option>                
+                        <option value="mkv">mkv</option>                
+                        <option value="mpg">mpg</option>                
+                        <option value="divx">divx</option>                
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="resolution"><span>Por Resolución</span>
+                    <select id="resolution" name="resolution">                     
+                        <option value="">n/a</option>                    
+                        <option value="1280x528">1280x528</option>                    
+                        <option value="1280x532">1280x532</option>                    
+                        <option value="1280x536">1280x536</option>                    
+                        <option value="1280x544">1280x544</option>                    
+                        <option value="1280x690">1280x690</option>                    
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="fps"><span>Por FPS</span>
+                    <select id="fps" name="fps">                      
+                        <option value="">n/a</option>                    
+                        <option value="29.97">29.97</option>                    
+                        <option value="26.07">26.07</option>                    
+                        <option value="24.83">24.83</option>                    
+                        <option value="24.39">24.39</option>                    
+                        <option value="23.98">23.98</option>                    
+                        <option value="23.97">23.97</option>                    
+                        <option value="23.0">23.0</option>                    
+                        <option value="None">None</option>                    
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="id_country"><span>Por País</span>
+                    <select id="id_country" name="id_country">                     
+                        <option value="">n/a</option>                    
+                        <option value="1" style="padding: 0 1rem;background-size: 1rem;background-image:url('icons/flags/us.svg');">Estados Unidos (us)</option>                    
+                        <option value="3">&#127462;&#127479; Canadá (ca)</option>                    
+                        <option value="4">Francia (fr)</option>                    
+                        <option value="5">&#127465;&#127472;Reino Unido (gb)</option>                    
+                        <option value="6">China (cn)</option>                    
+                        <option value="7">Hong Kong (hk)</option>                    
+                        <option value="8">Indonesia (id)</option>                    
+                        <option value="9">Corea del Sur (kr)</option>                    
+                        <option value="10">Japón (jp)</option> 
+                    </select>
+                </label>
+            </div>
+
+
+            <div>
+                <label><span>Por Calificación (0/10)</span>
+                    <label class="row" for="min_rating"><span>Mínimo</span>
+                        <input type="number" class="noborder" id=v1 value="" disabled>
+                        <input type="range" id="v1r" name="min_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v1.value=value">   
+                    </label>
+                    <label class="row" for="max_rating"><span>Máximo</span>
+                        <input type="number" class="noborder" id=v2 value="" disabled>
+                        <input type="range" name="max_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v2.value=value">
+                    </label>
+                </label>
+            </div>
+            
+            <div>
+                <label><span>Por fecha de Creación</span>
+          
+                        <label class="row" for="min_date"><span>Fecha Inicio</span>
+                            <input type="date" name="min_date" min="1800-01-01" max="2900-01-01">  
+                        </label>      
+                        <label class="row" for="max_date"><span>Fecha Fin</span>
+                            <input type="date" name="max_date" min="1800-01-01" max="2900-01-01">
+                        </label>
+            
+                </label>
+            </div>
+
+            <!-- Line 3 -->
+            <div>
+                <button type="submit" class="btn btn-primary">BUSCAR</button>
+            </div>
+        </form>
+        
+    </details>
+</div>
+    
+    <section class="item-list">
+
+        <!-- CARTA FILM -->
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" style="display: none" data-id-film="1197"></div>
+    <div class="card-info-film" style="display: none" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+        <!-- CARTA REVERSA -->    
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" data-id-film="1197"></div>
+
+    <div class="card-info-film" id="card-info-film-212">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#my-alert" aria-label="Close"></button>
+        <strong>Overlord asdasd a sdasd as</strong>
+
+        <img src="img/image.jpg">
+    
+        <a target="_blank" href="https://www.filmaffinity.com/es/film183164.html">
+            <span><i class="icon-file"></i>avi</span>
+            <span><i class="icon-film"></i>BRRip</span>
+            <span><i class="icon-database"></i>HDD 0</span>
+            <span><i class="icon-hdd"></i>1.96 GB</span>
+        </a>
+
+        <div><img class="flag" src="css/icons/flags/us.svg">Estados Unidos</div>
+
+        <div class="admin-tool">
+            <button class="btn btn-danger-outline" data-action="delete-film" data-id-film="212" data-title-film="Overlord" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">ELIMINAR</button>
+            <button class="btn btn-primary" data-action="edit-film" data-id-film="212" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">EDITAR</button>
+        </div>
+
+    </div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+
+            
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" data-id-film="1197"></div>
+    <div class="card-info-film" style="z-index: 1; background-color:red" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" style="z-index: 1; background-color:green" data-id-film="1197"></div>
+    <div class="card-info-film" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" data-id-film="1197"></div>
+    <div class="card-info-film" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" data-id-film="1197"></div>
+    <div class="card-info-film" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+<div class="card-film" id=2021>
+    <div class="card-click-film" data-id-film="1197"></div>
+    <div class="card-info-film" id="card-info-film-1197"></div>
+
+    <img src="img/image.jpg" loading="lazy">
+    <strong>Una sombra en mi ojo</strong>
+    
+    <div>
+        <div>6.7<i class="icon-star"></i></div>
+        <div><i class="icon-calendar"></i>2021</div>
+        <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+    </div>
+</div>
+
+
+            <div id="message-container">
+    
+        
+             
+</div>  
+        </section>
+
+        <noscript>
+            <div class="noscript-warning">
+                Javascript está deshabilitado en su navegador web.<br>
+                Por favor, para ver correctamente este sitio, <b><i>habilite javascript</i></b>.
+            </div>
+        </noscript>
+        <footer id="footer-bottom"></footer>
+    </body>
+</html>

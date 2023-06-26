@@ -1,0 +1,90 @@
+/* 	MIXINS
+	Funciones y metodos
+*/
+
+// Crear contenedor
+@mixin make-container($padding, $margin, $background) {
+	background-color: $background;
+    width: calc(100vw - $margin * 3); 
+    max-width: calc(100vw - $margin * 3);
+	margin: $margin;
+	padding: $padding;
+    overflow-y: scroll;
+    gap: $padding;
+    border-radius: 5px;
+}
+
+// Crear botones
+@mixin make-button($color, $background) {
+    color: $color;
+	background-color: $background;
+	border-color: $background;
+	&:hover,
+	&:active {
+		background-color: darken($background, 10%);
+		border-color:  darken($background, 5%);
+	}
+
+	&:focus {
+		box-shadow: rgb( 49, 132, 253);
+	}
+
+	&-outline {
+		color: $background;
+		border-color: $background;
+		&:hover,
+		&:active {
+			color: $color;
+			background-color: $background;
+			border-color: $background;
+		}
+	}
+
+	&-link {
+		color: $background;
+		font-weight: bolder;
+		background-color: transparent;
+		border-color: transparent;
+		box-shadow: none;
+		text-decoration: underline;
+		&:hover,
+		&:active {
+			color: darken($background, 90%);
+			border-color: transparent;
+		}
+	}
+}
+
+// Crear todos los botones
+@mixin make-all-button($buttons) {
+	@each $name, $value in $buttons {
+		.btn-#{$name} {
+			@extend .btn;
+			@include make-button(map-get($value, color), map-get($value, bkg));
+		} 
+	}
+}
+
+// Crear un popup de alerta
+@mixin make-alert($color, $background, $border) {
+    color:$color;
+    background-color: $background;
+    border-color: $border;
+	border-left: 4px solid;
+    .alert-link {
+        color: $color;
+		font-weight: bolder;
+		&:hover {
+			color: lighten($color, 20%);
+		}
+    }
+}
+
+// Crear iconos
+@mixin make-icon($icons) {
+	@each $name in $icons {
+		.icon-#{$name} {
+			background-image:url('icons/#{$name}.svg');
+		}
+	}
+}

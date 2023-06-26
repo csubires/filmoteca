@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <link rel="shortcut icon" href="../static/img/favicon.png">
+        <meta charset="utf-8"/>
+        
+        <title>Mantenimiento</title>
+        
+        <meta name="title" content="Gestor de Películas">
+        <meta name="description" content="Web para gestionar las películas">     
+        <link rel="stylesheet" href="../static/css/main.css" />
+        <script type="text/javascript" src="/static/js/main.js"></script>
+    </head>
+
+    <body>
+        
+        <!-- Bloque principal -->
+
+    <details class="maintenance-list">
+        <summary class="btn btn-primary">Opciones de mantenimiento</summary>
+        <div>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/repeated_movies"><strong>Repetidas</strong><p>Películas repetidas</p></a>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/missing_movies_hdd0"><strong>Desaparecidas HDD 0 (Interno)</strong><p>Películas que ya no se encuentran en el HDD 0 (Interno)</p></a>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/missing_movies_hdd1"><strong>Desaparecidas HDD 1 (Externo)</strong><p>Películas que ya no se encuentran en el HDD 1 (Externo)</p></a>        
+            <a class="btn btn-primary-outline" href="/auth/maintenance/incomplete_movie_info"><strong>Incompletas</strong><p>Películas a las cuales les falta algún dato</p></a>
+            <a class="btn btn-warning-outline" href="/auth/maintenance/censured_movies"><strong>Censuradas</strong><p>Películas marcadas como censuradas</p></a>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/devalued_movies"><strong>Peor Valoradas </strong><p>Películas con peor valoración (&#60;6.0) en el HDD 0 (Interno)</p></a>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/overevalued_movies"><strong>Mejor Valoradas</strong><p>Películas con mejor valoración (&#62;6.7) en el HDD 1 (Externo)</p></a>
+            <a class="btn btn-primary-outline" href="/auth/maintenance/corrupt_movies"><strong>Corrompidas</strong><p>Películas con archivo corrupto</p></a>        
+            <a class="btn btn-primary-outline" href="/auth/maintenance/uncoded_country"><strong>País desconocido</strong><p>Países sin código asociado</p></a>
+        </div>
+    </details>
+    
+    <h3 class="head-result">26 Repetidas</h3>
+    
+    
+    <div class="head-result">
+    <h3> País desconocido</h3>
+        <a class="btn btn-primary-outline" target="_blank" href="https://country-code.cl/es/">Listado de códigos</a>
+    </div>
+    <section class="item-list">
+        <!-- Listado de países -->            
+        <table>
+            <caption>Listado de países</caption>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Flag</th><th>Nombre</th><th>Código</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>3</td>
+                    <td><img class="flag" src="css/icons/flags/us.svg"></td>
+                    <td>Estados Unidos</td>
+                    <td><input type="text" name="code" placeholder="eu" value="us"></td>
+                    <td><button class="btn btn-primary" id="btnSave">Guardar</button></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><img class="flag" src="css/icons/flags/us.svg"></td>
+                    <td>Estados Unidos</td>
+                    <td><input type="text" name="code" placeholder="eu" value="us"></td>
+                    <td><button class="btn btn-primary" id="btnSave">Guardar</button></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><img class="flag" src="css/icons/flags/us.svg"></td>
+                    <td>Estados Unidos</td>
+                    <td><input type="text" name="code" placeholder="eu" value="us"></td>
+                    <td><button class="btn btn-primary" id="btnSave">Guardar</button></td>
+                </tr>                                
+            </tbody>
+        </table>
+    </section>
+
+    <div class="head-result">
+        <h3>119 Peor Valoradas (&lt;6.0)</h3>
+        <details>
+            <summary class="btn btn-primary-outline">Listado limpio</summary>
+            <ul>
+                
+                    <li>0.0 <strong> Bob&#39;s Burgers - La película</strong><i> Animación/Bob&#39;s Burgers - La película [BRRip] (2022).avi</i></li>
+                
+                    <li>0.0 <strong> El monstruo marino</strong><i> Animación/El monstruo marino [BRRip] (2022).avi</i></li>
+                
+                    <li>0.0 <strong> El hombre del norte</strong><i> Aventuras/El hombre del norte [BRRip] (2022).avi</i></li>
+                
+                    <li>0.0 <strong> Predator - La presa</strong><i> Aventuras/Predator - La presa [BRRip] (2022).avi</i></li>
+                
+                    <li>0.0 <strong> Adiós, señor Haffmann</strong><i> Drama/Adiós, señor Haffmann [BRRip] (2021).avi</i></li>
+                
+                    <li>0.0 <strong> Downton Abbey - Una nueva era</strong><i> Drama/Downton Abbey - Una nueva era [BRRip] (2022).avi</i></li>
+                
+                    <li>0.0 <strong> Elvis</strong><i> Drama/Elvis [BRRip] (2022).avi</i></li>    
+                </ul>
+            </details>
+        </div>    
+
+
+        
+<section class="item-list item-list-two-columns">
+
+                <!-- CARTA FILM -->
+        
+        <div class="card-film" id=2021>
+            <div class="card-click-film" style="display: none" data-id-film="1197"></div>
+            <div class="card-info-film" style="display: none" id="card-info-film-1197"></div>
+        
+            <img src="img/image.jpg" loading="lazy">
+            <strong>Una sombra en mi ojo</strong>
+            
+            <div>
+                <div>6.7<i class="icon-star"></i></div>
+                <div><i class="icon-calendar"></i>2021</div>
+                <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+            </div>
+        </div>
+        
+                <!-- CARTA REVERSA -->    
+        <hr>
+
+        <div class="card-film" id=2021>
+            <div class="card-click-film" data-id-film="1197"></div>
+        
+            <div class="card-info-film" id="card-info-film-212">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#my-alert" aria-label="Close"></button>
+                <strong>Overlord asdasd a sdasd as</strong>
+        
+                <img src="img/image.jpg">
+            
+                <a target="_blank" href="https://www.filmaffinity.com/es/film183164.html">
+                    <span><i class="icon-file"></i>avi</span>
+                    <span><i class="icon-film"></i>BRRip</span>
+                    <span><i class="icon-database"></i>HDD 0</span>
+                    <span><i class="icon-hdd"></i>1.96 GB</span>
+                </a>
+        
+                <div><img class="flag" src="css/icons/flags/us.svg">Estados Unidos</div>
+        
+                <div class="admin-tool">
+                    <button class="btn btn-danger-outline" data-action="delete-film" data-id-film="212" data-title-film="Overlord" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">ELIMINAR</button>
+                    <button class="btn btn-primary" data-action="edit-film" data-id-film="212" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">EDITAR</button>
+                </div>
+        
+            </div>
+        
+            <img src="img/image.jpg" loading="lazy">
+            <strong>Una sombra en mi ojo</strong>
+            
+            <div>
+                <div>6.7<i class="icon-star"></i></div>
+                <div><i class="icon-calendar"></i>2021</div>
+                <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+            </div>
+        </div>
+        
+
+               <!-- CARTA FILM -->
+        
+               <div class="card-film" id=2021>
+                <div class="card-click-film" style="display: none" data-id-film="1197"></div>
+                <div class="card-info-film" style="display: none" id="card-info-film-1197"></div>
+            
+                <img src="img/image.jpg" loading="lazy">
+                <strong>Una sombra en mi ojo</strong>
+                
+                <div>
+                    <div>6.7<i class="icon-star"></i></div>
+                    <div><i class="icon-calendar"></i>2021</div>
+                    <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+                </div>
+            </div>
+            
+                    <!-- CARTA REVERSA -->    
+            
+            <div class="card-film" id=2021>
+                <div class="card-click-film" data-id-film="1197"></div>
+            
+                <div class="card-info-film" id="card-info-film-212">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#my-alert" aria-label="Close"></button>
+                    <strong>Overlord asdasd a sdasd as</strong>
+            
+                    <img src="img/image.jpg">
+                
+                    <a target="_blank" href="https://www.filmaffinity.com/es/film183164.html">
+                        <span><i class="icon-file"></i>avi</span>
+                        <span><i class="icon-film"></i>BRRip</span>
+                        <span><i class="icon-database"></i>HDD 0</span>
+                        <span><i class="icon-hdd"></i>1.96 GB</span>
+                    </a>
+            
+                    <div><img class="flag" src="css/icons/flags/us.svg">Estados Unidos</div>
+            
+                    <div class="admin-tool">
+                        <button class="btn btn-danger-outline" data-action="delete-film" data-id-film="212" data-title-film="Overlord" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">ELIMINAR</button>
+                        <button class="btn btn-primary" data-action="edit-film" data-id-film="212" data-csrf-token-film="Tcuc6zj_kWpwiIuBU2hCZzgrl0kX1ejuZwf8Rm4BHxU">EDITAR</button>
+                    </div>
+            
+                </div>
+            
+                <img src="img/image.jpg" loading="lazy">
+                <strong>Una sombra en mi ojo</strong>
+                
+                <div>
+                    <div>6.7<i class="icon-star"></i></div>
+                    <div><i class="icon-calendar"></i>2021</div>
+                    <div><i class="icon-watch"></i>1hr, 40min, 51seg</div>
+                </div>
+            </div>
+
+</section>
+
+
+
+
+<noscript>
+    <div class="noscript-warning">
+        ¡ IMPORTANTE !.<br>
+        Para realizar operaciones de mantenimiento es necesario que, <b><i>habilite JavaScript</i></b>.
+    </div>
+</noscript>
+
+
+            <div id="message-container">
+    
+        
+             
+</div>  
+        </section>
+
+        <noscript>
+            <div class="noscript-warning">
+                Javascript está deshabilitado en su navegador web.<br>
+                Por favor, para ver correctamente este sitio, <b><i>habilite javascript</i></b>.
+            </div>
+        </noscript>
+        <footer id="footer-bottom"></footer>
+    </body>
+</html>

@@ -1,0 +1,130 @@
+{% from "macros.html" import render_card_movie, render_form_movie %}
+{% extends 'index.html' %}
+
+{% block content%}
+<div class="container-advance-search">
+    <details>
+        <summary class="btn btn-primary">Busqueda Avanzada</summary>    
+
+        {% if response[0] %}
+        {# [quality, extension, resolution, fps, country] #}
+
+        <form id="form-advance-search" action="/auth/search" method="POST">
+            <input type="hidden" name="csrf_token_form" value="{{ session['csrf_token_form'] }}">
+
+            <div>
+                <label for="id_movie"><span>Por ID</span>
+                    <input type="number" id="id_movie" class="noborder" name="id_movie" size="8" minlength="1" maxlength="8">
+                </label>
+            </div>
+
+            <div>
+                <label for="quality"><span>Por calidad</span>
+                    <select id="quality" name="quality">
+                        <option value="">n/a</option>
+                        {% for select in response[0][0] %}
+                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        {% endfor %}             
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="extension"><span>Por Extensión</span>
+                    <select id="extension" name="extension">                
+                        <option value="">n/a</option>                
+                        {% for select in response[0][1] %}
+                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="resolution"><span>Por Resolución</span>
+                    <select id="resolution" name="resolution">               
+                        <option value="">n/a</option>    
+                        {% for select in response[0][2] %}
+                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="fps"><span>Por FPS</span>
+                    <select id="fps" name="fps">                      
+                        <option value="">n/a</option> 
+                        {% for select in response[0][3] %}
+                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        {% endfor %}                                         
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label for="id_country"><span>Por País</span>
+                    <select id="id_country" name="id_country">                     
+                        <option value="">n/a</option>
+                        {% for select in response[0][4] %}
+                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label><span>Por Calificación (0/10)</span>
+                    <label class="row" for="min_rating"><span>Mínimo</span>
+                        <input type="number" class="noborder" id=v1 value="" disabled>
+                        <input type="range" name="min_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v1.value=value">   
+                    </label>
+                    <label class="row" for="max_rating"><span>Máximo</span>
+                        <input type="number" class="noborder" id=v2 value="" disabled>
+                        <input type="range" name="max_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v2.value=value">
+                    </label>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <span>Por fecha de Creación</span>
+                        <label class="row" for="min_date"><span>Fecha Inicio</span>
+                            <input type="date" name="min_date" min="1800-01-01" max="2900-01-01">  
+                        </label>      
+                        <label class="row" for="max_date"><span>Fecha Fin</span>
+                            <input type="date" name="max_date" min="1800-01-01" max="2900-01-01">
+                        </label>
+                </label>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" data-action="search">BUSCAR</button>
+            </div>
+        </form>
+        {% endif %}
+    </details>
+</div>
+
+{# RENDERIZAR PELÍCULAS ENCONTRADAS #}
+{% if response[1] %}
+<article class="item-list">
+    {% for movie in response[1] %}
+        {{ render_card_movie(movie, None, True) }}
+    {% endfor %}
+</article>
+{% endif %}
+
+{% if session['auth'] %}
+    {{ render_form_movie() }}
+{% endif %}
+
+<div id="control">
+    <div class="menu">
+        <i class="menu-ico control-ico" aria-hidden="true"></i>	
+        <div class="menu-content-center">
+            <a href="#nav-menu"><i class="up-ico form-ico" aria-hidden="true"></i></a>
+            <a href="#footer-bottom"><i class="down-ico form-ico" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
