@@ -40,7 +40,7 @@ STR_MAINTENANCE_OPTIONS = {
 	'missing_movies_hdd0': 'Desaparecidas HDD 0 (Interno)',
 	'incomplete_movie_info': 'Incompletas',
 	'censured_movies': 'Censuradas',
-	'devalued_movies': 'Peor Valoradas (<6.0)',
+	'devalued_movies': 'Peor Valoradas (<6.5)',
 	'corrupt_movies': 'Corrompidas',
 	'uncoded_country': 'País desconocido',
 	'overevalued_movies': 'Mejor Valoradas (>6.7)',

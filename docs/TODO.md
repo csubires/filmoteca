@@ -65,9 +65,12 @@ Catalogar Queries por aparición en archivos: archivo.js, core.py.. etc
 - [ ] Empaquetar proyecto como /src setup.py
 - [ ] Hacer que se detecten los cambios de películas entre carpetas (evitar redescargar metadatos)
 - [ ] Buscar alternativa a filmaffinity service_filmmafinity.py, service_otro.py 
+- [ ] Mostrar un mensaje de "no encontrado ningun elemento" en mantenimiento al no obtener pelis, pais, etc
 
 ---
 ### Modo servidor Web
+- [ ] Mejorar el modo en que se muestra el listado de películas peor valoradas haciendolo más útil (orden alfabetico, / agrupación por géneros)
+- [ ] Poder pasar facilmente una película de un género a otro moviendo la imagen
 - [x] El enlace de subgéneros no lleva a nada, Hacer una busqueda de pelís de ese subgénero
 - [x] Añadir a mantenimiento géneros sin ninguna película
 - [x] Si no existe el string de error hacer `get(stringBD, "Ocurrio un error no registrado")`
@@ -111,6 +114,7 @@ https://github.com/chrischase011/simple_flask
 - Refactorizar Javascript fillDataList
 ---
 ### MEJORAS
+- [ ] Crear un script para copia automática de películas script robocopy automatic???
 - [x] Mejorar y añadir gráficos
 - Mejorar pantalla de espera: Cargando, wait...
 - Mejorar honeypot
@@ -136,6 +140,16 @@ https://github.com/chrischase011/simple_flask
 - Botón salir del menú queda feo
 ---
 ## ERRORES
+- [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir
+- [ ] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
+NO el problema es que has puesto la fecha como UNIQUE y hace un reporte de external o internal en el mismo día se pisen (ARREGLADO PERO COMPROBAR)
+- [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set. 
+app.config['SESSION_TYPE'] = 'memcached'
+app.config['SECRET_KEY'] = 'super secret key'
+- [ ] Error al clonar no encuentra www/logs
+- [ ] añadir a docu 7z x images.7z
+mv images ../filmo .....
+
 - [ ] vuelta ciclista al descargar inet... error ..
 - [x] No se puede cerrar las pelis abiertas"" si no estas logeado
 - [x] En datos globales aparece 2 veces EXTERNO(1)
@@ -150,6 +164,11 @@ https://github.com/chrischase011/simple_flask
 - [x] Editar no funciona en mantenimiento (no aparece el form)
 - [x] Problema JSON error cuando se usa el buscador principal y no encuentra un match película
 - [x] Error al no encontrar directorio
+- [ ] inet pelicula comprobar antes si hay internet
+cuando el pais no esta en la bd da error
+{'id_movie': 1518, 'title': 'El caftán azul', 'realtitle': 'The Blue Caftan', 'urldesc': '/es/film999656.html', 'ratings': 7.2, 'urlpicture': '/the_blue_caftan-747001033-mmed.jpg', 'country': 'Marruecos', 'id_country': None, 'year': 2022}  'NoneType' object is not subscriptable
+ [4/4]  [✖] Error complete_films(). Failed to update movie  (1518, 'El caftán azul', 18, None, 2022, '/es/film999656.html')
+
 
 ---
 ## TEST
