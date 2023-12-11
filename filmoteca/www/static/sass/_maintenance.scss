@@ -38,10 +38,14 @@
 // Cabeceras con el resultado de la opción de mantenimiento y estadísticas
 .head-result {
     display: flex;
-    align-items: center;
-    justify-content: space-around;
     margin: 0 2rem;
     align-items: baseline;
+    gap: 0.5rem;
+    overflow-x: scroll;
+    height: 4.4em;
+    &-little {
+        text-align: center;
+    }
 
     details {
         summary {
@@ -61,10 +65,6 @@
                 float: right;
             }
         }
-    }
-
-    h3 {
-        width: 50%;
     }
 }
 

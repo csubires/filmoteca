@@ -15,6 +15,11 @@
 	}
 }
 
+// :root {
+	// Para adaptar la tipografía según el tamaño de ancho y alto
+	// font-size: calc(1vw + 1vh + .5vmin);
+// }
+
 html {
 	scroll-behavior: smooth;
 	scrollbar-color: lighten(c.$bs-gray-900, 30%), c.$bs-gray-900;	

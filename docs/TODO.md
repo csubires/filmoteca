@@ -1,5 +1,48 @@
 ## TODO (Hay otros en el código)
 ---
+
+
+generar imagenes subgeneros
+fill sub generos.. y borrar vacios
+cambiar Error al clonar no encuentra www/logs
+ejecutar query is_prewsent de rating
+
+meter 
+CREATE TABLE "deleted_movies" (
+	"id_movie" INTEGER,
+	"title"	TEXT NOT NULL,
+	"realtitle"	TEXT,
+	"year"	INTEGER,
+	"quality"	TEXT,
+	"extension"	TEXT,
+	"size"	INTEGER,
+	"size_str"	TEXT,
+	"duration"	INTEGER,
+	"duration_str"	TEXT,
+	"pathfile"	TEXT UNIQUE,
+	"resolution"	TEXT,
+	"fps"	REAL,
+	"urldesc"	TEXT,
+	"ratings"	REAL DEFAULT 0.0,
+	"urlpicture"	TEXT,
+	"censure"	INTEGER DEFAULT 0,
+	"file_created"	TEXT,
+	"report_date"	TEXT,
+	"id_genre"	INTEGER NOT NULL,
+	"id_subgenre"	INTEGER DEFAULT -1,
+	"id_country"	INTEGER,
+	"hdd_code"	INTEGER NOT NULL DEFAULT 99,
+	FOREIGN KEY("id_subgenre") REFERENCES "genre"("id_genre"),
+	FOREIGN KEY("id_genre") REFERENCES "genre"("id_genre"),
+	FOREIGN KEY("id_country") REFERENCES "country"("id_country")
+)
+
+CREATE TRIGGER delete_movie AFTER DELETE ON movies
+BEGIN
+	INSERT INTO deleted_movies VALUES (OLD.id_movie, OLD.title, OLD.realtitle, OLD.year, OLD.quality, OLD.extension, OLD.size, OLD.size_str, OLD.duration, OLD.duration_str, OLD.pathfile, OLD.resolution, OLD.fps, OLD.urldesc, OLD.ratings, OLD.urlpicture, OLD.censure, OLD.file_created, OLD.report_date, OLD.id_genre, OLD.id_subgenre, OLD.id_country, OLD.hdd_code);
+END;
+
+
 ### Aplicación principal
 
 - [ ] Arreglar el setup.py
@@ -65,12 +108,15 @@ Catalogar Queries por aparición en archivos: archivo.js, core.py.. etc
 - [ ] Empaquetar proyecto como /src setup.py
 - [ ] Hacer que se detecten los cambios de películas entre carpetas (evitar redescargar metadatos)
 - [ ] Buscar alternativa a filmaffinity service_filmmafinity.py, service_otro.py 
-- [ ] Mostrar un mensaje de "no encontrado ningun elemento" en mantenimiento al no obtener pelis, pais, etc
-
+- [X] Mostrar un mensaje de "no encontrado ningun elemento" en mantenimiento al no obtener pelis, pais, etc
+- [x] rating is present script check
 ---
 ### Modo servidor Web
-- [ ] Mejorar el modo en que se muestra el listado de películas peor valoradas haciendolo más útil (orden alfabetico, / agrupación por géneros)
-- [ ] Poder pasar facilmente una película de un género a otro moviendo la imagen
+- [x] Copiar listado a portapapeles
+- [x] Generar avatar para subgeneros y géneros
+- [x] Mejorar el modo en que se muestra el listado de películas peor valoradas haciendolo más útil (orden alfabetico, / agrupación por géneros)
+- [-] Ordenar peor valoradas por porcentajes de género, para penalizar Drama u otros con sobreabundancia de películas
+- [x] Poder pasar facilmente una película de un género a otro moviendo la imagen
 - [x] El enlace de subgéneros no lleva a nada, Hacer una busqueda de pelís de ese subgénero
 - [x] Añadir a mantenimiento géneros sin ninguna película
 - [x] Si no existe el string de error hacer `get(stringBD, "Ocurrio un error no registrado")`
@@ -85,14 +131,12 @@ Catalogar Queries por aparición en archivos: archivo.js, core.py.. etc
 - ~~[ ] Jinja respuestas, Javascript JSon Unificar tipo de respuesta API no javascript~~
 - [x] Si las caches siempre se llena 1 vez, simplificar los if
 - ~~[ ] Opción de copiar nombre para usarlo en buscadores~~
-- [ ] Script para empaquetar/comprimir archivos de imagen en un rar para subir a gitea
-- [ ] Ordenar peor valoradas por porcentajes de género, para penalizar Drama u otros con sobreabundancia de películas
+- [x] Script para empaquetar/comprimir archivos de imagen en un rar para subir a gitea
 - [ ] Traer 100 películas jinja y lo demas renderizado en paquetes por JavaScript
 - ~~[ ] Evitar robo de imagenes o texto ~~
 - [x] Detector de link rotos.. 404 image not found
 - [ ] Mejorar la seguridad y testearla
 - [x] Atributos path y httpOnly de la cookie no configurados en la aplicación
-- [ ] Generar avatar para subgeneros y géneros
 - [ ] Decorator token_required('name') para PUT DELETE
 ** https://github.com/VanNgoc1102/Flask/blob/master/src/security/security.py
 https://stackoverflow.com/questions/15231359/split-python-flask-app-into-multiple-files
@@ -105,8 +149,8 @@ https://github.com/chrischase011/simple_flask
 - Revisar los errores a la hora de mandar peticiones
 - Revisar y control de datos
 - [x] Añadir logeo, acceso, real con contraseña en BD, cambiar , crear cuenta
-- Refactorizar manejo de imagenes y archivos
-- Refactorizar manejo de errores y mensajes
+- [x] Refactorizar manejo de imagenes y archivos
+- [x] Refactorizar manejo de errores y mensajes
 - Refactorizar busqueda avanzada
 - ~~Macro para global.html reports ???~~
 - ~~Macro para generar card-genre ???~~
@@ -116,14 +160,15 @@ https://github.com/chrischase011/simple_flask
 ### MEJORAS
 - [ ] Crear un script para copia automática de películas script robocopy automatic???
 - [x] Mejorar y añadir gráficos
-- Mejorar pantalla de espera: Cargando, wait...
 - Mejorar honeypot
 - Cookie y privacidad
 - Implementar cache, evitar remandar css, js, iconos desde cliente
-- Poner elegir el listado por orden de nombre o año, duracion, estrellas (eso requiere listado javascript o no?) viewport virtual scroll
-- Generar automaticamente la foto de subgeneros?, 
+- [x] Poner elegir el listado por orden de nombre o año, duracion, estrellas (eso requiere listado javascript o no?) 
+- [ ] viewport virtual scroll
 - INSERT INTO t0(c) VALUES(random()) RETURNING *;
 - pasar pelis borradas a una tabla nueva ??
+- [ ] .gitignore para desarrollo y para producción
+
 ---
 ## ESTILOS
 - [X] Cuando haces una busqueda y el cursos sale de text al intentar darle al boton buscar, acabas dandole a borrar texto
@@ -131,25 +176,22 @@ https://github.com/chrischase011/simple_flask
 - [ ] En vez de botones tool edit un list icon con ver, editar borrar solo para admins
 - [ ] Tipografia responsive
 - [ ] Dar animación y efectos al estilo
-- [ ] Mejorar tiempo de carga imagen.gif
+- [ ] Mejorar tiempo de carga imagen.gif - Mejorar pantalla de espera: Cargando, wait...
 - [ ] Form position sticki??
 ---
 ### CSS
-- Mejorar modo oscuro
-- Mejorar modo móvil, tablet, normal, pantalla grande @queri-media
+- [@] Mejorar modo oscuro
+- [@] Mejorar modo móvil, tablet, normal, pantalla grande @queri-media
 - Botón salir del menú queda feo
 ---
 ## ERRORES
-- [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir
-- [ ] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
+- [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir. Ver en Windows por qué se obtiene mal.
+- [X] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
 NO el problema es que has puesto la fecha como UNIQUE y hace un reporte de external o internal en el mismo día se pisen (ARREGLADO PERO COMPROBAR)
 - [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set. 
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
-- [ ] Error al clonar no encuentra www/logs
-- [ ] añadir a docu 7z x images.7z
-mv images ../filmo .....
-
+- [-] Error al clonar no encuentra www/logs
 - [ ] vuelta ciclista al descargar inet... error ..
 - [x] No se puede cerrar las pelis abiertas"" si no estas logeado
 - [x] En datos globales aparece 2 veces EXTERNO(1)
@@ -160,12 +202,12 @@ mv images ../filmo .....
 - [ ] Si el POST está vacio, no aplicar update ???, o sobreescribirá datos importantes
 - [X] Añadir pruebas unitarias, de integracion, y funcionales
 - [X] Objeto simulado para las pruebas de error
-- [ ] Algunos subgeneros no contabilizan num peliculas, ni size?????? PROBLEMAS VERSION SQLITE
+- [-] Algunos subgeneros no contabilizan num peliculas, ni size?????? PROBLEMAS VERSION SQLITE
 - [x] Editar no funciona en mantenimiento (no aparece el form)
 - [x] Problema JSON error cuando se usa el buscador principal y no encuentra un match película
 - [x] Error al no encontrar directorio
-- [ ] inet pelicula comprobar antes si hay internet
-cuando el pais no esta en la bd da error
+- [X] inet pelicula comprobar antes si hay internet
+- [ ] cuando el pais no esta en la bd da error
 {'id_movie': 1518, 'title': 'El caftán azul', 'realtitle': 'The Blue Caftan', 'urldesc': '/es/film999656.html', 'ratings': 7.2, 'urlpicture': '/the_blue_caftan-747001033-mmed.jpg', 'country': 'Marruecos', 'id_country': None, 'year': 2022}  'NoneType' object is not subscriptable
  [4/4]  [✖] Error complete_films(). Failed to update movie  (1518, 'El caftán azul', 18, None, 2022, '/es/film999656.html')
 

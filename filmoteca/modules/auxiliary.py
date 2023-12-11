@@ -1,4 +1,4 @@
-# 2022.05.17
+# 2023.11.27
 
 from datetime import datetime		# Para hacer conversiones de tiempo
 from datetime import timedelta		# Para cambiar de segundos a formateo de tiempo
@@ -11,9 +11,9 @@ ABR_SIZE = ('B', 'KB', 'MB', 'GB', 'TB', 'PB')
 def timestamp_to_datetime(timeStamp):		# BORRAR ?????
 	""" Convierte el formato timestamp a fecha
 		Args:
-			timeStamp (str):	Fecha en formato timestamp. Ex:
+			timeStamp (str):	Fecha en formato timestamp. Ex: 1651855905
 		Returns:
-			(str): 				Fecha formateada. Ex:
+			(str): 				Fecha formateada. Ex: 06/05/2022, 18:51:45
 	"""
 
 	date = datetime.fromtimestamp(float(timeStamp), tz=None)
@@ -21,7 +21,7 @@ def timestamp_to_datetime(timeStamp):		# BORRAR ?????
 
 
 def timestamp2Date(timeStamp):
-	# Convierte timestamp '1651855905' a fecha ''
+	# Convierte timestamp '1651855905' a fecha '2022-05-06'
 	return datetime.fromtimestamp(float(timeStamp), tz=None).strftime('%Y-%m-%d')
 
 
@@ -30,7 +30,7 @@ def date_to_human(date):
 		Args:
 			date (str): 2020-10-23 21:34:23
 		Returns:
-			(str): 		2020, 23 de October, [34]
+			(str): 		23 de October de 2020
 	"""
 
 	obj_date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')

@@ -21,3 +21,8 @@ python3 setup.py build
 [Configurar Flask](https://runebook.dev/es/docs/flask/config/index)
 
 # cat /dev/urandom | LANG=C tr -dc '[:alnum:]' | head -c 32 ; echo
+
+## Descompromir imagenes en carpeta desde git
+
+cd ../data or mv images ../filmo .....
+7z x ./pack_images.7z -o../filmoteca/www

@@ -36,10 +36,17 @@
     <h3 class="head-result">{{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
         {% if response[0] in ['devalued_movies', 'overevalued_movies'] %}
         <div class="head-result">
-            <details>
+            <details class="list-copy">
                 <summary class="btn btn-primary-outline">Listado limpio</summary>
                 <ul>
+                    <li><i><button class="btn btn-warning-outline" data-action="copy-clipboard">COPIAR</button></i></li>
+                    <br>
+                    {% set aux = { 'flag': -1 } %}
                     {% for movie in response[2] %}
+                        {% if aux.flag != movie[6] %}
+                            {% if aux.update({'flag': movie[6]}) %}{% endif %}
+                        <br>
+                        {% endif %}
                         <li>{{ movie[4] }} <strong> {{ movie[1] }}</strong><i> {{ movie[7] }}</i></li>
                     {% endfor %}
                 </ul>
@@ -83,7 +90,7 @@
     {% elif response[0] == 'uncoded_country' %}
     <div class="head-result">
         <h3>País desconocido {{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
-            <a class="btn btn-primary-outline" target="_blank" href="https://country-code.cl/es/">Listado de códigos</a>
+        <a class="btn btn-primary-outline" target="_blank" href="https://country-code.cl/es/">Listado de códigos</a>
     </div>
 
     {# 0 id_country, 1 name, 2 code, 3 flag #}
@@ -113,10 +120,12 @@
         </tbody>
     </table>
 </section>
-    {% endif %}
+{% endif %}
 
-    {{ render_form_movie() }}
+{{ render_form_movie() }}
 
+{% else %}
+    <section class="maintenance-list"><h3>No se obtuvó ningún resultado</h3></section>
 {% endif %}
 </article>
 

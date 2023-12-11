@@ -77,12 +77,8 @@ class HandlerService:
 			lg_prt('y', '[▲] Unable to connect to the Internet')
 			return False
 
-		id_movie = row[0]
-		title = row[1]
-		id_genre = row[2]
-		id_subgenre = row[3]
-		year = row[4]
-		urldesc = row[5]			# Es posible haberlo incluido manualmente
+		id_movie, title, id_genre, id_subgenre, year, urldesc = row[0], row[1], row[2], row[3], row[4], row[5]
+		# urldesc Es posible haberlo incluido manualmente
 
 		genre = self.oDTB.execute('get_name_genre', {'id_genre': id_genre, 'is_subgenre': 0})[0]
 		self.oFilmInet.clear()
@@ -100,17 +96,17 @@ class HandlerService:
 
 		# Obtener código del país
 		try:
-			code_country = self.cache_country.get(self.oFilmInet.country, None)
-			if code_country is None:
-				code_country = self.oDTB.execute('country_byname', {'name': self.oFilmInet.country})[0]
-				if code_country is None:		# Si el país no existe lo inserta
+			id_country = self.cache_country.get(self.oFilmInet.country, None)
+			if id_country is None:
+				id_country = self.oDTB.execute('country_byname', {'name': self.oFilmInet.country})[0]
+				if id_country is None:		# Si el país no existe lo inserta
 					self.oDTB.execute('insert_country', {'name': self.oFilmInet.country})
-					code_country = self.oDTB.lastid()
-					lg_prt('gywb', '[✔] Country inserted.', 'CODE:', code_country, self.oFilmInet.country)
+					id_country = self.oDTB.lastid()
+					lg_prt('gywb', '[✔] Country inserted.', 'ID:', id_country, self.oFilmInet.country)
 				else:
-					code_country = code_country[0]
-				self.cache_country.update({self.oFilmInet.country: code_country})
-			self.oFilmInet.id_country = code_country
+					id_country = id_country[0]
+				self.cache_country.update({self.oFilmInet.country: id_country})
+			self.oFilmInet.id_country = id_country
 
 			# Actualizar el resto de información de una película
 			params = self.oFilmInet.prepare()

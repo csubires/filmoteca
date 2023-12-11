@@ -38,7 +38,6 @@ docker/
 
 # Ignorar archivos de logs
 **/debug
-**/logs
 *.log
 
 # Ignorar carpeta Visual Studio Code

@@ -83,7 +83,7 @@
 //  ----------------
 
 .item-list {
-    @include mixins.make-container(1rem, 2rem, c.$bs-gray-800);
+    @include mixins.make-container(1.5rem, 2rem, c.$bs-gray-800);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -117,9 +117,11 @@
         width: 14rem;
         text-align: center;
         gap: 0.3rem;
+        transition: transform .5s ease;
         &:hover {
-            box-shadow: 0 4px 16px 0 c.$bs-orange;
             filter: saturate(150%);
+            transform: scale(1.05);
+            box-shadow: 5px 5px 20px 0 black;
         }
 
         strong {
@@ -326,6 +328,13 @@
                         background-size: 3rem;
                     }
                 }
+            }
+
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+                margin: .5rem;
             }
         }   // End .container-bottom
     }   // End .menu

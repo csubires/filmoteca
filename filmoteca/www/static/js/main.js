@@ -1,4 +1,5 @@
 import { Handler_connection } from './connection.js';
+import { Confirm } from './utils.js';
 
 window.addEventListener('load', function () {
     const cnt = new Handler_connection();
@@ -85,7 +86,11 @@ window.addEventListener('load', function () {
         },
 
         // BOTÓN - Borrar película
-        'delete-film': async (e) =>  {  
+        'delete-film': async (e) =>  {
+            let result = await Confirm('Borrar película', `¿Estas seguro de BORRAR la película "${e.target.dataset.titleFilm}"?`, 'Borrar').then(alert)
+            console.log(result)
+            alert('mierda ' + result)
+
             if (confirm(`¿Estas seguro de BORRAR la película "${e.target.dataset.titleFilm}"?`)) {
                 let params = {
                     'csrf_token_movie': e.target.dataset.csrfTokenFilm,
@@ -115,17 +120,24 @@ window.addEventListener('load', function () {
         },
 
         // BOTÓN - Establecer película como presente
-        'set-present': async (e) =>  {  
-            let params = {
-                'id_rating': e.target.dataset.idRating,
-                'csrf_token_form': e.target.dataset.csrfTokenForm
-            }
-            let dataJson = await cnt.send('PUT', '/api/set_present', params)
-            if (dataJson) {
-                let trReport = document.querySelector(`#rating-tr-${e.target.dataset.idRating}`)
-                trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`  
-            }         
-            
+        'set-present': async (e) =>  { 
+            if (confirm(`¿Estas seguro de establecer como presente "${e.target.dataset.title}"?`)) { 
+                let params = {
+                    'id_rating': e.target.dataset.idRating,
+                    'csrf_token_form': e.target.dataset.csrfTokenForm
+                }
+                let dataJson = await cnt.send('PUT', '/api/set_present', params)
+                if (dataJson) {
+                    let trReport = document.querySelector(`#rating-tr-${e.target.dataset.idRating}`)
+                    trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`  
+                }
+            } 
+        },
+
+        // BOTÓN - Buscar la película que supuestamente está presente
+        'present-view': async (e) =>  {
+            searchForm.search.value = e.target.dataset.title
+            searchForm.submit()
         },
 
         // INPUT - Habilitar botón de actualizar película en el formulario de edición
@@ -156,6 +168,7 @@ window.addEventListener('load', function () {
             //fillFormEdit()                          // Refrescar los datos modificados
         },
 
+        // BOTÓN - Actualizar los datos de una película
         'update-film': async (e) =>  {  
             e.preventDefault()
             showAndHidde(screenBlock, 'visible, 99')  // Trae al frente la pantalla de bloqueo
@@ -169,6 +182,25 @@ window.addEventListener('load', function () {
                 fillFormEdit()
             }
             showAndHidde(screenBlock, 'hidden', -1)     // Oculta la pantalla de bloqueo
+        },
+
+        // BOTÓN - Ordenar listado de películas por
+        'sort-items':  async (e) =>  {
+            const items = document.querySelector('.item-list')
+
+            // Ordenar por 0 Título, 1 Valoración, 2 Año, 3 Duración
+            let mySort = (a, b) => {
+                let str1 = a.innerText.split('\n')
+                let str2 = b.innerText.split('\n')
+                let orderBy = e.target.dataset.idSort
+                return str1[orderBy] > str2[orderBy] ? 1 : -1
+            }
+            
+            // Filtrar solo los nodos tipo 1, ordenar, mostrar
+            let aux = [...items.children]
+                .filter(item => item.nodeType == 1)
+                .sort(mySort)
+                .forEach(node => items.appendChild(node))
         },
 
         // INPUT - Autocompletar con películas que coincidan de el texto introducido
@@ -194,19 +226,37 @@ window.addEventListener('load', function () {
             }
         },
 
-        // I - Borrar el campo de busqueda principal
+        // SELECT - Cuando se cambia el género o subgenero es necesario modificar el path de la película
+        'change-path': (e) => {
+            let id_genre = e.target.options[e.target.selectedIndex].value
+            // Sacar de localStorage
+            let dataJsonDataList = JSON.parse(localStorage.dataJson)
+            let pathfolder = dataJsonDataList.get_all_pathgenres.find((item) => item[0] == id_genre)[1]
+            movieForm['pathfile'].value = pathfolder + "/" + movieForm['pathfile'].value.split("/").at(-1)
+        },
+
+        // INPUT - Borrar el campo de busqueda principal
         'clear-search': () =>  {
             searchForm['text-search'].value = ''
+        },
+
+        // BUTTON - Copiar la lista al portapapeles
+        'copy-clipboard': () => {
+            let content = document.querySelector('.list-copy').innerText
+            navigator.clipboard.writeText(content)
+            alert("Listado copiado al portapapeles")
         },
 
         // RADIO - Modo tema claro
         'light-mode': () =>  {  
             document.body.setAttribute('class', '')
+            localStorage.setItem('theme', '') 
         },
 
         // RADIO - Modo tema oscuro
         'dark-mode': () =>  {  
             document.body.setAttribute('class', 'theme theme-dark')
+            localStorage.setItem('theme', 'dark') 
         },        
 
     }   // END callbackCollection
@@ -233,6 +283,14 @@ window.addEventListener('load', function () {
     // EVENTO - AUTOCOMPLETAR BUSQUEDA
     makeClickeable('input', '#text-search')
 
+    // EVENTO - AL SELECIONAR GÉNERO O SUBGÉNERO
+    makeClickeable('change', '#id_genre')
+    makeClickeable('change', '#id_subgenre')
+
+    // EJECUTAR AL CARGAR
+    let mode = localStorage.getItem('theme') == 'dark' ? 'theme theme-dark' : ''
+    document.body.setAttribute('class', mode)
+    document.querySelector("#dark-mode").checked = mode != ''? true : false
 
     // ----------------------------------- FUNCIONES -----------------------
 
@@ -286,12 +344,15 @@ window.addEventListener('load', function () {
                 // Obtener fps
                 dataJson = await cnt.send('GET', `/api/select_fps/${params}`)
                 all_data['select_fps'] = dataJson.data
-                // Obtener géneros
+                // Obtener géneros TODO (traer todo del tiron y filtrar )
                 dataJson = await cnt.send('GET', `/api/get_all_genres/${params}`)
                 all_data['get_all_genres'] = dataJson.data
-                // Obtener subgéneros
+                // Obtener subgéneros TODO (traer todo del tiron y filtrar )
                 dataJson = await cnt.send('GET', `/api/get_all_subgenres/${params}`)
                 all_data['get_all_subgenres'] = dataJson.data
+                // Obtener pathgenres TODO (traer todo del tiron y filtrar )
+                dataJson = await cnt.send('GET', `/api/get_all_pathgenres/${params}`)
+                all_data['get_all_pathgenres'] = dataJson.data
                 // Obtener países
                 dataJson = await cnt.send('GET', `/api/select_country/${params}`)
                 all_data['select_country'] = dataJson.data
@@ -347,4 +408,7 @@ window.addEventListener('load', function () {
         movieForm['hdd_code_ext'].checked = (dataJson['hdd_code'] == 1 ? true : false)
     }
 
+
+
+    
 })  // END window load

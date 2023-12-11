@@ -248,6 +248,11 @@ class HandlerService:
 			lg_prt('t', result)
 			dataSQL = dataSQL if result else None
 			lg_prt('t', dataSQL)
+		
+		elif tagSQL == 'modify_movie':
+			# Se modificó una película y hay que ver si es necesario mover la imagen a otra carpeta
+			pass
+			
 
 		# Obtener cabeceras si existen y trasnformar a diccionario
 		headers = HEADERS_JSON.get(tagSQL, None)

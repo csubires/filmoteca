@@ -55,9 +55,9 @@ TAG_QUERY_REPORT = {
 	'missing_movies_hdd1': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE report_date <> (SELECT MAX(report_date) FROM report WHERE hdd_code = 1) AND hdd_code = 1',
 	'incomplete_movie_info': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE year IS NULL OR size IS NULL or duration IS NULL OR urldesc IS NULL OR id_country IS NULL',
 	'censured_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE censure = 1',
-	'devalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END, pathfile FROM movies WHERE ratings < 6.5 AND hdd_code = 0 ORDER BY ratings ASC',
+	'devalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, (CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END) AS idgenre, pathfile FROM movies WHERE ratings < 6.5 AND hdd_code = 0 ORDER BY idgenre, ratings ASC',
 	'corrupt_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE size < 100 ORDER BY size ASC',
-	'overevalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END, pathfile FROM movies WHERE ratings > 6.7 AND hdd_code = 1 ORDER BY ratings DESC',
+	'overevalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, (CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END) AS idgenre, pathfile FROM movies WHERE ratings > 6.7 AND hdd_code = 1 ORDER BY idgenre, ratings DESC',
 	'get_info_genre': 'SELECT id_genre, name, num_movies, local_size_str, local_duration_str, is_subgenre FROM genre ORDER BY is_subgenre ASC, name ASC',
 	'uncoded_country': 'SELECT * FROM country WHERE code = "n/a" OR flag IS NULL',
 	'incomplete_genre': 'SELECT id_genre, name, pathfolder, is_subgenre FROM genre WHERE num_movies = 0',
@@ -65,6 +65,7 @@ TAG_QUERY_REPORT = {
 	'get_movie': 'SELECT * FROM movies WHERE id_movie = :id_movie',
 	'get_all_genres': 'SELECT id_genre, name FROM genre WHERE is_subgenre = 0',
 	'get_all_subgenres': 'SELECT id_genre, name FROM genre WHERE is_subgenre = 1',
+    'get_all_pathgenres': 'SELECT id_genre, pathfolder FROM genre',
 	'delete_movie': 'DELETE FROM movies WHERE id_movie = :id_movie',
 	'select_country': 'SELECT id_country, (flag || " " || name || " (" || code || ")") AS name FROM country ORDER BY name',
 	'modify_movie': 'UPDATE movies SET censure = :censure, duration = :duration, duration_str = :duration_str, fps = :fps, id_country = :id_country, pathfile = :pathfile, quality = :quality, ratings = :ratings, realtitle = :realtitle, resolution = :resolution, size = :size, size_str = :size_str, title = :title, urldesc = :urldesc, urlpicture = :urlpicture, year = :year, id_genre = :id_genre, id_subgenre = :id_subgenre, hdd_code = :hdd_code, extension = :extension WHERE id_movie = :id_movie',
@@ -99,5 +100,5 @@ TAG_QUERY_FUNCTION = {
 	'select_movie_country': 'SELECT id_movie, country.id_country FROM movies, country WHERE movies.country = country.name',
 	'update_movie_country': 'UPDATE movies SET id_country = :id_country WHERE id_movie = :id_movie',
 	'select_all_movies': 'SELECT id_movie, size, duration FROM movies',
-	'update_size_duration': 'UPDATE movies SET size_str = :size_str, duration_str = :duration_str WHERE id_movie = :id_movie'
+	'update_size_duration': 'UPDATE movies SET size_str = :size_str, duration_str = :duration_str WHERE id_movie = :id_movie',
 }

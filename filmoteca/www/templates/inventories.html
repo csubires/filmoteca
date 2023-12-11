@@ -15,7 +15,7 @@
 </details>
 
 {% if response[0] %}
-<h3 class="head-result">Películas propuestas para descargar</h3>
+<div class="head-result-little"><h3>Películas propuestas para descargar</h3></div>
 <div class="head-result">
     {% for data in response[0] %}
     <a class="btn btn-primary-outline" href="/menu/ranking/{{ data[0] }}"><strong>{{ data[0] }} ({{ data[1] }})</strong></a>
@@ -54,8 +54,9 @@
                 <td>{{ "SÍ" if data[6] else "NO" }} </td>
                 <td>
                     {% if not data[6] %}
-                    <button class="btn btn-danger-outline" data-id-rating="{{ data[0] }}" data-csrf-token-form="{{ session['csrf_token_form'] }}"
-                    data-action="set-present">PRESENTE</button>
+                    <button class="btn btn-danger-outline" data-title="{{ data[3] }}" data-id-rating="{{ data[0] }}" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="set-present">PRESENTE</button>
+                    {% else %}
+                    <button aria-label="mostrar" class="btn btn-info-outline" data-title="{{ data[3] }}" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="present-view">MOSTRAR</button>
                     {% endif %}
                 </td>
             </tr>

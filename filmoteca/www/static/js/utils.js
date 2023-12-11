@@ -27,3 +27,33 @@ export const showMessage = (message, type) => {
         button.addEventListener("click", e => { button.parentNode.remove() })
     })  
 }
+
+
+export const Confirm = async (title, msg, doWord) => {
+    let wrapper = document.createElement("div")
+    wrapper.innerHTML = `
+        <div class="dialog-ovelay">
+            <div class="dialog"><header><h3>${title}</h3></header>
+                <div class="dialog-msg"><p>${msg}</p></div>
+                <footer>
+                    <div class="controls">
+                        <button class="button button-danger doAction">${doWord}</button> 
+                        <button class="button button-default cancelAction">Cancelar</button>     
+                    </div>
+                </footer>
+            </div>
+        </div>`
+            
+    document.body.prepend(wrapper)
+
+    document.querySelector('.doAction').addEventListener("click", (event) => {
+        wrapper.remove()
+        return Promise.resolve(true)
+    })
+
+    document.querySelector('.cancelAction').addEventListener("click", () => {
+        wrapper.remove()
+        return Promise.resolve(false)
+    })
+
+}

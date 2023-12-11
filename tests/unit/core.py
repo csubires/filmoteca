@@ -8,7 +8,7 @@ import unittest
 # Ejecutar text en el orden en el que se escriben
 # unittest.TestLoader.sortTestMethodsUsing = lambda *args: -1
 
-from modules.analyser import path_file_splits, get_fileMetaData, getRealPathSize
+from filmoteca.modules.analyser import path_file_splits, get_fileMetaData, get_real_path_size
 
 
 class TestScan(unittest.TestCase):
@@ -190,14 +190,14 @@ class TestScan(unittest.TestCase):
 		self.assertIsNone(resolution)
 		self.assertIsNone(fps)
 
-	def test020_getRealPathSize(self):
+	def test020_get_real_path_size(self):
 		# Obtener el tamaño real de una carpeta
 		full_path = '/mnt/hgfs/movies/Supervivencia'
-		result = getRealPathSize(full_path)
+		result = get_real_path_size(full_path)
 		self.assertEqual(result, '7,8G')
 		# Fallo al obtener el tamaño real de una carpeta
 		full_path = '/mnt/hgfs/movies/Superv'
-		result = getRealPathSize(full_path)
+		result = get_real_path_size(full_path)
 		self.assertEqual(result, '0 MB')
 
 if __name__ == '__main__':
