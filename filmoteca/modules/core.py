@@ -213,13 +213,13 @@ class HandlerScan:
 		response = self.oDTB.execute('get_id_genre', params)
 		if response is None:					# Si el género no existe lo inserta
 			self.oDTB.execute('insert_genre', params)
-			return self.oDTB.cdb.lastrowid		# Retorna el id recien creado
+			return self.oDTB.lastid				# Retorna el id recien creado
 		else:
 			return response[0][0]				# Restorna el id de género
 
 	def insert_movie(self, params):
 		# Insertar una película nueva en la base de datos
-		if None not in (params['title'], params['id_genre'], params['size']):
+		if all(params['title'], params['id_genre'], params['size']):
 			self.oDTB.execute('insert_movie', params)
 			lg_prt('gb', '[✔] Insert Movie:', params)
 		else:

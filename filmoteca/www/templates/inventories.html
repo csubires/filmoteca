@@ -1,43 +1,49 @@
 {% extends 'index.html' %}
 
 {% block content%}
-<details class="maintenance-list">
-    <summary class="btn btn-primary">Listados</summary>
+
+{% if not response %}
+<div class="menu--clickeable btn btn-primary">
+    <input class="menu-btn" type="checkbox" id="menu-btn" />
+    <label class="menu-icon" for="menu-btn"><span>Listados</span><span class="navicon"></span></label>
     <div>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Libros.html"><strong>Libros</strong><p>Colección de libros en PDF</p></a>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Miscellaneous.html"><strong>Miscellaneous</strong><p>Canciones sueltas</p></a>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230327_Listado Música.html"><strong>Música</strong><p>Discografías de artístas</p></a>        
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Películas.html"><strong>Películas</strong><p>Películas en el disco interno</p></a>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Películas EXTRA.html"><strong>Películas EXTRA</strong><p>Películas de peor calidad</p></a>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Series.html"><strong>Series</strong><p>Listado de series por categorías</p></a>
-        <a class="btn btn-primary-outline" target="_blank" href="/inventories/20230328_Listado Series EXTRA.html"><strong>Series EXTRA</strong><p>Listado de series peor valoradas</p></a>   
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Colección de libros en PDF" href="/inventories/20230327_Listado Libros.html"><strong>Libros</strong></a>
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Canciones sueltas" href="/inventories/20230327_Listado Miscellaneous.html"><strong>Miscellaneous</strong></a>
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Discografías de artístas" href="/inventories/20230327_Listado Música.html"><strong>Música</strong></a>        
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Películas en el disco interno" href="/inventories/20230328_Listado Películas.html"><strong>Películas</strong></a>
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Películas de peor calidad" href="/inventories/20230328_Listado Películas EXTRA.html"><strong>Películas EXTRA</strong></a>
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Listado de series por categorías" href="/inventories/20230328_Listado Series.html"><strong>Series</strong></a>
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Listado de series peor valoradas" href="/inventories/20230328_Listado Series EXTRA.html"><strong>Series EXTRA</strong></a>   
     </div>
-</details>
+</div>
+{% endif %}
 
 {% if response[0] %}
 <div class="head-result-little"><h3>Películas propuestas para descargar</h3></div>
-<div class="head-result">
+<div class="head-result years">
     {% for data in response[0] %}
-    <a class="btn btn-primary-outline" href="/menu/ranking/{{ data[0] }}"><strong>{{ data[0] }} ({{ data[1] }})</strong></a>
+    <a class="btn btn-primary-outline" data-descr="{{ data[1] }}" href="/menu/ranking/{{ data[0] }}"><strong>{{ data[0] }}</strong></a>
     {% endfor %}
 </div>
 {% endif %}
 
-<section class="item-list"> 
-    {% if response[1] %}
-    
-        {#
-            0 id_rating
-            1 src_img
-            2 url
+{% if response[1] %}
+
+{#
+    0 id_rating
+    1 src_img
+    2 url
             3 title
             4 year
             5 rating
             6 is_present
-        #}
-
+            #}
+<main class="table">
+    <section class="table__header">
+        <h1>Películas de {{response[1][0][4]}}</h1>
+    </section>
+    <section class="table__body"> 
         <table>
-            <caption>Películas de {{response[1][0][4]}}</caption>
             <thead>
             <tr>
                 <th>Nombre</th>
@@ -63,7 +69,8 @@
             {% endfor %}
             </tbody>
         </table>
-</section>
+    </section>
+</main>
     {% endif %}
 
 {% endblock %}

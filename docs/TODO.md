@@ -1,13 +1,16 @@
 ## TODO (Hay otros en el código)
 ---
 
+> Cosas que hacer después de que gittes (push) el proyecto
 
-generar imagenes subgeneros
-fill sub generos.. y borrar vacios
-cambiar Error al clonar no encuentra www/logs
-ejecutar query is_prewsent de rating
+- generar imagenes subgeneros
+- fill sub generos.. y borrar vacios
+- cambiar Error al clonar no encuentra www/logs
+- ejecutar query is_prewsent de rating
+- meter 0000 a aquellas películas de rating que no tengan año
+- meter 
 
-meter 
+``` sql
 CREATE TABLE "deleted_movies" (
 	"id_movie" INTEGER,
 	"title"	TEXT NOT NULL,
@@ -41,9 +44,9 @@ CREATE TRIGGER delete_movie AFTER DELETE ON movies
 BEGIN
 	INSERT INTO deleted_movies VALUES (OLD.id_movie, OLD.title, OLD.realtitle, OLD.year, OLD.quality, OLD.extension, OLD.size, OLD.size_str, OLD.duration, OLD.duration_str, OLD.pathfile, OLD.resolution, OLD.fps, OLD.urldesc, OLD.ratings, OLD.urlpicture, OLD.censure, OLD.file_created, OLD.report_date, OLD.id_genre, OLD.id_subgenre, OLD.id_country, OLD.hdd_code);
 END;
+```
 
-
-### Aplicación principal
+### APLICACIÓN PRINCIPAL
 
 - [ ] Arreglar el setup.py
 - [x] Refactorización
@@ -111,7 +114,7 @@ Catalogar Queries por aparición en archivos: archivo.js, core.py.. etc
 - [X] Mostrar un mensaje de "no encontrado ningun elemento" en mantenimiento al no obtener pelis, pais, etc
 - [x] rating is present script check
 ---
-### Modo servidor Web
+### SERVIDOR WEB
 - [x] Copiar listado a portapapeles
 - [x] Generar avatar para subgeneros y géneros
 - [x] Mejorar el modo en que se muestra el listado de películas peor valoradas haciendolo más útil (orden alfabetico, / agrupación por géneros)
@@ -170,7 +173,7 @@ https://github.com/chrischase011/simple_flask
 - [ ] .gitignore para desarrollo y para producción
 
 ---
-## ESTILOS
+### CSS
 - [X] Cuando haces una busqueda y el cursos sale de text al intentar darle al boton buscar, acabas dandole a borrar texto
 - [ ] Agrupar todas las opciones para una pelí en un icono con li, o select
 - [ ] En vez de botones tool edit un list icon con ver, editar borrar solo para admins
@@ -178,14 +181,23 @@ https://github.com/chrischase011/simple_flask
 - [ ] Dar animación y efectos al estilo
 - [ ] Mejorar tiempo de carga imagen.gif - Mejorar pantalla de espera: Cargando, wait...
 - [ ] Form position sticki??
----
-### CSS
+- [ ] Comprobar si :root:has(-checked) está disponible en los nuevos navegadores
 - [@] Mejorar modo oscuro
 - [@] Mejorar modo móvil, tablet, normal, pantalla grande @queri-media
-- Botón salir del menú queda feo
+- [ ] Botón salir del menú queda feo
+- [ ] Mejorar los colores
 ---
+
+## JAVASCRIPT
+- [ ] main.js crear un bucle para all_data fillData, refactorizar
+- [ ] chartjs.js Generar los gráficos de las estadísticas mediante javascript
+- [ ] se ha jodido el mapa en estadisticas ??
+---
+
 ## ERRORES
-- [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir. Ver en Windows por qué se obtiene mal.
+- [X] listado y descargar se unen
+- [X] Cuando no se devuelven busquedas en buscador salta error con cada tecla que se pulsa
+- [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir. Ver en Windows por qué se obtiene mal. Ver time to secon, y filemetadata
 - [X] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
 NO el problema es que has puesto la fecha como UNIQUE y hace un reporte de external o internal en el mismo día se pisen (ARREGLADO PERO COMPROBAR)
 - [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set. 

@@ -12,6 +12,13 @@
 
 
 /*
+
+IMPORTANTE
+Usar --style compressed para evitar que en el css final salgan estos comentarios.
+Además comprime el código
+
+ver :has() compatibilidad en el futuro
+
 sass --watch sass/index.scss css/main.css
 
 Calcular filtros para colorear SVG
@@ -25,4 +32,21 @@ https://angrytools.com/css-flex/
 
 Iconos SVG genericos gratis
 https://icons.getbootstrap.com/
+
+
+
+
+BEM: La metodología BEM (bloque, elemento, modificador) 
+Block component
+.btn {}
+
+Element that depends upon the block
+.btn__price {}
+
+Modifier that changes the style of the block
+.btn--orange {} 
+.btn--big {}
+
+
 */
+

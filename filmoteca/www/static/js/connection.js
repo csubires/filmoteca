@@ -31,7 +31,8 @@ export class Handler_connection {
             }
 
         }).catch(error => {
-            showMessage(error.message, 'danger')
+            if (error.message == null)
+                showMessage(error.message, 'danger')
             return null
         }) 
 

@@ -1,5 +1,5 @@
 import { Handler_connection } from './connection.js';
-import { Confirm } from './utils.js';
+import { showMessage } from './utils.js';
 
 window.addEventListener('load', function () {
     const cnt = new Handler_connection();
@@ -33,44 +33,41 @@ window.addEventListener('load', function () {
                 dataJson = dataJson.data[0]
                 if (dataJson) {
                     cardInfoFilm.insertAdjacentHTML('afterbegin', `
+                    
                     <strong>${dataJson.realtitle}</strong>
                     <img src="/covers/${dataJson.id_genre}${dataJson.urlpicture}">
                     <a target="_blank" href="https://www.filmaffinity.com${dataJson.urldesc}">
-                        <span><i class="icon-file"></i>${dataJson.extension}</span>
-                        <span><i class="icon-film"></i>${dataJson.quality}</span>
-                        <span><i class="icon-database"></i>${dataJson.hdd_code}</span>
-                        <span><i class="icon-hdd"></i>${dataJson.size_str}</span>
+                    <span><i class="icon-file"></i>${dataJson.extension}</span>
+                    <span><i class="icon-film"></i>${dataJson.quality}</span>
+                    <span><i class="icon-database"></i>${dataJson.hdd_code}</span>
+                    <span><i class="icon-hdd"></i>${dataJson.size_str}</span>
                     </a>
-                    <div class="country"><i>${dataJson.flag}</i><span>${dataJson.country}</span></div>`)
+                    <div class="country"><i>${dataJson.flag}</i><span>${dataJson.country}</span></div>
+                    `)
                 }
             }
             // Hacer visible la carta info
-            showAndHidde(cardInfoFilm, 'visible', 2)    // Traer la tarjeta de información al frente
+            showAndHidde(cardInfoFilm, 'visible', 4)    // Traer la tarjeta de información al frente
             e.target.dataset.filled = ''                // Establecer atributo para evitar repetir petición
         },
 
         // BOTÓN - Rellenar formulario de edición de película
-        'edit-film': (e) =>  {
+        'show-dialog-edit': (e) =>  {
             e.preventDefault()
             movieForm.dataset.idFilm = e.target.dataset.idFilm
             fillFormEdit()
-            showAndHidde(movieForm, 'visible', 9)
-            showAndHidde(screenBlock, 'visible', 8)
+            document.querySelector('#dialog-edit').showModal()
+        },
+
+        // BOTÓN - Cerrar ventana de dialogo
+        'close-dialog': (e) => {
+            e.target.closest('dialog').close('cancel')
         },
 
         // BOTÓN - Cerrar ventana padre
         'close': (e) =>  {
             screenBlock && showAndHidde(screenBlock, 'hidden', -1)
             showAndHidde(e.target.parentElement, 'hidden', -1)
-        },
-
-        // BOTÓN - Cerrar ventana formulario
-        'close_form': (e) =>  {
-            e.preventDefault()
-            screenBlock.style.visibility = "hidden"
-            movieForm.style.visibility = "hidden"
-            screenBlock.style.zIndex = -1
-            movieForm.style.zIndex = -1
         },
 
         // BOTÓN - Salvar código de un país
@@ -87,51 +84,41 @@ window.addEventListener('load', function () {
 
         // BOTÓN - Borrar película
         'delete-film': async (e) =>  {
-            let result = await Confirm('Borrar película', `¿Estas seguro de BORRAR la película "${e.target.dataset.titleFilm}"?`, 'Borrar').then(alert)
-            console.log(result)
-            alert('mierda ' + result)
-
-            if (confirm(`¿Estas seguro de BORRAR la película "${e.target.dataset.titleFilm}"?`)) {
-                let params = {
-                    'csrf_token_movie': e.target.dataset.csrfTokenFilm,
-                    'id_movie': e.target.dataset.idFilm,
-                }
-                let dataJson = await cnt.send('DELETE', '/api/delete_movie', params)
-                if (dataJson) {
-                    let cardInfoFilm = document.querySelector(`#card-info-film-${e.target.dataset.idFilm}`)
-                    cardInfoFilm.innerHTML = `<strong>Película ${e.target.dataset.titleFilm} eliminada</strong><p>${dataJson.message}</p>` 
-                }         
+            let params = {
+                'csrf_token_movie': e.target.dataset.csrfTokenFilm,
+                'id_movie': e.target.dataset.idFilm,
+            }
+            let dataJson = await cnt.send('DELETE', '/api/delete_movie', params)
+            if (dataJson) {
+                let cardInfoFilm = document.querySelector(`#card-info-film-${e.target.dataset.idFilm}`)
+                cardInfoFilm.innerHTML = `<strong>Película ${e.target.dataset.titleFilm} eliminada</strong><p>${dataJson.message}</p>` 
             }
         },
 
         // BOTÓN - Borrar reporte en mantenimiento
         'delete-report': async (e) =>  {  
-            if (confirm(`¿Estas seguro de BORRAR el reporte "${e.target.dataset.dateReport}"?`)) {
-                let params = {
-                    'id_report': e.target.dataset.idReport,
-                    'csrf_token_form': e.target.dataset.csrfTokenForm
-                }
-                let dataJson = await cnt.send('DELETE', '/api/delete_report', params)
-                if (dataJson) {
-                    let trReport = document.querySelector(`#report-tr-${e.target.dataset.idReport}`)
-                    trReport.innerHTML = `<tr><td colspan="11"${e.target.dataset.dateReport} ${dataJson.message}</td><tr>`  
-                }         
+            let params = {
+                'id_report': e.target.dataset.idReport,
+                'csrf_token_form': e.target.dataset.csrfTokenForm
             }
+            let dataJson = await cnt.send('DELETE', '/api/delete_report', params)
+            if (dataJson) {
+                let trReport = document.querySelector(`#report-tr-${e.target.dataset.idReport}`)
+                trReport.innerHTML = `<tr><td colspan="11"${e.target.dataset.dateReport} ${dataJson.message}</td><tr>`  
+            }         
         },
 
         // BOTÓN - Establecer película como presente
         'set-present': async (e) =>  { 
-            if (confirm(`¿Estas seguro de establecer como presente "${e.target.dataset.title}"?`)) { 
-                let params = {
-                    'id_rating': e.target.dataset.idRating,
-                    'csrf_token_form': e.target.dataset.csrfTokenForm
-                }
-                let dataJson = await cnt.send('PUT', '/api/set_present', params)
-                if (dataJson) {
-                    let trReport = document.querySelector(`#rating-tr-${e.target.dataset.idRating}`)
-                    trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`  
-                }
-            } 
+            let params = {
+                'id_rating': e.target.dataset.idRating,
+                'csrf_token_form': e.target.dataset.csrfTokenForm
+            }
+            let dataJson = await cnt.send('PUT', '/api/set_present', params)
+            if (dataJson) {
+                let trReport = document.querySelector(`#rating-tr-${e.target.dataset.idRating}`)
+                trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`  
+            }
         },
 
         // BOTÓN - Buscar la película que supuestamente está presente
@@ -235,6 +222,13 @@ window.addEventListener('load', function () {
             movieForm['pathfile'].value = pathfolder + "/" + movieForm['pathfile'].value.split("/").at(-1)
         },
 
+        // BUTTON - Mostrar el diálogo de confirmación
+        'show-dialog': (e) => {
+            let id_movie = e.target.dataset.idFilm
+            const dialog = document.querySelector(`#dialog-${id_movie}`);
+            dialog.showModal();
+        },
+
         // INPUT - Borrar el campo de busqueda principal
         'clear-search': () =>  {
             searchForm['text-search'].value = ''
@@ -244,13 +238,27 @@ window.addEventListener('load', function () {
         'copy-clipboard': () => {
             let content = document.querySelector('.list-copy').innerText
             navigator.clipboard.writeText(content)
-            alert("Listado copiado al portapapeles")
+            showMessage('Listado copiado al portapapeles', 'success')
         },
 
         // RADIO - Modo tema claro
         'light-mode': () =>  {  
             document.body.setAttribute('class', '')
             localStorage.setItem('theme', '') 
+            const themeSwitch = document.querySelector('.theme-switch');
+            themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
+            
+            themeSwitch.addEventListener('change', function (e) {
+                if(e.currentTarget.checked === true) {
+                // Add item to localstorage
+                    localStorage.setItem('switchedTheme', 'true');
+                } else {
+                // Remove item if theme is switched back to normal
+                    localStorage.removeItem('switchedTheme');
+                }
+            });
+
+
         },
 
         // RADIO - Modo tema oscuro
@@ -276,7 +284,7 @@ window.addEventListener('load', function () {
 
     // EVENTO - AL CLICKAR EN BOTONES
     makeClickeable('click', '.btn')
-    
+
     // EVENTO - HABILITAR BOTÓN DE ACTUALIZAR PELÍCULA
     makeClickeable('change', '#urldesc')
 
@@ -408,7 +416,4 @@ window.addEventListener('load', function () {
         movieForm['hdd_code_ext'].checked = (dataJson['hdd_code'] == 1 ? true : false)
     }
 
-
-
-    
 })  // END window load

@@ -1,10 +1,24 @@
 #!/usr/bin/python3
+import sys
+
 from www.controller import app as application
-from config.server_config import DevelopmentConfig, ProductionConfig
+from config.server_config import DevelopmentConfig, ProductionConfig, TestingConfig
 
 if __name__ == '__main__':
+
+	mode = 'default'
+	if sys.argv[1:]:
+		mode = sys.argv[1]				# Opción
+
+	configurations = {
+		'default': ProductionConfig,
+		'development': DevelopmentConfig,
+		'production': ProductionConfig,
+		'testing': TestingConfig
+	}
+
 	# import os
 	# print(os.getcwd())
-	application.config.from_object(DevelopmentConfig())
-	# application.config.from_pyfile('../config/server_config.py')
+	print('Executing in mode', configurations[mode])
+	application.config.from_object(configurations[mode])
 	application.run()

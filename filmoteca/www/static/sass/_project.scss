@@ -22,16 +22,6 @@
 //  ---------------
 
 #form-editor {
-    @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
-    top: 0;
-    position: absolute;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    display: flex;
-    visibility: hidden;
-    z-index: -1;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
     >div {
         width: 49%;
@@ -52,30 +42,12 @@
             text-transform: capitalize;
         }
 
-        &:last-child {
-            justify-content: end;
-            order: 1;
-            flex-grow: 1;
-            display: flex;
-            width: 99%;
-            gap: 1rem;
-            border: none;
-        }
     }   // End div
 
     span {
         opacity: 0.5;
     }
 
-    .btn-close {
-        top: 1rem;
-        right: 1rem;
-        width: auto;
-        height: auto;
-        background-color: c.$bs-red;
-        border-radius: 50%;
-        padding: 25px;
-    }
 }
 
 //  ----------------
@@ -83,11 +55,11 @@
 //  ----------------
 
 .item-list {
-    @include mixins.make-container(1.5rem, 2rem, c.$bs-gray-800);
+    @include mixins.make-container(1.5rem, 2rem, transparent);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    border: 1px solid c.$bs-gray-200;
+    border: 1px solid transparent;
     justify-content: center;
 
     // Para comparar películas en mantenimiento (2 columnas)
@@ -110,18 +82,54 @@
         display: flex;
         flex-direction: column;
         background-color: c.$bs-gray-100;
-        border-radius: 5px;
+        border-radius: 15px;
         font-size: 1rem;
         align-content: baseline;
         position: relative;
-        width: 14rem;
+        width: 15rem;
+        height: 20rem;
         text-align: center;
         gap: 0.3rem;
-        transition: transform .5s ease;
+        overflow: hidden;
+        transition: transform .5s ease-in-out;
+        outline: 1px solid #c8bbbb;
         &:hover {
             filter: saturate(150%);
             transform: scale(1.05);
             box-shadow: 5px 5px 20px 0 black;
+            transition: .5s ease-in-out;
+        }
+
+        &::before {
+            position: absolute;
+            content: "";
+            background: linear-gradient(0deg, white 70%, transparent);
+            transition: 1s ease-in-out;
+            z-index: 1;
+            width: 100%;
+            height: 80%;
+            bottom: -4rem;
+        
+        }
+
+        &:hover::before {
+            bottom: 0;
+        }        
+
+        img {
+			position: relative;
+			height: 100%;
+			transition: .5s;
+            background-repeat: no-repeat;
+        }
+
+        &:hover img {
+            bottom: 20%;
+        }
+
+        &:hover .details {
+            transition: 1s ease-in-out;
+            transform: translateY(-2rem);
         }
 
         strong {
@@ -131,30 +139,38 @@
             text-overflow: ellipsis;
         }
 
-        >img {
-            border: 4px solid transparent;
-            max-height: 10rem;
-            object-fit: cover;
-            object-position: top;
-            justify-self: center;
-            background-image: url('icons/break.svg');
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-        div {
+        .details {
+            position: absolute;
+            bottom: 0;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            gap: 1rem;
             justify-content: space-around;
+            transform: translateY(2rem);
+            z-index: 2;
 
-            &:last-child {
-                padding: 0.5rem;
+            strong {
+                flex-basis: 100%;
             }
-        }
 
-        .icon-star {
-            filter: invert(57%) sepia(91%) saturate(618%) hue-rotate(0deg) brightness(80%) contrast(200%);
+            :nth-child(2)::after {
+                content: " ★";
+                font-size: 1.5rem;
+                color: gold;
+            }
+
+            :nth-child(3)::before {
+                content: "🗓 ";
+                font-size: 1.5rem;
+                filter: saturate(0%);
+            }
+
+            :nth-child(4)::before {
+                content: "⏱ ";
+                font-size: 1.5rem;
+                filter: saturate(0%);
+            }            
         }
 
         // ----------------------------------------- 
@@ -169,7 +185,7 @@
         .card-click-film {
             background-color: transparent;
             position: absolute;
-            z-index: 1;
+            z-index: 3;
         }
 
         .card-info-film {
@@ -179,15 +195,15 @@
             position: absolute;
             flex-direction: column;
             border-radius: 5px;
+            padding-top: 2rem;
             z-index: -1;
             >img {
                 height: 4rem;
-                border: 4px solid c.$bs-gray-100;
                 object-fit: cover;
                 background-image: url('icons/break.svg');
-                background-repeat: no-repeat;
-                background-size: contain;
                 border-radius: 5px;
+                transition: 1s ease-in-out;
+                background-repeat: no-repeat;
                 &:hover {
                     position: absolute;
                     height: 100%;
@@ -239,6 +255,10 @@
                 background-color: c.$bs-red;
             }
 
+            .admin-tools {
+                margin-top: 1rem;
+            }
+
         }   // End .card-info-film
     }   // End .card-film
 }   // End .item-list
@@ -261,27 +281,30 @@
 //  -----------------------------------------
 
 #control {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 4rem;
+    height: 4rem;
     position: fixed;
-    bottom: 1rem;
+    top: 10vh;
     right: 1rem;
     opacity: .7;
     border-radius: 50%;
-    z-index: 4;
+    z-index: 5;
+    font-size: 2.5rem;
+    text-align: center;
+
     background: {
-        color: c.$bs-yellow;
-        image: url("icons/calendar2.svg");
-        repeat: no-repeat;
+        color: c.$bs-orange;
         position-x: 50%;
         position-y: 50%;
-        size: 1.5rem;
+        size:3rem;
     }
     &:hover {
         opacity: 1;
     }
 
     .menu {
+        position: absolute;
+        top: 0;
         font-size: 1.5rem;
         line-height: 2rem;
         width: 100%;
@@ -291,7 +314,14 @@
         &:hover .container-bottom {
             display: block;    
             overflow-y: scroll;
-            max-height: 50vh; 
+            border-radius: 15px;
+        }
+
+        .btn {
+            background-color: white;
+            &:hover {
+                background-color: c.$bs-blue;
+            }
         }
 
         .container-bottom {
@@ -299,16 +329,19 @@
             position: absolute;
             background-color: c.$bs-gray-100;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            width: 8rem;
+            min-width: 20vw;
             right: 0;
-            bottom: 0;
             scrollbar-color: c.$bs-gray-800 c.$bs-gray-600;
             scrollbar-width: 1rem; 
             border: 1px solid c.$bs-gray-500;  
             letter-spacing: 0.3rem;
+            max-height: 85vh;
+            background-color: rgba(255, 255, 255, 0.3333333333);
+            backdrop-filter: blur(7px);
 
             a {
                 color: c.$bs-gray-800;
+                
                 padding: 0.25rem 0rem;
                 text-decoration: none;
                 display: block;
@@ -317,7 +350,7 @@
                     background-color: c.$bs-gray-400;
                     border-left: solid 5px c.$bs-gray-600;
                     padding: 1rem;
-                    font-size: 1.5rem;
+                    font-size: 2rem;
                 }
 
                 // Botones arriba/abajo del todo
@@ -346,12 +379,6 @@
 
 $icons: 
     "search",
-    "clear",
-    "menu",
-    "gear",
-    "star", 
-    "calendar",
-    "watch",
     "file",
     "film",
     "database",
@@ -370,3 +397,7 @@ $icons:
     width: 1.5rem;
     border-radius: 7px;
 }
+
+//  -------------
+//  MEDIA QUERIES
+//  -------------

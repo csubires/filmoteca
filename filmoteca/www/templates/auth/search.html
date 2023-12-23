@@ -3,7 +3,7 @@
 
 {% block content%}
 <div class="container-advance-search">
-    <details>
+    <details {{ '' if response[1] else 'open' }}>
         <summary class="btn btn-primary">Busqueda Avanzada</summary>    
 
         {% if response[0] %}
@@ -67,7 +67,7 @@
                     <select id="id_country" name="id_country">                     
                         <option value="">n/a</option>
                         {% for select in response[0][4] %}
-                        <option value="{{ select[0] }}">{{ select[0] }}</option>
+                        <option value="{{ select[0] }}">{{ select[1] }}</option>
                         {% endfor %}
                     </select>
                 </label>
@@ -118,12 +118,11 @@
     {{ render_form_movie() }}
 {% endif %}
 
-<div id="control">
+<div id="control"> 🗓
     <div class="menu">
-        <i class="menu-ico control-ico" aria-hidden="true"></i>	
-        <div class="menu-content-center">
-            <a href="#nav-menu"><i class="up-ico form-ico" aria-hidden="true"></i></a>
-            <a href="#footer-bottom"><i class="down-ico form-ico" aria-hidden="true"></i></a>
+        <div class="container-bottom">
+            <a href="#nav-menu"><i class="icon-arrow-up"></i></a>
+            <a href="#footer-bottom"><i class="icon-arrow-down"></i></a>
         </div>
     </div>
 </div>

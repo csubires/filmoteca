@@ -3,9 +3,9 @@
 
 // Tema claro
 .theme {
-	--color-primary:#f8f9fa;
-	--color-secondary: #e9ecef;
-	--color-text: #000;
+	--color-primary: #e9ebee;
+	--color-secondary: #fafafa;
+	--color-text: #212429;
 
 	// Tema oscuro
 	&-dark {
@@ -26,7 +26,9 @@ html {
 }
 
 body {
-	background-color: var(--color-primary);
+	background: rgb(244,244,250);
+	background: radial-gradient(circle, rgba(244,244,250,1) 22%, rgba(218,214,221,1) 88%);
+	
 	color: var(--color-text);
 	font-family: c.$bs-body-font-family;
 	font-size: c.$bs-body-font-size;
@@ -49,82 +51,97 @@ body {
 //  -----------------------------
 
 header {
-	border-bottom: 1px solid c.$bs-gray-700;
-	box-shadow: 0 4px 2px -2px c.$bs-gray-500;
-	padding: 0.7rem;
-	background: linear-gradient(90deg, rgba(215, 205, 205, 0.16) 26%, rgba(160, 160, 202, 0.12) 73%);
+	background-color: transparent;
+	margin-top: 1rem;
 
 	nav {
-		background-color: transparent;
+		width: 80%;
+		padding: .5rem;
 		display: flex;
+		flex-direction: row;
 		justify-content: space-around;
+		border-radius: 10rem;
+		background-color: c.$bs-gray-300;
+		margin-inline: auto;
 
 		// Formulario de busqueda
 		form {
-			background-color: white;
-			border-radius: 5px;
-			border: 1px solid gray;
 			display: flex;
-			font-size: 1.5rem;
-			height: 100%;
+			flex-direction: row;
+			background-color: c.$bs-gray-200;
+			align-items: center;
 			justify-content: center;
-			z-index: 2;
+			padding: 0.5rem;
+			border-radius: 4rem;
+			gap: .5rem;
+			width: 25%;
+			transition: .5s ease-in-out;
 			&:hover {
-				scale: 1.4;
+				outline: 1px solid c.$bs-green;
+				width: 50%;
 			}
 
 			#text-search {
 				font-family: c.$bs-font-sans-serif;
-				padding: 0.3rem 0.5rem;
+				padding: .5rem;
+				width: 100%;
 				border: none;
+				font-size: 2rem;
+				padding: 0 .5rem;
+				background: transparent;
 				outline: none;
-			}
-
-			#btn-search {
-				color: white;
-				letter-spacing: 2px;
-				padding: 0.5rem 0.5rem;
-				margin: 0.1rem;
-				border-radius: 5px;
-				&:hover {
-					background-color: c.$bs-dark;
+				&::placeholder {
+					color: gray;
 				}
 			}
 
-			#btn-clear {
-				background-size: 1.5rem;
-				padding: 0 1.5rem;
+			#btn-search {
+				border: none;
+				outline: none;
+				border-radius: 50%;
+				padding: 10px;
+				&:hover {
+					background-color: c.$bs-gray-400;
+				}
+			}
+
+			#clear-search {
+				border: none;
+				outline: none;
+				border-radius: 50%;
 				cursor:pointer;
+				font-style: normal;
 				&:hover {
 					background-color: c.$bs-gray-300;
-					border-radius: 50%;
-					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(93%) contrast(83%);
 				}
 			}
 		}	// form
 
 		// Menú de opciones
 		.menu {
-			display: inline-block;
-			font-size: 1rem;
-			font-weight: 500;
-			height: 100%;
-			line-height: 2rem;
+
 			position: relative;
 			text-align: center;
 			text-transform: capitalize;
-			align-self: center;
+
 			z-index: 5;
+
 			&:hover .container-left, 
 			&:hover .container-right {
-				display: block;    
+				display: block;
+				border-radius: 15px; 
 			}
 
 			i {
+				font-style: normal;
+				font-weight: bold;
+				font-size: 3rem;
 				background-size: 2.5rem;
 				padding: 1rem 1.5rem;
+				background-color: #e9ecef;
 				cursor:pointer;
 				&:hover {
+					font-weight: lighter;
 					border-radius: 50%;
 					background-color: c.$bs-gray-300;
 					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(10%) contrast(83%);
@@ -137,10 +154,10 @@ header {
 				border: 1px solid c.$bs-gray-500;  
 				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 				display: none;
-				margin-top: 0.5rem;
 				position: absolute;
 				width: 15rem;
 				z-index: 3;
+				top: 0;
 
 				.mark-opt {
 					@include mixins.make-alert(#084298, #cfe2ff, #b6d4fe);
@@ -155,13 +172,14 @@ header {
 						background-color: c.$bs-gray-400;
 						border-left: solid 5px c.$bs-gray-600;
 						padding: 1rem;
-						font-size: 1.2rem;
+						font-size: 1.5rem;
 					}
 				}
 			}
 
 			.container-left {
-				padding-bottom: 1rem;
+				left: 0;
+				padding: 1rem 0;
 			}
 
 			.container-right {
@@ -169,8 +187,13 @@ header {
 				overflow-y: scroll;
 				max-height: 80vh;
 			}
-
 		}	// .menu
+		
+		i {
+			opacity: 1;
+			border-radius: 50%;
+		}
+
 	}	// nav
 }	// header
 

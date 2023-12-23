@@ -41,7 +41,6 @@
     margin: 0 2rem;
     align-items: baseline;
     gap: 0.5rem;
-    overflow-x: scroll;
     height: 4.4em;
     &-little {
         text-align: center;
@@ -177,7 +176,7 @@
 //  -------------------------
 
 .card-genre {
-	background-color: c.$bs-gray-200;
+	background-color: transparent;
 
     a {
         background-color: c.$bs-gray-100;
@@ -186,14 +185,16 @@
         gap: 1rem;
         text-decoration: none;
         color: c.$bs-gray-500;
-        border-radius: 5px;
+        border-radius: 15px;
         border: 1px solid c.$bs-gray-400;
         width: min-content;
         padding: 1rem;
+        transition: transform .5s ease-in-out;
 
         &:hover {
-            box-shadow: 0 4px 16px 0 c.$bs-orange;
             filter: saturate(150%);
+            transform: scale(1.05);
+            box-shadow: 5px 5px 20px 0 black;
             text-decoration: underline;
             cursor: pointer;
         }
@@ -228,7 +229,7 @@
 .card-subgenre {
     background-color: c.$bs-gray-300;
     @extend .card-genre;
-
+    
     a {
         background-color: c.$bs-gray-200;
     }
@@ -290,4 +291,43 @@
         flex-direction: column;
         padding: 1rem;
     }
+}
+
+//  ------------
+//  A DESCARGAR
+//  ------------
+
+.years {
+	padding: .5rem;
+	display: flex;
+    flex-direction: row;
+    row-gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 4rem 0 8rem 0;
+}
+
+.years a[data-descr] {
+	position: relative;
+	border-radius: 10px;
+	text-decoration: none;
+	padding: 1rem 1rem .5rem;
+}
+
+.years a[data-descr]::before {
+	content: attr(data-descr);
+	position: absolute;
+	border-radius: 50%;
+	top: -2rem;
+	left: 1rem;
+	border: 1px solid c.$bs-blue;
+	text-align: center;
+	padding: .6rem;
+	transition: 1s ease-in-out;
+    background-color: white;
+}
+
+.years a[data-descr]:hover::before {
+	background-color: c.$bs-orange;
+	transform: translateY(-.3rem);
 }

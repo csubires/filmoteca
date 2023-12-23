@@ -21,7 +21,7 @@
             <nav>
                 <!-- Menú de administración -->
                 <div class="menu">
-                    <i class="icon-gear"></i>
+                    <i>⚙</i>
                     <div class="container-left">
                         {% if session['auth'] %}
                         <a href="/auth/maintenance"> Mantenimiento </a>
@@ -52,16 +52,15 @@
                 <!-- Buscador de películas -->
                 <form id="form-search" action="/view" method="POST">
                     <input type="hidden" name="csrf_token_form" value="{{ session['csrf_token_form'] }}">
-                    <i class="btn icon-clear" data-action="clear-search"></i>
-                    <i class="icon-search"></i>
-                    <input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año de la película" data-action="autocomplete-search">
+                    <i class="btn" id="clear-search" data-action="clear-search">🅧</i>
+                    <input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año" data-action="autocomplete-search">
                     <datalist id="dlSearch"></datalist>
-                    <input type="submit" class="btn btn-light" value="Buscar">      
+                    <input type="submit" id="btn-search" class="btn btn-light" value="🔍">
                 </form>
 
                 <!-- Listadp de películas por género -->
                 <div class="menu">
-                    <i class="icon-menu"></i>
+                    <i>𝄙</i>
                     <div class="container-right">
                         <a href="/view/1"> acción </a>
                         <a href="/view/4"> animación </a>

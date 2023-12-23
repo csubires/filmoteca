@@ -90,7 +90,7 @@ TAG_QUERY_REPORT = {
 	'insert_country': 'INSERT OR IGNORE INTO country (name) VALUES (:name)',
 	# RATING
 	'set_present': 'UPDATE rating SET is_present=1 WHERE id_rating = :id_rating',
-	'get_rating': 'SELECT id_rating, src_img, url, title, year, rating, is_present FROM rating WHERE year = :year ORDER BY rating DESC',
+	'get_rating': 'SELECT id_rating, src_img, url, title, year, rating, is_present FROM rating WHERE year is :year ORDER BY rating DESC',
 	'get_years': 'SELECT DISTINCT year, COUNT(*) FROM rating WHERE is_present=0 GROUP BY year ORDER BY year DESC',
 }
 

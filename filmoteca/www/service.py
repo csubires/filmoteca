@@ -4,7 +4,7 @@ from modules.utils import lg_prt, singleton							# Mostrar y Colorear texto en 
 from www.auxiliary import isValidEmail, htmlFilterChars, min_len
 
 from config.queries_database import TAG_QUERY_REPORT
-from config.global_constant import DB_FILE, NUMMOV_X_SEARCH, NUM_LAST_MOV, MAINTENANCE_OPTIONS, STR_MAINTENANCE_OPTIONS, MESSAGE_SUCCESS, MESSAGE_FAILURE, HEADERS_JSON
+from config.global_constant import DB_FILE, NUMMOV_X_SEARCH, NUM_LAST_MOV, MAINTENANCE_OPTIONS, MESSAGE_SUCCESS, MESSAGE_FAILURE, HEADERS_JSON
 
 
 @singleton
@@ -132,7 +132,7 @@ class HandlerService:
 
 		elif menu == 'ranking':
 			data1 = self.oDTB.execute('get_years')
-			data2 = self.oDTB.execute('get_rating', {'year': year}) if year is not None else None
+			data2 = self.oDTB.execute('get_rating', {'year': year})
 			data1 = data1 if data1 is not None and len(data1) > 0 else None
 			response = ('Descargar', 'inventories.html', [data1, data2])
 
@@ -154,12 +154,12 @@ class HandlerService:
 
 	def maintenance(self, menu):
 		# Obtener información para el mantenimiento
-		if menu in MAINTENANCE_OPTIONS:		# Comprobar que la opción está disponible
+		if menu in MAINTENANCE_OPTIONS.keys():		# Comprobar que la opción está disponible
 			data = self.oDTB.execute(menu)
 			if data is None:
 				response = ('Sin resultados', 'auth/maintenance.html', [])
 			else:
-				response = ('Mantenimiento', 'auth/maintenance.html', (menu, STR_MAINTENANCE_OPTIONS.get(menu, None), data))
+				response = ('Mantenimiento', 'auth/maintenance.html', (menu, MAINTENANCE_OPTIONS.get(menu, None), data))
 		else:
 			response = ('Mantenimiento', 'auth/maintenance.html', None)
 

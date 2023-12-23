@@ -9,7 +9,7 @@ from .models import FilmInet							# Modelo para almacenar información
 from .analyser import get_posible_url, parse_film, get_ranking_page
 from .utils import lg_prt, singleton, year_now			# Mostrar y Colorear texto en consola
 
-from config.global_constant import GENRE_TRANS, URL_BASE, URL_PICT, DB_FILE, PATH_COVERS, YEAR_INIT_RATING
+from config.global_constant import GENRE_TAG, URL_BASE, URL_PICT, DB_FILE, PATH_COVERS, YEAR_INIT_RATING
 from config.queries_database import TAG_QUERY
 
 
@@ -138,7 +138,7 @@ class HandlerService:
 					'stype[]': 'title',
 					'country': '',
 					# Convertir género a código de género de la web filmaffinity
-					'genre': GENRE_TRANS.get(genre, ''),
+					'genre': GENRE_TAG.get(genre, ''),
 					'fromyear': year,
 					'toyear': year
 				}
