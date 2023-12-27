@@ -1,50 +1,6 @@
 ## TODO (Hay otros en el código)
 ---
 
-> Cosas que hacer después de que gittes (push) el proyecto
-
-- generar imagenes subgeneros
-- fill sub generos.. y borrar vacios
-- cambiar Error al clonar no encuentra www/logs
-- ejecutar query is_prewsent de rating
-- meter 0000 a aquellas películas de rating que no tengan año
-- meter 
-
-``` sql
-CREATE TABLE "deleted_movies" (
-	"id_movie" INTEGER,
-	"title"	TEXT NOT NULL,
-	"realtitle"	TEXT,
-	"year"	INTEGER,
-	"quality"	TEXT,
-	"extension"	TEXT,
-	"size"	INTEGER,
-	"size_str"	TEXT,
-	"duration"	INTEGER,
-	"duration_str"	TEXT,
-	"pathfile"	TEXT UNIQUE,
-	"resolution"	TEXT,
-	"fps"	REAL,
-	"urldesc"	TEXT,
-	"ratings"	REAL DEFAULT 0.0,
-	"urlpicture"	TEXT,
-	"censure"	INTEGER DEFAULT 0,
-	"file_created"	TEXT,
-	"report_date"	TEXT,
-	"id_genre"	INTEGER NOT NULL,
-	"id_subgenre"	INTEGER DEFAULT -1,
-	"id_country"	INTEGER,
-	"hdd_code"	INTEGER NOT NULL DEFAULT 99,
-	FOREIGN KEY("id_subgenre") REFERENCES "genre"("id_genre"),
-	FOREIGN KEY("id_genre") REFERENCES "genre"("id_genre"),
-	FOREIGN KEY("id_country") REFERENCES "country"("id_country")
-)
-
-CREATE TRIGGER delete_movie AFTER DELETE ON movies
-BEGIN
-	INSERT INTO deleted_movies VALUES (OLD.id_movie, OLD.title, OLD.realtitle, OLD.year, OLD.quality, OLD.extension, OLD.size, OLD.size_str, OLD.duration, OLD.duration_str, OLD.pathfile, OLD.resolution, OLD.fps, OLD.urldesc, OLD.ratings, OLD.urlpicture, OLD.censure, OLD.file_created, OLD.report_date, OLD.id_genre, OLD.id_subgenre, OLD.id_country, OLD.hdd_code);
-END;
-```
 
 ### APLICACIÓN PRINCIPAL
 
@@ -174,6 +130,8 @@ https://github.com/chrischase011/simple_flask
 
 ---
 ### CSS
+- [ ] linear gradiend en search
+- [ ] Meter los mensajes poppup por encima del dialog (form update film)
 - [X] Cuando haces una busqueda y el cursos sale de text al intentar darle al boton buscar, acabas dandole a borrar texto
 - [ ] Agrupar todas las opciones para una pelí en un icono con li, o select
 - [ ] En vez de botones tool edit un list icon con ver, editar borrar solo para admins
@@ -189,6 +147,7 @@ https://github.com/chrischase011/simple_flask
 ---
 
 ## JAVASCRIPT
+- [ ] Cuando se le de a ordenar por título que en vez de aparecer años aparezca alfabeto
 - [ ] main.js crear un bucle para all_data fillData, refactorizar
 - [ ] chartjs.js Generar los gráficos de las estadísticas mediante javascript
 - [ ] se ha jodido el mapa en estadisticas ??

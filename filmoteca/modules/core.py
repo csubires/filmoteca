@@ -219,7 +219,7 @@ class HandlerScan:
 
 	def insert_movie(self, params):
 		# Insertar una película nueva en la base de datos
-		if all(params['title'], params['id_genre'], params['size']):
+		if all([params['title'], params['id_genre'], params['size']]):
 			self.oDTB.execute('insert_movie', params)
 			lg_prt('gb', '[✔] Insert Movie:', params)
 		else:

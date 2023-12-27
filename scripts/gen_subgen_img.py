@@ -10,9 +10,9 @@ import os 												# Para saber si existe una carpeta
 import random 											# Pequeño descanso aleatorio entre peticiones web
 from PIL import Image
 
-from modules.database import HandlerSQL					# Manejador de la base de datos
-from config.queries_database import TAG_QUERY
-from modules.utils import lg_prt						# Mostrar y Colorear texto en consola
+from filmoteca.modules.database import HandlerSQL					# Manejador de la base de datos
+from filmoteca.config.queries_database import TAG_QUERY
+from filmoteca.modules.utils import lg_prt						# Mostrar y Colorear texto en consola
 
 GENRE_PATH = 'filmoteca/www/images/genres/'
 COVER_PATH = 'filmoteca/www/images/covers/'
