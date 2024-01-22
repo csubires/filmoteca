@@ -220,4 +220,27 @@ app.config['SECRET_KEY'] = 'super secret key'
 > Raises:
 
 
+## DOCKER
+Permanencia de archivos
+Pasar webs a /var/wwww
+Multiples webs en distintos puertos?
+1 servidor varias webs
+Estresas la web
+Buscar vulnerabilidades
+
+* Crear un CD/CI con gitea
+https://aprendeit.com/como-montar-un-gitea-con-ci-cd-con-drone/
+https://dev.to/ruanbekker/self-hosted-cicd-with-gitea-and-drone-ci-200l
+https://blog.ruanbekker.com/blog/2021/03/09/cicd-with-droneci-and-gitea-using-docker-compose/
+
+---
+
+
+https://tailwindui.com/components/application-ui/navigation/pagination
+https://www.clubdetecnologia.net/blog/2020/buenas-practicas-de-seguridad-para-las-api-rest/
+https://github.com/Open-Bootcamp/docker
+https://stackoverflow.com/questions/45732458/ignore-files-committed-to-git-and-also-remove-them-from-history
+https://codepen.io/ndangelo/pen/BaamRam
+https://github.com/purecatamphetamine/country-flag-icons/tree/gh-pages/1x1
+https://noticiasseguridad.com/tutoriales/como-proteger-cualquier-servidor-linux-proteccion-automatizada-de-servidor/
 
