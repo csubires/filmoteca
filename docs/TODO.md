@@ -127,6 +127,7 @@ https://github.com/chrischase011/simple_flask
 - INSERT INTO t0(c) VALUES(random()) RETURNING *;
 - pasar pelis borradas a una tabla nueva ??
 - [ ] .gitignore para desarrollo y para producción
+- [ ] Web alternativa para consegir datos cine.com
 
 ---
 ### CSS
