@@ -1,0 +1,262 @@
+{# RENDERIZAR MENSAJES DEL SERVIDOR #}
+{% macro form_message() %}
+
+<svg xmlns="http://www.w3.org/2000/svg" id="alertIcons" style="display: none">
+    <symbol id="success-icon" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+        />
+    </symbol>
+    <symbol id="info-icon" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+        />
+    </symbol>
+    <symbol id="danger-icon" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+        />
+    </symbol>
+</svg>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                <button type="button" class="btn-close" aria-label="Close"></button>
+                <svg class="bi" role="img" aria-label="Alert:">
+                    <use xlink:href="#{{ category }}-icon" />
+                </svg>
+                <div>{{ message|capitalize|safe }}</div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}         
+{% endmacro %}
+
+
+{# RENDERIZAR UNA PELÍCULA #}
+{% macro render_card_movie(movie, year_tag=None, show_genre=None) %}
+{# 0 id_movie, 1 title, 2 year, 3 duration_str, 4 ratings, 5 urlpicture, 6 id_genre, 7 genre #}
+
+<div class="card-film"{{ ' id=' + year_tag|string + '' if year_tag is not none else "" }}>
+    <!-- Card clicker -->
+    <div class="card-click-film" data-id-film="{{ movie[0] }}" data-action="info-film">
+        {% if show_genre %}
+        <div class="popup-genre">{{ movie[7] }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Card info film -->
+    <div class="card-info-film" id="card-info-film-{{ movie[0] }}">
+        <button type="button" class="btn btn-close" data-action="close" aria-label="Close"></button>
+
+        {# GENERADO POR JAVASCRIPT
+            0 id_movie
+            1 realtitle
+            2 quality
+            3 extension
+            4 size_str
+            5 urldesc
+            6 urlpicture
+            7 id_genre
+            8 id_country
+            9 country
+            10 hdd_code
+        #}
+
+        {% if session['auth'] %}
+        <div class="admin-tools">
+            {% set btn_delete = '<button  type="submit" class="btn btn-danger-outline" data-id-film="' ~ movie[0] ~ '" data-title-film="' ~ movie[1] ~ '" data-csrf-token-film="' ~ session['csrf_token_movie'] ~ '" data-action="delete-film">Eliminar</button>' %}
+            {{ render_dialog(movie[0], 'Eliminar película', '¿Estás seguro de que quieres eliminar "' + movie[1] + '" ?', btn_delete)}}
+            <button class="btn btn-danger-outline" data-action="show-dialog" data-id-film="{{ movie[0] }}">ELIMINAR</button>
+
+            <button class="btn btn-primary" data-action="show-dialog-edit" data-id-film="{{ movie[0] }}" data-csrf-token-film="{{ session['csrf_token_movie'] }}">EDITAR</button>
+
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Card film -->
+    <img src="{{ url_for('render_image', tag='covers', file_name=movie[6]|string + movie[5]|string) }}" loading="lazy">
+    <div class="details">
+        <strong>{{ movie[1] }}</strong>
+        <div>{{ movie[4] }}</div>
+        <div>{{ movie[2] }}</div>
+        <div>{{ movie[3] }}</div>
+    </div>
+
+</div>
+{% endmacro %}
+
+
+{# RENDERIZAR FORMULARIO DE EDICIÓN DE PELÍCULA #}
+{% macro render_form_movie() %}
+<!-- DIV para bloquear la pantalla con una opacidad x 
+<img src="{{ url_for('static', filename='img/wait.gif') }}">-->
+
+<!-- Formulario de edición de películas -->
+<dialog id="dialog-edit" class="edit">
+    <form method="dialog" id="form-editor" data-id-film="33">
+        <header><h3>Editar película</h3></header>
+
+        <article class="edit">
+            <!--<button type="button" class="btn btn-close" data-action="close" aria-label="Close"></button>-->
+            <input type="hidden" name="csrf_token_form" value="{{ session['csrf_token_form'] }}">
+
+            <div class="row">
+                <label for="id_movie" class="row"><span>id_movie</span>
+                    <input type="number" id="id_movie" class="noborder" name="id_movie" disabled>
+                </label>
+                <label for="year" class="row"><span>year</span>
+                    <div class="inp-number">
+                        <input type="button" onclick="this.parentNode.querySelector('#year').stepDown()" value="-">
+                        <input type="number" id="year" name="year" class="noborder" min="1800" max="2900" maxlength="4" placeholder="9999">
+                        <input type="button" onclick="this.parentNode.querySelector('#year').stepUp()" value="+">
+                    </div>    
+                </label>
+            </div>
+
+            <div class="row">
+                <label for="ratings" class="row"><span>HDD</span>
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="hdd_code" id="hdd_code_int" autocomplete="off" value="0">
+                        <label class="btn btn-primary-outline" for="hdd_code_int">Interno</label>
+                        <input type="radio" class="btn-check" name="hdd_code" id="hdd_code_ext" autocomplete="off" value="1">
+                        <label class="btn btn-primary-outline" for="hdd_code_ext">Externo</label>
+                    </div>
+                </label>
+                <label for="censure" class="row"><span>censure</span>
+                    <input type="checkbox" name="censure" value="0">
+                </label>
+            </div>
+
+            <div>
+                <label for="title"><span>title</span>
+                    <input type="text" name="title">
+                </label>
+                <label for="realtitle"><span>realtitle</span>
+                    <input type="text" name="realtitle">
+                </label>
+            </div>
+
+            <div>
+                <label for="size"><span>size (bytes)</span>
+                    <div class="inp-number">
+                        <input type="button" onclick="this.parentNode.querySelector('#size').stepDown()" value="-">
+                        <input type="number" id="size" name="size" class="noborder" placeholder="9999999">
+                        <input type="button" onclick="this.parentNode.querySelector('#size').stepUp()" value="+">
+                    </div> 
+                </label>
+                <label for="size_str"><span>size_str</span>
+                    <input type="text" name="size_str" placeholder="999.9 MB" disabled>
+                </label>
+            </div>
+
+            <div>
+                <label for="quality"><span>quality</span>
+                    <input type="text" name="quality" list="dlQuality" placeholder="SELEC">
+                    <datalist id="dlQuality" name="dlQuality"></datalist>
+                </label>
+                <label for="extension"><span>extension</span>
+                    <input type="text" maxlength="4" name="extension" list="dlExtension">
+                    <datalist id="dlExtension"></datalist>
+                </label>
+            </div>
+
+            <div>
+                <label for="fps"><span>fps</span>
+                    <div class="inp-number">
+                        <input type="button" onclick="this.parentNode.querySelector('#fps').stepDown()" value="-">
+                        <input type="number" id="fps" name="fps" placeholder="99.99" step="0.1" list="dlFps">
+                        <datalist id="dlFps"></datalist>
+                        <input type="button" onclick="this.parentNode.querySelector('#fps').stepUp()" value="+">
+                    </div>    
+                </label>
+                <label for="resolution"><span>resolution</span>
+                    <input type="text" name="resolution" placeholder="999x999" list="dlResolution">
+                    <datalist id="dlResolution"></datalist>
+                </label>
+            </div>
+
+            <div>
+                <label for="duration"><span>duration (segundos)</span>
+                    <div class="inp-number">
+                        <input type="button" onclick="this.parentNode.querySelector('#duration').stepDown()" value="-">
+                        <input type="number" id="duration" name="duration" placeholder="9999">
+                        <input type="button" onclick="this.parentNode.querySelector('#duration').stepUp()" value="+">
+                    </div> 
+                </label>
+                <label for="duration_str"><span>duration_str</span>
+                    <input type="text" name="duration_str" placeholder="9hr, 99min, 99seg" disabled="">
+                </label>
+            </div>
+
+            <div class="row">
+                <label for="ratings" class="row"><span>ratings</span>
+                    <input type="number" class="noborder" id="vratings" placeholder="9.9" disabled="">
+                </label>
+                <input type="range" id="range" name="ratings" size="2" step="0.5" min="0.0" max="10.0" oninput="vratings.value=value">
+            </div>
+
+            <div>
+                <label for="pathfile"><span>pathfile</span>
+                    <input type="text" class="folder" id="pathfile" name="pathfile">
+                </label>
+            </div>
+
+            <div>
+                <label for="id_country"><span>id_country</span>
+                    <select id="id_country" name="id_country"><option></option></select>
+                </label>
+            </div>
+
+            <div>
+                <label for="urldesc"><span>urldesc</span>
+                    <input type="text" class="folder" id="urldesc" name="urldesc" placeholder="/es/film99.html" data-action="enable-update">
+                </label>
+                <label for="urlpicture"><span>urlpicture</span>
+                    <input type="text" class="folder"  name="urlpicture" placeholder="/namefile-mmed.jpg">
+                </label>
+            </div>
+
+            <div>
+                <label for="id_genre"><span>id_genre</span>
+                    <select id="id_genre" name="id_genre" data-action="change-path"><option></option></select>
+                </label>
+                <label for="id_subgenre"><span>id_subgenre</span>
+                    <select id="id_subgenre" name="id_subgenre" data-action="change-path"><option></option></select>
+                </label>
+            </div>
+        </article>
+
+        <footer>
+            <menu>
+                <button class="btn btn-warning-outline" id="btnUpdate" disabled="" data-action="update-film">Actualizar</button>
+                <button class="btn btn-primary" data-action="save-film">Guardar</button>
+                <button autofocus type="reset" class="btn btn-secondary-outline" data-action="close-dialog">Cancelar</button>
+            </menu>
+        </footer>
+    </form>
+</dialog>
+{% endmacro %}
+
+
+
+{# DIALOG DE CONFIRMACIÓN DE UNA ACCIÓN #}
+{% macro render_dialog(id_film, title, message, btn_action) %}
+<dialog id="dialog-{{ id_film }}">
+    <form method="dialog">
+        <header>
+            <h3>{{ title }}</h3>
+        </header>
+        <article>{{ message }}</article>
+        <footer>
+            <menu>
+                {{ btn_action|safe }}
+                <button autofocus type="reset" class="btn btn-primary" data-action="close-dialog">Cancelar</button>
+            </menu>
+        </footer>
+    </form>
+</dialog>
+{% endmacro %}

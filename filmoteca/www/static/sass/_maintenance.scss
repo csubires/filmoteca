@@ -1,0 +1,333 @@
+@use "constants" as c;
+@use "mixins";
+
+//  -------------
+//  MANTENIMIENTO
+//  -------------
+
+.maintenance-list {
+    @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+    summary {
+        text-transform: uppercase;
+        width: calc(100% - 1.5rem);
+        margin-bottom: 1rem;
+    }
+
+    div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+
+        a {
+            color: c.$bs-gray-900;
+            background-color: white;
+            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.2);
+            width: 20rem;
+
+            p {
+                color: lighten(c.$bs-blue, 20%);
+            }
+        }
+    }
+}
+
+// Cabeceras con el resultado de la opción de mantenimiento y estadísticas
+.head-result {
+    display: flex;
+    margin: 0 2rem;
+    align-items: baseline;
+    gap: 0.5rem;
+    height: 4.4em;
+    &-little {
+        text-align: center;
+    }
+
+    details {
+        summary {
+            text-transform: uppercase;
+        }
+
+        ul {
+            text-align: left;
+            list-style-type: none;
+            position: absolute;
+            background-color: c.$bs-gray-100;
+            z-index: 3;
+            width: calc(100% - 5.9rem);
+            left: 2rem;
+            padding: 1rem;
+            i {
+                float: right;
+            }
+        }
+    }
+}
+
+//  -----------------
+//  BUSQUEDA AVANZADA
+//  -----------------
+
+.container-advance-search {
+    @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+    summary {
+        text-transform: uppercase;
+        width: calc(100% - 1.5rem);
+    }
+
+    #form-advance-search {
+        display: flex;
+        flex-direction: row;
+        z-index: 999;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+
+        >div {
+            width: 49%;
+            border: 1px solid c.$bs-gray-200;
+            border-radius: 5px;
+
+            label .row,
+            &.row {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            input,
+            select {
+                text-align: center;
+                text-transform: capitalize;
+            }
+
+            input[type=number] {
+                appearance: textfield;
+            }
+
+            &:last-child {
+                justify-content: end;
+                order: 1;
+                flex-grow: 1;
+                display: flex;
+                width: 99%;
+                gap: 1rem;
+                border: none;
+            }
+        }
+
+        span {
+            opacity: 0.5;
+        }
+    }
+}
+
+//  ------------
+//  DATOS GLOBAL
+//  ------------
+
+.container-global-data {
+    @include mixins.make-container(1rem, 2rem, transparent);
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-transform: uppercase;
+
+    div {
+        background-color: c.$bs-gray-100;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid c.$bs-gray-500;
+        border-radius: 5px;
+        color: c.$bs-gray-900;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+        label {
+            text-align: center;
+            font-size: 0.5rem;
+        }
+
+        span {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+    }
+
+    table {
+        outline: 1px solid c.$bs-gray-500;
+    }
+
+    b {
+        opacity: .4;
+    }
+}
+
+//  -------------------------
+//  INFO GÉNEROS Y SUBGÉNEROS
+//  -------------------------
+
+.card-genre {
+	background-color: transparent;
+
+    a {
+        background-color: c.$bs-gray-100;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-decoration: none;
+        color: c.$bs-gray-500;
+        border-radius: 15px;
+        border: 1px solid c.$bs-gray-400;
+        width: min-content;
+        padding: 1rem;
+        transition: transform .5s ease-in-out;
+
+        &:hover {
+            filter: saturate(150%);
+            transform: scale(1.05);
+            box-shadow: 5px 5px 20px 0 black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        img {
+            background-image: url('img/break.png');
+            background-repeat: no-repeat;
+            background-size: contain;	
+            height: 7rem;
+            min-width: 21rem;
+        }
+
+        strong,
+        b {
+            color: c.$bs-gray-900;
+            font-weight: bold;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+    }
+
+    .card-genre-right {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+    }
+}
+
+.card-subgenre {
+    background-color: c.$bs-gray-300;
+    @extend .card-genre;
+    
+    a {
+        background-color: c.$bs-gray-200;
+    }
+}
+
+//  ------------
+//  ESTADÍSTICAS
+//  ------------
+
+.container-statistics {
+    @include mixins.make-container(1rem, 2rem, transparent);
+	display: flex;
+    flex-direction: row;
+    justify-content: center;
+	flex-wrap: wrap;
+
+    figure {
+        border: 1px solid c.$bs-gray-200;
+        border-radius: 5px;
+        padding: 0.5rem;
+
+        img {
+            width: 39vw;
+            height: auto;
+        }
+
+        &.large {
+            max-height: 25rem;
+            overflow-y: scroll;
+        }
+    
+        figcaption {
+            position: sticky;
+            bottom: 0;
+            color: c.$bs-gray-700; 
+        }
+    }
+}
+
+#world-map {
+	border: solid 1px c.$bs-gray-200;
+    padding: 1rem 0 0 0;
+    width: 100%;
+    text-align: center;
+    background-color: azure;
+
+    path{
+        fill: c.$bs-gray-200;
+        stroke: c.$bs-gray-200;
+        pointer-events:all;
+        &:hover{
+            fill:c.$bs-gray-400;
+            // stroke:c.$bs-gray-900;
+        }
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+    }
+}
+
+//  ------------
+//  A DESCARGAR
+//  ------------
+
+.years {
+	padding: .5rem;
+	display: flex;
+    flex-direction: row;
+    row-gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 4rem 0 8rem 0;
+}
+
+.years a[data-descr] {
+	position: relative;
+	border-radius: 10px;
+	text-decoration: none;
+	padding: 1rem 1rem .5rem;
+}
+
+.years a[data-descr]::before {
+	content: attr(data-descr);
+	position: absolute;
+	border-radius: 50%;
+	top: -2rem;
+	left: 1rem;
+	border: 1px solid c.$bs-blue;
+	text-align: center;
+	padding: .6rem;
+	transition: 1s ease-in-out;
+    background-color: white;
+}
+
+.years a[data-descr]:hover::before {
+	background-color: c.$bs-orange;
+	transform: translateY(-.3rem);
+}

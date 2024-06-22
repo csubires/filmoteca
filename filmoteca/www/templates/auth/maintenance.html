@@ -1,0 +1,161 @@
+{% from "macros.html" import render_card_movie, render_form_movie %}
+{% extends 'index.html' %}
+
+{% block content%}
+<div class="menu--clickeable btn btn-primary">
+    <input class="menu-btn" type="checkbox" id="menu-btn" />
+    <label class="menu-icon" for="menu-btn"><span>Opciones de mantenimiento</span><span class="navicon"></span></label>
+    <div>
+            <a class="btn btn-primary-outline" data-descr="Películas repetidas" href="/auth/maintenance/repeated_movies"><strong>Repetidas</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas que ya no se encuentran en el HDD 0 (Interno)" href="/auth/maintenance/missing_movies_hdd0"><strong>Desaparecidas HDD 0 (Interno)</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas que ya no se encuentran en el HDD 1 (Externo)" href="/auth/maintenance/missing_movies_hdd1"><strong>Desaparecidas HDD 1 (Externo)</strong></a>        
+            <a class="btn btn-primary-outline" data-descr="Películas a las cuales les falta algún dato" href="/auth/maintenance/incomplete_movie_info"><strong>Incompletas</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas marcadas como censuradas" href="/auth/maintenance/censured_movies"><strong>Censuradas</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas con peor valoración (&#60;6.0) en el HDD 0 (Interno)" href="/auth/maintenance/devalued_movies"><strong>Peor Valoradas</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas con mejor valoración (&#62;6.7) en el HDD 1 (Externo)" href="/auth/maintenance/overevalued_movies"><strong>Mejor Valoradas</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas con archivo corrupto" href="/auth/maintenance/corrupt_movies"><strong>Corrompidas</strong></a>        
+            <a class="btn btn-primary-outline" data-descr="Países sin código asociado" href="/auth/maintenance/uncoded_country"><strong>País desconocido</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Géneros que no contienen películas o les faltan datos" href="/auth/maintenance/incomplete_genre"><strong>Géneros incompletos</strong></a>    
+    </div>
+</div>
+
+{% if response %}
+    {# PELÍCULAS REPETIDAS #}
+    {% if response[0] == 'repeated_movies' %}
+    <h3 class="head-result">{{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
+    <article class="item-list item-list-two-columns">
+        {% for movie in response[2] %}
+            {{ render_card_movie(movie) }}
+            {% if loop.index % 2 != 0 %}
+            <hr>
+            {% endif %}
+        {% endfor %}
+    </article>
+
+    {# Películas perdidas, incompletas, cen... #}
+    {% elif response[0] in ['missing_movies_hdd0', 'missing_movies_hdd0', 'missing_movies_hdd1', 'incomplete_movie_info', 'censured_movies', 'devalued_movies', 'overevalued_movies', 'corrupt_movies'] %}
+    <h3 class="head-result">{{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
+        {% if response[0] in ['devalued_movies', 'overevalued_movies'] %}
+        <div class="head-result">
+            <details class="list-copy">
+                <summary class="btn btn-primary-outline">Listado limpio</summary>
+                <ul>
+                    <li><i><button class="btn btn-warning-outline" data-action="copy-clipboard">COPIAR</button></i></li>
+                    <br>
+                    {% set aux = { 'flag': -1 } %}
+                    {% for movie in response[2] %}
+                        {% if aux.flag != movie[6] %}
+                            {% if aux.update({'flag': movie[6]}) %}{% endif %}
+                        <br>
+                        {% endif %}
+                        <li>{{ movie[4] }} <strong> {{ movie[1] }}</strong><i> {{ movie[7] }}</i></li>
+                    {% endfor %}
+                </ul>
+            </details>
+        </div>
+        {% endif %}
+
+    <article class="item-list">
+    {% for movie in response[2] %}
+        {{ render_card_movie(movie) }}
+    {% endfor %}
+    </article>
+
+    {% elif response[0] == 'incomplete_genre' %}
+    <div class="head-result">
+        <h3>Géneros incompletos {{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
+    </div>
+    {# 0 id_genre, 1 name, 2 pathfolder, 3 is_subgenre #}
+    <!-- Listado de géneros -->  
+    <main class="table">
+        <section class="table__header">
+            <h1>Listado de géneros</h1>
+        </section>
+        <section class="table__body">       
+            <table>
+                <caption></caption>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Nombre</th><th>Ruta</th><th>Sub-Género</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in response[2] %}
+                    <tr>
+                        <td>{{ data[0] }}</td>
+                        <td>{{ data[1] }}</td>
+                        <td>{{ data[2] }}</td>
+                        <td>{{ data[3] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    {% elif response[0] == 'uncoded_country' %}
+    <div class="head-result">
+        <h3>País desconocido {{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
+        <a class="btn btn-primary-outline" target="_blank" href="https://country-code.cl/es/">Listado de códigos</a>
+    </div>
+
+    {# 0 id_country, 1 name, 2 code, 3 flag #}
+    <!-- Listado de países -->  
+    <main class="table">
+        <section class="table__header">
+            <h1>Listado de países</h1>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Flag</th><th>Nombre</th><th>Código</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in response[2] %}
+                    <tr>
+                        <td>{{ data[0] }}</td>
+                        <td>{{ data[3] }}</td>
+                        <td>{{ data[1] }}</td>
+                        <td>
+                            <input type="text" id="input-country-{{ data[0] }}" placeholder="{{ data[2] }}" maxlength="3" value="{{ data[2] }}">
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-id-country="{{ data[0] }}" data-action="edit-country">GUARDAR</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+
+
+{% endif %}
+
+{{ render_form_movie() }}
+
+{% else %}
+    <section class="maintenance-list"><h3>No se obtuvó ningún resultado</h3></section>
+{% endif %}
+</article>
+
+<div id="control"> 🗓
+    <div class="menu">
+        <div class="container-bottom">
+            <a href="#form-search"><i class="icon-arrow-up"></i></a>
+            <a href="#footer-bottom"><i class="icon-arrow-down"></i></a>
+        </div>
+    </div>
+</div>
+
+<noscript>
+    <div class="noscript-warning">
+        ¡ IMPORTANTE !.<br>
+        Para realizar operaciones de mantenimiento es necesario que, <b><i>habilite JavaScript</i></b>.
+    </div>
+</noscript>
+
+{% endblock %}

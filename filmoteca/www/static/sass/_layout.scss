@@ -1,0 +1,370 @@
+@use "constants" as c;
+@use "mixins";
+
+// Tema claro
+.theme {
+	--color-primary: #e9ebee;
+	--color-secondary: #fafafa;
+	--color-text: #212429;
+
+	// Tema oscuro
+	&-dark {
+		--color-primary: #212529;
+		--color-secondary: #343a40;
+		--color-text: #e9ecef;
+	}
+}
+
+// :root {
+	// Para adaptar la tipografía según el tamaño de ancho y alto
+	// font-size: calc(1vw + 1vh + .5vmin);
+// }
+
+html {
+	scroll-behavior: smooth;
+	scrollbar-color: lighten(c.$bs-gray-900, 30%), c.$bs-gray-900;	
+}
+
+body {
+	background: rgb(244,244,250);
+	background: radial-gradient(circle, rgba(244,244,250,1) 22%, rgba(218,214,221,1) 88%);
+	
+	color: var(--color-text);
+	font-family: c.$bs-body-font-family;
+	font-size: c.$bs-body-font-size;
+	font-weight: c.$bs-body-font-weight;
+	line-height: c.$bs-body-line-height;
+	margin: 0;
+	padding: 0;
+}
+
+.noscript-warning {
+    background-color: #f5c2c7;
+    color: #842029;
+    text-align: center;
+    margin: 5rem 10rem;
+    padding: 1rem 1rem;
+}
+
+//  -----------------------------
+//  CABECERA CON MENÚS Y BUSCADOR
+//  -----------------------------
+
+header {
+	background-color: transparent;
+	margin-top: 1rem;
+
+	nav {
+		width: 80%;
+		padding: .5rem;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		border-radius: 10rem;
+		background-color: c.$bs-gray-300;
+		margin-inline: auto;
+
+		// Formulario de busqueda
+		form {
+			display: flex;
+			flex-direction: row;
+			background-color: c.$bs-gray-200;
+			align-items: center;
+			justify-content: center;
+			padding: 0.5rem;
+			border-radius: 4rem;
+			gap: .5rem;
+			width: 25%;
+			transition: .5s ease-in-out;
+			&:hover {
+				outline: 1px solid c.$bs-green;
+				width: 50%;
+			}
+
+			#text-search {
+				font-family: c.$bs-font-sans-serif;
+				padding: .5rem;
+				width: 100%;
+				border: none;
+				font-size: 2rem;
+				padding: 0 .5rem;
+				background: transparent;
+				outline: none;
+				&::placeholder {
+					color: gray;
+				}
+			}
+
+			#btn-search {
+				border: none;
+				outline: none;
+				border-radius: 50%;
+				padding: 10px;
+				&:hover {
+					background-color: c.$bs-gray-400;
+				}
+			}
+
+			#clear-search {
+				border: none;
+				outline: none;
+				border-radius: 50%;
+				cursor:pointer;
+				font-style: normal;
+				&:hover {
+					background-color: c.$bs-gray-300;
+				}
+			}
+		}	// form
+
+		// Menú de opciones
+		.menu {
+
+			position: relative;
+			text-align: center;
+			text-transform: capitalize;
+
+			z-index: 5;
+
+			&:hover .container-left, 
+			&:hover .container-right {
+				display: block;
+				border-radius: 15px; 
+			}
+
+			i {
+				font-style: normal;
+				font-weight: bold;
+				font-size: 3rem;
+				background-size: 2.5rem;
+				padding: 1rem 1.5rem;
+				background-color: #e9ecef;
+				cursor:pointer;
+				&:hover {
+					font-weight: lighter;
+					border-radius: 50%;
+					background-color: c.$bs-gray-300;
+					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(10%) contrast(83%);
+				}				
+			}
+
+			.container-left, 
+			.container-right {
+				background-color: c.$bs-gray-100;
+				border: 1px solid c.$bs-gray-500;  
+				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+				display: none;
+				position: absolute;
+				width: 15rem;
+				z-index: 3;
+				top: 0;
+
+				.mark-opt {
+					@include mixins.make-alert(#084298, #cfe2ff, #b6d4fe);
+				}
+
+				a {
+					color: c.$bs-gray-800;
+					padding: 0.25rem 0rem;
+					text-decoration: none;
+					display: block;
+					&:hover {
+						background-color: c.$bs-gray-400;
+						border-left: solid 5px c.$bs-gray-600;
+						padding: 1rem;
+						font-size: 1.5rem;
+					}
+				}
+			}
+
+			.container-left {
+				left: 0;
+				padding: 1rem 0;
+			}
+
+			.container-right {
+				right: 0;
+				overflow-y: scroll;
+				max-height: 80vh;
+			}
+		}	// .menu
+		
+		i {
+			opacity: 1;
+			border-radius: 50%;
+		}
+
+	}	// nav
+}	// header
+
+
+//  -------------
+//  CAJA DE LOGIN
+//  -------------
+
+#form-login {
+	background-color: c.$bs-gray-100;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 2rem auto 2rem auto;
+	padding: 1.5rem 2.5rem 1rem 1.5rem;
+    border: 1px solid c.$bs-gray-200;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    width: 30vw;
+}
+
+//  ------------------------------
+//  AGRUPAR INPUT EN UN FORMULARIO
+//  ------------------------------
+
+.form-group {
+	position: relative;
+	
+	.form-control {
+		font-family: c.$bs-font-sans-serif;
+		height: calc(3.5rem + 2px);
+		width: 100%;
+		padding: 0.8rem 0.7rem 0rem 0.7rem;
+		font-size: 1.5rem;
+		border: 1px solid #ced4da;
+		border-radius: .375rem;
+		transition: border-color 0.5s ease-out;
+		
+	}
+
+	&:last-child {
+		display: flex;
+		flex-direction: row-reverse;
+	}	
+
+	input[type=checkbox] {
+		position: absolute;
+		left: 43%;
+		top: 27%;
+	}
+
+	input[type=password] {
+		font-size: 2rem;
+	}
+
+	label {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 1rem 0.75rem;
+		pointer-events: none;
+		transform-origin: 0 0;
+		transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+		opacity: 0.65;
+		transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);		
+	}
+}
+
+//  -------------
+//  MEDIA QUERIES
+//  -------------
+
+// Pantalla smartphone
+@media (max-width: 360px) {
+
+	nav {
+		form {
+			scale: .4;
+		}
+	}
+
+
+	section {
+		margin: 0;
+		padding: 0;
+		min-width: 100%;
+		
+		figure {
+			padding: 0;
+			min-width: calc(100vw - 6rem);
+			img {
+				min-width: calc(100vw);
+			}
+		}
+	}
+
+	figure {
+		padding: 0;
+	}
+}
+
+// Pantalla tableta
+@media screen and (max-width: 800px) {
+	nav {
+		flex-direction: column;
+		gap: 1rem;
+
+		.menu {
+			text-align: left;
+			width: 10% !important;
+			
+			.container-left,
+			.container-right {
+				left: 0 !important;
+				z-index: 99 !important;
+			}
+		}
+
+		form {
+			z-index: 2;
+			scale: .6;
+			justify-content: space-between;
+			align-self: center;
+			&:hover {
+				scale: 1 !important;
+			}
+		}
+	}
+
+	#form-login {
+		width: 80vw;
+	}
+
+	#form-advance-search {
+		div {
+			width: 100%;
+		}
+	}
+
+	#form-editor {
+		div {
+			width: inherit !important;
+		}
+	}
+
+	.card-subgenre a img {
+		width: 40vw;
+	}
+
+	section {
+		margin: 0;
+		padding: 0;
+		min-width: calc(100vw - 2rem);
+		
+		figure {
+			padding: 0;
+			width: 100%;
+			img {
+				min-width: calc(100vw - 2rem);
+			}
+		}
+	}
+}
+
+// Pantalla por defecto 800-1000
+
+// Pantalla monitor
+@media screen and (min-width: 1000px) {
+	// TODO
+	/* 
+	menu fijos a los lados
+	container al 80%
+	*/
+}

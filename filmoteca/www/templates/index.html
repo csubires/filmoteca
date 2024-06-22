@@ -1,0 +1,107 @@
+{% from "macros.html" import form_message %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="title" content="Gestor de Películas">
+        <meta name="description" content="Web para gestionar las películas">           
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+        {% if title %}
+        <title>{{ title|title }}</title>
+        {% else %}
+        <title>Gestor de Películas</title>
+        {% endif %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+        <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <!-- Menú de administración -->
+                <div class="menu">
+                    <i>⚙</i>
+                    <div class="container-left">
+                        {% if session['auth'] %}
+                        <a href="/auth/maintenance"> Mantenimiento </a>
+                        <a href="/auth/search"> Busqueda Avanzada </a>
+                        <a href="/menu"> Estadísticas </a>
+                        <a href="/menu/ranking"> Descargar </a>
+                        {% else %}
+                        <a class="mark-opt" href="/auth/login"> Iniciar Sesión </a>                          
+                        {% endif %}
+                        <a href="/menu/genres"> Géneros </a>
+                        <a href="/view/0"> Recientes </a>
+                        <a href="/menu/recommended"> Sugeridas </a>
+                        <a href="/menu/inventories"> Listados </a>
+                        {% if session['auth'] %}
+                        <a class="mark-opt" href="/auth/logout"> Salir </a>
+                        {% endif %}
+
+                        <!-- Botón para elegir estilo-->
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" id="light-mode" name="btnradio" class="btn btn-check" autocomplete="off" checked="">
+                            <label class="btn btn-primary-outline" data-action="light-mode" for="light-mode">Claro</label>
+                            <input type="radio" id="dark-mode" name="btnradio" class="btn btn-check" autocomplete="off">
+                            <label class="btn btn btn-primary-outline" data-action="dark-mode" for="dark-mode">Ocuro</label>
+                        </div>      
+                    </div>
+                </div>
+
+                <!-- Buscador de películas -->
+                <form id="form-search" action="/view" method="POST">
+                    <input type="hidden" name="csrf_token_form" value="{{ session['csrf_token_form'] }}">
+                    <i class="btn" id="clear-search" data-action="clear-search">🅧</i>
+                    <input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año" data-action="autocomplete-search">
+                    <datalist id="dlSearch"></datalist>
+                    <input type="submit" id="btn-search" class="btn btn-light" value="🔍">
+                </form>
+
+                <!-- Listadp de películas por género -->
+                <div class="menu">
+                    <i>𝄙</i>
+                    <div class="container-right">
+                        <a href="/view/1"> acción </a>
+                        <a href="/view/4"> animación </a>
+                        <a href="/view/6"> anime </a>
+                        <a href="/view/9"> aventuras </a>
+                        <a href="/view/11"> bélico </a>
+                        <a href="/view/12"> carreras </a>
+                        <a href="/view/13"> ciencia ficción </a>
+                        <a href="/view/16"> comedia </a>
+                        <a href="/view/17"> documental </a>
+                        <a href="/view/18"> drama </a>
+                        <a href="/view/20"> fantástico </a>
+                        <a href="/view/21"> intriga </a>
+                        <a href="/view/42"> musical </a>
+                        <a href="/view/22"> quentin tarantino </a>
+                        <a href="/view/23"> superhéroes </a>
+                        <a href="/view/25"> supervivencia </a>
+                        <a href="/view/26"> terror </a>
+                        <a href="/view/33"> thriller </a>
+                        <a href="/view/34"> walt disney </a>
+                        <a href="/view/35"> western </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Bloque principal -->
+        <section class="container">
+            {% block content %}{% endblock %}
+            <div id="alerts-container">
+                {{ form_message() }}
+            </div>  
+        </section>
+
+        <noscript>
+            <div class="noscript-warning">
+                Javascript está deshabilitado en su navegador web.<br>
+                Por favor, para ver correctamente este sitio, <b><i>habilite javascript</i></b>.
+            </div>
+        </noscript>
+
+        <footer id="footer-bottom"></footer>
+    </body>
+</html>

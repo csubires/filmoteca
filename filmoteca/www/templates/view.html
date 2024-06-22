@@ -1,0 +1,49 @@
+{% from "macros.html" import render_card_movie, render_form_movie %}
+{% extends 'index.html' %}
+
+{% block content%}
+    {% if response %}
+        {% set year = { 'flag': 9999 } %}
+        {% set years = [] %}
+
+    <article class="item-list">
+        {# RENDERIZAR LISTADO DE PELÍCULAS #}
+        {% set popupGenre = False %}
+        {% if title == 'Últimas Añadidas' or title == 'Recomendadas' %}
+            {% set popupGenre = True %}
+        {% endif %}
+
+        {% for movie in response %}
+            {% if year.flag != movie[2] %}
+                {% if year.update({'flag': movie[2]}) %}{% endif %}
+                {% if years.append(movie[2]) %}{% endif %}
+                {{ render_card_movie(movie, movie[2], popupGenre) }}
+            {% else %}
+                {{ render_card_movie(movie, None, popupGenre) }}
+            {% endif %}
+        {% endfor %}
+    </article>
+
+    <div id="control"> 🗓
+        <div class="menu">
+            <div class="container-bottom">
+                <div>
+                    <button class="btn btn-primary-outline" data-id-sort="0" data-action="sort-items">Título</button>
+                    <button class="btn btn-primary-outline" data-id-sort="1" data-action="sort-items">Valoración</button>
+                    <button class="btn btn-primary-outline" data-id-sort="2" data-action="sort-items">Año</button>
+                    <button class="btn btn-primary-outline" data-id-sort="3" data-action="sort-items">Duración</button>
+                </div>
+                <a href="#form-search"><i class="icon-arrow-up"></i></a>
+                <a href="#footer-bottom"><i class="icon-arrow-down"></i></a>
+                {% for year in years %}
+                <a href="#{{ year }}">{{ year }}</a> 
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+        {% if session['auth'] %}
+            {{ render_form_movie() }}
+        {% endif %}
+    {% endif %}
+{% endblock %}

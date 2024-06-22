@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <link rel="shortcut icon" href="../static/img/favicon.png">
+        <meta charset="utf-8"/>
+        
+        <title>Bélico</title>
+        
+        <meta name="title" content="Gestor de Películas">
+        <meta name="description" content="Web para gestionar las películas">     
+        <link rel="stylesheet" href="../static/css/main.css" />
+        <script type="text/javascript" src="/static/js/main.js"></script>
+    </head>
+
+    <body class="theme dark">
+
+
+        <!-- Bloque principal -->
+        <section class="container">
+            <div id="screen-block"><img src="/wait.gif"></div>
+
+            <form id="form-editor" data-id-movie="1179">
+                <h3>Editar película</h3>
+                <button type="button" class="btn-close"
+                aria-label="Close"></button>
+
+                <input type="hidden" name="csrf_token_form" value="XFQTH-ar98Jc1__u8FMZlwJul878F_BwEv05CJNIPF4">
+            
+                <!-- Line 1 -->
+                <div class="row">
+                    <label for="id_movie" class="row"><span>id_movie</span>
+                        <input type="number" id="id_movie" class="noborder" name="id_movie" disabled value="234">
+                    </label>
+
+                    <label for="year" class="row"><span>year</span>
+                        <div class="inp-number">
+                            <input type="button" onclick="this.parentNode.querySelector('#year').stepDown()" value="-">
+                            <input type="number" id="year" class="noborder" min="1800" max="2900" name="year" maxlength="4" placeholder="9999" value="1990">
+                            <input type="button" onclick="this.parentNode.querySelector('#year').stepUp()" value="+">
+                        </div>    
+                    </label>
+
+
+
+                </div>
+
+
+
+
+                <div class="row">
+ 
+                    <label for="ratings" class="row"><span>HDD</span>
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="btnradio" id="hdd_code_int" autocomplete="off" checked>
+                            <label class="btn btn-primary-outline" for="hdd_code_int">Interno</label>
+                            <input type="radio" class="btn-check" name="btnradio" id="hdd_code_ext" autocomplete="off">
+                            <label class="btn btn-primary-outline" for="hdd_code_ext">Externo</label>
+                        </div>
+                    </label>
+       
+                    <label for="censure" class="row"><span>censure</span>
+                        <input type="checkbox" name="censure" value="0">
+                    </label>
+
+                </div>
+
+
+                <div>
+                    <label for="title"><span>title</span>
+                        <input type="text" name="title">
+                    </label>
+
+                    <label for="realtitle"><span>realtitle</span>
+                        <input type="text" name="realtitle">
+                    </label>
+                </div>
+            
+                <!-- Line 2 -->
+                <div>
+                    <label for="size"><span>size (bytes)</span>
+                        
+
+                        <div class="inp-number">
+                            <input type="button" onclick="this.parentNode.querySelector('#size').stepDown()" value="-">
+                            <input type="number" id="size" name="size" class="noborder" placeholder="9999999">
+                            <input type="button" onclick="this.parentNode.querySelector('#size').stepUp()" value="+">
+                        </div> 
+
+                    </label>
+                    <label for="size_str"><span>size_str</span>
+                        <input type="text" name="size_str" placeholder="999.9 MB" disabled>
+                    </label>
+                </div>
+
+                <div>
+                    <label for="quality"><span>quality</span>
+                        <input type="text" name="quality" list="dlQuality" placeholder="SELEC">
+                        <datalist id="dlQuality" name="dlQuality"><option value="HDRip">HDRip</option><option value="DVDRip">DVDRip</option><option value="BRRip">BRRip</option><option value="null">null</option><option value="BR-SCR">BR-SCR</option><option value="BrRip">BrRip</option><option value="BDRip">BDRip</option><option value="HDTV-SCR">HDTV-SCR</option><option value="DVDrip">DVDrip</option><option value="HDTV-SCS">HDTV-SCS</option><option value="microHD">microHD</option><option value="DVDRIP">DVDRIP</option><option value="BRLine">BRLine</option><option value="BDrip">BDrip</option><option value="TeleCine">TeleCine</option><option value="TV">TV</option><option value="BluRay Rip">BluRay Rip</option><option value="HDRIP">HDRIP</option><option value="BBRip">BBRip</option><option value=""></option><option value="CDRip">CDRip</option><option value="HRRip">HRRip</option><option value="DVDScreener">DVDScreener</option><option value="BRrip">BRrip</option></datalist></label>
+
+                        <label for="extension"><span>extension</span>
+                            <input type="text" maxlength="4" name="extension" list="dlExtension">
+                            <datalist id="dlExtension"><option value="avi">avi</option><option value="mp4">mp4</option><option value="mkv">mkv</option><option value="mpg">mpg</option><option value="divx">divx</option></datalist>
+                    </label>
+                </div>
+
+                <div>
+
+
+                    <label for="fps"><span>fps</span>
+                        <div class="inp-number">
+                            <input type="button" onclick="this.parentNode.querySelector('#fps').stepDown()" value="-">
+                            <input type="number" id="fps" name="fps" placeholder="99.99" step="1.00" list="dlFps">
+                            <datalist id="dlFps"><option value="29.97">29.97</option><option value="26.07">26.07</option><option value="24.83">24.83</option><option value="24.39">24.39</option><option value="23.98">23.98</option><option value="23.97">23.97</option><option value="23">23</option><option value="null">null</option></datalist>
+                            <input type="button" onclick="this.parentNode.querySelector('#fps').stepUp()" value="+">
+                        </div>    
+                    </label>
+
+
+                    <label for="resolution"><span>resolution</span>
+                        <input type="text" name="resolution" placeholder="999x999" list="dlResolution">
+                        <datalist id="dlResolution"><option value="1280x528">1280x528</option><option value="1280x532">1280x532</option><option value="1280x536">1280x536</option><option value="1280x544">1280x544</option><option value="1280x690">1280x690</option><option value="1280x692">1280x692</option><option value="1280x696">1280x696</option><option value="1280x720">1280x720</option><option value="1616x1080">1616x1080</option><option value="1792x1028">1792x1028</option><option value="1844x992">1844x992</option><option value="1910x888">1910x888</option><option value="1916x818">1916x818</option><option value="1920x1024">1920x1024</option><option value="1920x1040">1920x1040</option><option value="1920x1080">1920x1080</option><option value="1920x798">1920x798</option><option value="1920x800">1920x800</option><option value="1920x802">1920x802</option><option value="1920x804">1920x804</option><option value="1920x816">1920x816</option><option value="1920x818">1920x818</option><option value="1920x832">1920x832</option><option value="320x240">320x240</option><option value="352x272">352x272</option><option value="352x288">352x288</option></datalist>
+                    </label>
+                </div>
+            
+                <!-- Line 3 -->
+                <div>
+                    <label for="duration"><span>duration (segundos)</span>
+                        <div class="inp-number">
+                            <input type="button" onclick="this.parentNode.querySelector('#duration').stepDown()" value="-">
+                        <input type="number" id="duration" name="duration" placeholder="9999">
+                        <input type="button" onclick="this.parentNode.querySelector('#duration').stepUp()" value="+">
+                    </div> 
+                    </label>
+
+
+
+                    <label for="duration_str"><span>duration_str</span>
+                        <input type="text" name="duration_str" placeholder="9hr, 99min, 99seg" disabled="">
+                    </label>
+                </div>
+
+                <div class="row">
+               
+                    <label for="ratings" class="row"><span>ratings</span>
+                        <input type="number" class="noborder" id="vratings" placeholder="9.9" disabled="">
+                    </label>
+                    <input type="range" id="range" name="ratings" size="2" step="0.5" min="0.0" max="10.0" oninput="vratings.value=value">
+
+
+                </div>
+
+            
+                <!-- Line 4 -->
+                <div>
+                    <label for="pathfile"><span>pathfile</span>
+                        <input type="text" class="folder" name="pathfile">
+                    </label>
+                </div>
+
+                <div>
+                    <label for="id_country"><span>id_country</span>
+                        <select id="id_country" name="id_country"><option></option><option value="1">Estados Unidos (us)</option><option value="3">Canadá (ca)</option><option value="4">Francia (fr)</option><option value="5">Reino Unido (gb)</option><option value="6">China (cn)</option><option value="7">Hong Kong (hk)</option><option value="8">Indonesia (id)</option><option value="9">Corea del Sur (kr)</option><option value="10">Japón (jp)</option><option value="11">Noruega (no)</option><option value="12">Australia (au)</option><option value="13">Suiza (ch)</option><option value="14">España (es)</option><option value="15">Bélgica (be)</option><option value="16">Rusia (ru)</option><option value="17">Países Bajos (Holanda) (nl)</option><option value="18">Estonia (ee)</option><option value="19">Dinamarca (dk)</option><option value="20">Irlanda (ie)</option><option value="21">Ucrania (ua)</option><option value="22">República Checa (cz)</option><option value="23">Alemania (de)</option><option value="24">Grecia (gr)</option><option value="25">Finlandia (fi)</option><option value="26">Hungría (hu)</option><option value="27">Argentina (ar)</option><option value="28">Israel (il)</option><option value="29">Líbano (lb)</option><option value="30">Islandia (is)</option><option value="31">Italia (it)</option><option value="32">Polonia (pl)</option><option value="33">Austria (at)</option><option value="34">Vietnam (vn)</option><option value="35">México (mx)</option><option value="36">Chile (cl)</option><option value="37">Rumanía (ro)</option><option value="38">Kazajstán (kz)</option><option value="39">Nueva Zelanda (nz)</option><option value="40">Venezuela (ve)</option><option value="42">Brasil (br)</option><option value="43">Irán (ir)</option><option value="46">Montenegro (me)</option><option value="47">Cuba (cu)</option><option value="48">Turquía (tr)</option><option value="49">Colombia (co)</option><option value="50">Filipinas (ph)</option><option value="52">Palestina (ps)</option><option value="53">Alemania del Oeste (RFA) (de)</option><option value="54">Suecia (se)</option></select>
+                    </label>
+                </div>
+
+                <div>
+                    <label for="urldesc"><span>urldesc</span>
+                        <input type="text" class="folder"  id="urldesc" name="urldesc" placeholder="/es/film99.html">
+                    </label>
+
+                    <label for="urlpicture"><span>urlpicture</span>
+                        <input type="text" class="folder"  name="urlpicture" placeholder="/namefile-mmed.jpg">
+                    </label>
+                </div>
+            
+                <!-- Line 5 -->
+                <div>
+
+                    <label for="id_genre"><span>id_genre</span>
+                        <select id="id_genre" name="id_genre"><option></option><option value="1">acción</option><option value="4">animación</option><option value="6">anime</option><option value="9">aventuras</option><option value="11">bélico</option><option value="12">carreras</option><option value="13">ciencia ficción</option><option value="16">comedia</option><option value="17">documental</option><option value="18">drama</option><option value="20">fantástico</option><option value="21">intriga</option><option value="22">quentin tarantino</option><option value="23">superhéroes</option><option value="25">supervivencia</option><option value="26">terror</option><option value="33">thriller</option><option value="34">walt disney</option><option value="35">western</option><option value="42">musical</option><option value="54">romance</option></select>
+                    </label>
+
+                    <label for="id_subgenre"><span>id_subgenre</span>
+                        <select id="id_subgenre" name="id_subgenre"><option></option><option value="2">john wick</option><option value="3">mad max</option><option value="5">gru</option><option value="7">dragon ball</option><option value="8">ghost in the shell</option><option value="10">el reino de los cielos</option><option value="14">matrix</option><option value="15">star wars</option><option value="19">el imperio del sol</option><option value="24">spiderman</option><option value="27">el vengador tóxico</option><option value="28">entrevista con el vampiro</option><option value="29">insidious</option><option value="30">it</option><option value="31">los chicos del maíz</option><option value="32">rob zombie</option><option value="36">apocalypse now</option><option value="37">forrest gump [dvdrip] (1994)</option><option value="38">babel</option><option value="39">kagemusha, la sombra del guerrero</option><option value="40">el curioso caso de benjamin button</option><option value="41">el señor de los anillos</option><option value="43">gru &amp; los minions</option><option value="44">studio ghibli</option><option value="45">indiana jones</option><option value="46">piratas del caribe</option><option value="47">alien</option><option value="48">el padrino</option><option value="49">rowlling</option><option value="50">iron man</option><option value="51">trilogía del dólar</option><option value="52">shrek</option><option value="53">indiana jones y el reino de la calavera de cristal</option><option value="55">historias de princesas</option><option value="56">revolutionary road (2008)</option><option value="57">death proof</option></select>
+                    </label>
+                </div>
+
+    
+                
+                <!-- Line 6 -->
+                <div>
+                    <button class="btn btn-primary-outline" id="btnUpdate" disabled="">Actualizar</button>
+                    <button class="btn btn-primary" id="btnSave">Guardar</button>
+                </div>
+            
+            </form>
+        </section>
+
+        <noscript>
+            <div class="noscript-warning">
+                Javascript está deshabilitado en su navegador web.<br>
+                Por favor, para ver correctamente este sitio, <b><i>habilite javascript</i></b>.
+            </div>
+        </noscript>
+        <footer id="footer-bottom"></footer>
+    </body>
+</html>

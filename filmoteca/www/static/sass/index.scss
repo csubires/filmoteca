@@ -1,0 +1,52 @@
+// Componentes
+@use "components";
+
+// Estilos globales
+@use "layout";
+
+// Estilos del proyecto en particular
+@use "project";
+
+// Vistas de mantenimiento del proyecto en particular
+@use "maintenance";
+
+
+/*
+
+IMPORTANTE
+Usar --style compressed para evitar que en el css final salgan estos comentarios.
+Además comprime el código
+
+ver :has() compatibilidad en el futuro
+
+sass --watch sass/index.scss css/main.css
+
+Calcular filtros para colorear SVG
+https://codepen.io/sosuke/pen/Pjoqqp
+
+Obtener degradados de un color
+https://convertingcolors.com/rgbpercent-color-11_37_95.html
+
+Ver comportamiento de display FLEX
+https://angrytools.com/css-flex/
+
+Iconos SVG genericos gratis
+https://icons.getbootstrap.com/
+
+
+
+
+BEM: La metodología BEM (bloque, elemento, modificador) 
+Block component
+.btn {}
+
+Element that depends upon the block
+.btn__price {}
+
+Modifier that changes the style of the block
+.btn--orange {} 
+.btn--big {}
+
+
+*/
+

@@ -1,0 +1,114 @@
+// Local constants
+$background-color: #fff;
+
+// Light Theme
+$color-primary: #e9ebee;
+$color-secondary:#fafafa;
+$color-text:#212429;
+
+// Dark Theme
+$color-primary-dark: #212529;
+$color-secondary-dark: #343a40;
+$color-text-dark: #e9ecef;
+
+// Bootstrap COLOURS
+$bs-blue: #1089cd;
+$bs-indigo: #6610f2;
+$bs-purple: #6f42c1;
+$bs-pink: #d63384;
+$bs-red: #dc3545;
+$bs-orange: #fd7e14;
+$bs-yellow: #ffc107;
+$bs-green: #55ba54;
+$bs-teal: #20c997;
+$bs-cyan: #0dcaf0;
+$bs-black: #000;
+$bs-white: #fff;
+$bs-gray: #6c757d;
+
+$bs-gray-dark: #343a40;
+$bs-gray-100: #f8f9fa;
+$bs-gray-200: #e9ecef;
+$bs-gray-300: #dee2e6;
+$bs-gray-400: #ced4da;
+$bs-gray-500: #adb5bd;
+$bs-gray-600: #6c757d;
+$bs-gray-700: #495057;
+$bs-gray-800: #343a40;
+$bs-gray-900: #212529;
+
+$bs-primary: #0d6efd;
+$bs-secondary: #6c757d;
+$bs-success: #198754;
+$bs-info: #0dcaf0;
+$bs-warning: #ffc107;
+$bs-danger: #dc3545;
+$bs-light: #f8f9fa;
+$bs-dark: #212529;
+$bs-link-color: #0d6efd;
+$bs-link-hover-color: #0a58ca;
+
+// BUTTON
+$bs-btn-padding-x: 0.75rem;
+$bs-btn-padding-y: 0.375rem;
+$bs-btn-font-size: 1rem;
+$bs-btn-font-weight: 400;
+$bs-btn-line-height: 1.5;
+$bs-btn-color: #212529;
+$bs-btn-bg: transparent;
+$bs-btn-border-width: 1px;
+$bs-btn-border-color: transparent;
+$bs-btn-border-radius: 0.375rem;
+$bs-btn-hover-border-color: transparent;
+$bs-btn-focus-shadow-rgb: rgb(49, 132, 253);
+$bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+$bs-btn-disabled-opacity: 0.65;
+$bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba($bs-btn-focus-shadow-rgb, 0.5);
+
+// ALERT
+$bs-alert-bg: transparent;
+$bs-alert-padding-x: 1rem;
+$bs-alert-padding-y: 1rem;
+$bs-alert-margin-bottom: 1rem;
+$bs-alert-color: inherit;
+$bs-alert-border-color: transparent;
+$bs-alert-border: 1px solid var($bs-alert-border-color);
+$bs-alert-border-radius: 0.375rem;
+
+$bs-primary-rgb: rgb(13, 110, 253);
+$bs-secondary-rgb: rgb(108, 117, 125);
+$bs-success-rgb: rgb(25, 135, 84);
+$bs-info-rgb: rgb(13, 202, 240);
+$bs-warning-rgb: rgb(255, 193, 7);
+$bs-danger-rgb: rgb(220, 53, 69);
+$bs-light-rgb: rgb(248, 249, 250);
+$bs-dark-rgb: rgb(33, 37, 41);
+$bs-white-rgb: rgb(255, 255, 255);
+$bs-black-rgb: rgb(0, 0, 0);
+$bs-body-color-rgb: rgb(33, 37, 41);
+$bs-body-bg-rgb: rgb(255, 255, 255);
+$bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+
+$bs-border-width: 1px;
+$bs-border-style: solid;
+$bs-border-color: #dee2e6;
+$bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+$bs-border-radius: 0.375rem;
+$bs-border-radius-sm: 0.25rem;
+$bs-border-radius-lg: 0.5rem;
+$bs-border-radius-xl: 1rem;
+$bs-border-radius-2xl: 2rem;
+$bs-border-radius-pill: 50rem;
+
+$bs-code-color: #d63384;
+$bs-highlight-bg: #fff3cd;
+
+// BODY
+$bs-body-font-family: $bs-font-sans-serif;
+$bs-body-font-size: 1rem;
+$bs-body-font-weight: 400;
+$bs-body-line-height: 1.5;
+$bs-body-color: #212529;
+$bs-body-bg: #fff;
