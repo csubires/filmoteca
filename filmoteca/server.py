@@ -1,4 +1,13 @@
 #!/usr/bin/python3
+'''
+# Filename: server.py
+# Version: 1.0
+# By: CSUBIRES <j3xuz_cobmetal88@hotmail.com>
+# Created: 2024/08/12 12:03:35 by CSUBIRES
+# Updated: 2024/08/12 12:03:35 by CSUBIRES
+# Description: server
+'''
+
 import sys
 
 from www.controller import app as application

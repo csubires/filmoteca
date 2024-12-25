@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "constants" as c;
 @use "mixins";
 
@@ -29,7 +30,7 @@
             width: 20rem;
 
             p {
-                color: lighten(c.$bs-blue, 20%);
+                color: color.adjust(c.$bs-blue, $lightness: 20%);
             }
         }
     }

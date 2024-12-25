@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="title" content="Gestor de Películas">
-        <meta name="description" content="Web para gestionar las películas">           
+        <meta name="description" content="Web para gestionar las películas">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
         {% if title %}
         <title>{{ title|title }}</title>
@@ -29,12 +29,13 @@
                         <a href="/menu"> Estadísticas </a>
                         <a href="/menu/ranking"> Descargar </a>
                         {% else %}
-                        <a class="mark-opt" href="/auth/login"> Iniciar Sesión </a>                          
+                        <a class="mark-opt" href="/auth/login"> Iniciar Sesión </a>
                         {% endif %}
                         <a href="/menu/genres"> Géneros </a>
                         <a href="/view/0"> Recientes </a>
                         <a href="/menu/recommended"> Sugeridas </a>
                         <a href="/menu/inventories"> Listados </a>
+						<a href="/menu/torrent"> Torrents </a>
                         {% if session['auth'] %}
                         <a class="mark-opt" href="/auth/logout"> Salir </a>
                         {% endif %}
@@ -45,7 +46,7 @@
                             <label class="btn btn-primary-outline" data-action="light-mode" for="light-mode">Claro</label>
                             <input type="radio" id="dark-mode" name="btnradio" class="btn btn-check" autocomplete="off">
                             <label class="btn btn btn-primary-outline" data-action="dark-mode" for="dark-mode">Ocuro</label>
-                        </div>      
+                        </div>
                     </div>
                 </div>
 
@@ -92,7 +93,7 @@
             {% block content %}{% endblock %}
             <div id="alerts-container">
                 {{ form_message() }}
-            </div>  
+            </div>
         </section>
 
         <noscript>

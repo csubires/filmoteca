@@ -1,0 +1,65 @@
+@use "constants" as c;
+@use "mixins";
+
+//  -------------
+//  TORRENT
+//  -------------
+
+#films-torrent, #series-torrent {
+	h2 {
+		text-align: center;
+		color: yellowgreen;
+	}
+
+	article {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: .5rem;
+		padding: .5rem;
+		margin: 0 auto;
+		margin: .5rem;
+		background-color: cornsilk;
+		border-radius: 5px;
+		a {
+			text-decoration: none;
+			font-weight: bold;
+			margin: 1rem;
+			padding: .5rem;
+			background-color: cornflowerblue;
+			color: antiquewhite;
+			border-radius: 5px;
+			border: 1px transparent solid;
+			letter-spacing: 1px;
+			&:hover {
+				background-color: aliceblue;
+				color: darkslategray;
+				border: 1px aliceblue solid;
+			}
+		}
+
+		.rating {
+			padding: 0 10px;
+			color: tomato;
+			&::before {
+				content: "★ ";
+			}
+		}
+
+		.year {
+			font-weight: bold;
+			text-decoration-line: underline;
+		}
+
+		.index {
+			color: gray;
+		}
+
+		.title {
+			margin-left: auto;
+			margin-right: 1rem;
+			font-size: larger;
+			font-style: italic;
+		}
+	}
+}

@@ -11,6 +11,7 @@ from .utils import lg_prt						# Mostrar y Colorear texto en consola
 from config.global_constant import URL_BASE, URL_PICT
 
 
+
 # GET LOCAL DATA FOR core.py
 
 def path_file_splits(path_file, file_name):
@@ -196,3 +197,93 @@ def get_ranking_page(raw_html):
 			})
 	# Devolver quitando repetidos
 	return [dict(t) for t in {tuple(d.items()) for d in result}]
+
+
+def get_urls(raw_html):
+	# Devolver información de una película
+	soup = BeautifulSoup(raw_html.content, 'html.parser')
+	films = soup.select('div.noticiasContent a')
+	clean_films = []
+
+	for index, item in enumerate(films):
+		url = item['href'].strip()
+		if '/pelicula/' in url:
+			clean_films.append(url)
+	return clean_films
+
+def get_film(raw_html):
+	# Devolver información de una película
+	title = year = 'n/a'
+	soup = BeautifulSoup(raw_html.content, 'html.parser')
+
+	try:
+		title = soup.select('h2.descargarTitulo')[0].text.strip()
+	except Exception:
+		pass
+
+	try:
+		year = soup.select('p.m-1')[0].text.strip('Año: ')
+	except Exception:
+		pass
+
+	return {
+		'title': title,
+		'year': year,
+		'rating': '',
+		'url_rojo': '',
+		'url_filma': ''
+	}
+
+
+def get_urls_series(raw_html):
+	# Devolver información de una película
+	soup = BeautifulSoup(raw_html.content, 'html.parser')
+	films = soup.select('div.noticiasContent a')
+	clean_films = []
+
+	for index, item in enumerate(films):
+		url = item['href'].strip()
+		if '/serie/' in url:
+			clean_films.append(url)
+	return clean_films
+
+
+def get_serie(raw_html):
+	# Devolver información de una película
+	title = chapters = 'n/a'
+	soup = BeautifulSoup(raw_html.content, 'html.parser')
+
+	try:
+		title = soup.select('h2.descargarTitulo')[0].text.strip()
+	except Exception:
+		pass
+
+	try:
+		chapters = soup.select('p.m-1')[1].text.strip('Episodios: ')
+	except Exception:
+		pass
+
+	return {
+		'title': title,
+		'chapters': chapters,
+		'url_rojo': '',
+		'url_filma': ''
+	}
+
+def get_rating(raw_html, film_info):
+	# Obtener la valoración de una película
+	rating = 'n/a'
+	soup = BeautifulSoup(raw_html.content, 'html.parser')
+
+	try:
+		rating = soup.select('div.avgrat-box')[0].text.strip()
+		if len(soup.select('div.avgrat-box')) > 1:
+			rating += " *M"
+	except Exception:
+		try:
+			rating = soup.select('div#movie-rat-avg')[0].text.strip()
+			if len(soup.select('div#movie-rat-avg')) > 1:
+				rating += " *M"
+		except Exception:
+			pass
+	film_info.update({'rating': rating})

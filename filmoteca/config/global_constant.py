@@ -9,7 +9,7 @@ URL_BASE = 'https://www.filmaffinity.com'
 URL_PICT = 'https://pics.filmaffinity.com'
 PATH_COVERS = './www/images/covers/%s'
 PATH_CHARTS = './www/images/charts/'
-YEAR_INIT_RATING = 2023
+YEAR_INIT_RATING = 2024
 
 # -------------------------- SERVER ----------------------
 
@@ -60,3 +60,8 @@ HEADERS_JSON = {
 	'select_country': ('id_country', 'name'),
 	'search_movies': ('id_movie', 'title', 'year', 'duration_str', 'ratings', 'urlpicture', 'id_genero'),
 }
+
+# Torrents
+URL_BASE_R, URL_FILM, URL_PAGE = 'https://rojotorrent.com', '/peliculas', '/page/%s'
+URL_BASE_S, URL_SERIE, URL_PAGE_S = 'https://rojotorrent.com', '/series', '/page/%s'
+URL_FILMAFFINITY = "https://filmaffinity.com/es/advsearch.php?stext={}&stype%5B%5D=title&fromyear={}&toyear={}"

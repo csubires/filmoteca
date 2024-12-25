@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "constants" as c;
 @use "mixins";
 
@@ -22,7 +23,7 @@
 
 html {
 	scroll-behavior: smooth;
-	scrollbar-color: lighten(c.$bs-gray-900, 30%), c.$bs-gray-900;	
+	scrollbar-color: color.adjust(c.$bs-gray-900, $lightness: 30%), c.$bs-gray-900;	
 }
 
 body {

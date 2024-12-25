@@ -46,3 +46,6 @@ docker/
 # Ignorar bancos de imagenes
 filmoteca/www/images/**/*.png
 filmoteca/www/images/**/*.jpg
+
+docs/HELP.md
+docs/TODO.md

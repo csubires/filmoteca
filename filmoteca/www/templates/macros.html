@@ -31,7 +31,7 @@
             </div>
             {% endfor %}
         {% endif %}
-    {% endwith %}         
+    {% endwith %}
 {% endmacro %}
 
 
@@ -92,7 +92,7 @@
 
 {# RENDERIZAR FORMULARIO DE EDICIÓN DE PELÍCULA #}
 {% macro render_form_movie() %}
-<!-- DIV para bloquear la pantalla con una opacidad x 
+<!-- DIV para bloquear la pantalla con una opacidad x
 <img src="{{ url_for('static', filename='img/wait.gif') }}">-->
 
 <!-- Formulario de edición de películas -->
@@ -113,7 +113,7 @@
                         <input type="button" onclick="this.parentNode.querySelector('#year').stepDown()" value="-">
                         <input type="number" id="year" name="year" class="noborder" min="1800" max="2900" maxlength="4" placeholder="9999">
                         <input type="button" onclick="this.parentNode.querySelector('#year').stepUp()" value="+">
-                    </div>    
+                    </div>
                 </label>
             </div>
 
@@ -146,7 +146,7 @@
                         <input type="button" onclick="this.parentNode.querySelector('#size').stepDown()" value="-">
                         <input type="number" id="size" name="size" class="noborder" placeholder="9999999">
                         <input type="button" onclick="this.parentNode.querySelector('#size').stepUp()" value="+">
-                    </div> 
+                    </div>
                 </label>
                 <label for="size_str"><span>size_str</span>
                     <input type="text" name="size_str" placeholder="999.9 MB" disabled>
@@ -171,7 +171,7 @@
                         <input type="number" id="fps" name="fps" placeholder="99.99" step="0.1" list="dlFps">
                         <datalist id="dlFps"></datalist>
                         <input type="button" onclick="this.parentNode.querySelector('#fps').stepUp()" value="+">
-                    </div>    
+                    </div>
                 </label>
                 <label for="resolution"><span>resolution</span>
                     <input type="text" name="resolution" placeholder="999x999" list="dlResolution">
@@ -185,7 +185,7 @@
                         <input type="button" onclick="this.parentNode.querySelector('#duration').stepDown()" value="-">
                         <input type="number" id="duration" name="duration" placeholder="9999">
                         <input type="button" onclick="this.parentNode.querySelector('#duration').stepUp()" value="+">
-                    </div> 
+                    </div>
                 </label>
                 <label for="duration_str"><span>duration_str</span>
                     <input type="text" name="duration_str" placeholder="9hr, 99min, 99seg" disabled="">
@@ -240,8 +240,6 @@
     </form>
 </dialog>
 {% endmacro %}
-
-
 
 {# DIALOG DE CONFIRMACIÓN DE UNA ACCIÓN #}
 {% macro render_dialog(id_film, title, message, btn_action) %}

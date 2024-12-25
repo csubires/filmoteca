@@ -1,3 +1,4 @@
+@use "sass:list";
 // Constantes y variables de colores y tamaños
 @use "constants" as c;
 @use "mixins";
@@ -194,7 +195,7 @@ label {
 	@each $name, $value in $alerts {
 		.alert-#{$name} {
 			@extend .alert;
-			@include mixins.make-alert(nth($value, 1), nth($value, 2), nth($value, 3));
+			@include mixins.make-alert(list.nth($value, 1), list.nth($value, 2), list.nth($value, 3));
 		} 
 	}
 

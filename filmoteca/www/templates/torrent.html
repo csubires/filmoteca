@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+
+{% macro render_film_torrent(film) %}
+
+	<article>
+		<span class="index">{{ film["index"] }}</span>
+		<span class="rating">{{ film["rating"] }}</span>
+		<span class="title">{{ film["title"] }}</span>
+		<span class="year">{{ film["year"] }}</span>
+		<span class="rojo"><a href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
+		<span class="filma"><a href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+	</article>
+
+{% endmacro %}
+
+{% macro render_serie_torrent(serie) %}
+
+	<article>
+		<span class="index">{{ serie["index"] }}</span>
+		<span class="rating">Chapters:{{ serie["chapters"] }}</span>
+		<span class="title">{{ serie["title"] }}</span>
+		<span class="rojo"><a href="{{ serie['url_rojo'] }}" target="_blank">TORRENT</a> </span>
+		<span class="filma"><a href="{{ serie['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+	</article>
+
+{% endmacro %}
+
+{% block content%}
+	{% if response %}
+
+	<section id="films-torrent">
+		<h2>Películas Disponibles para descargar</h2>
+		{% for movie in response[0] %}
+			{{ render_film_torrent(movie) }}
+		{% endfor %}
+	</section>
+	<section id="series-torrent">
+		<h2>Series disponibles para descargar</h2>
+		{% for serie in response[1] %}
+			{{ render_serie_torrent(serie) }}
+		{% endfor %}
+	</section>
+
+    {% endif %}
+{% endblock %}

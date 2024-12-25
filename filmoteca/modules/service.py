@@ -3,11 +3,11 @@ import random 											# Pequeño descanso aleatorio entre peticiones web
 import threading										# Para generar threads con funciones
 from time import sleep 									# Parar el programa x segundos
 
-from .connection import HandlerConnection				# Manejador de la conexión web
-from .database import HandlerSQL						# Manejador de la base de datos
+from .connection import Handler_connection				# Manejador de la conexión web
+from .database import Handler_SQL						# Manejador de la base de datos
 from .models import FilmInet							# Modelo para almacenar información
 from .analyser import get_posible_url, parse_film, get_ranking_page
-from .utils import lg_prt, singleton, year_now			# Mostrar y Colorear texto en consola
+from .utils import lg_prt, singleton, dt_format			# Mostrar y Colorear texto en consola
 
 from config.global_constant import GENRE_TAG, URL_BASE, URL_PICT, DB_FILE, PATH_COVERS, YEAR_INIT_RATING
 from config.queries_database import TAG_QUERY
@@ -26,8 +26,8 @@ class HandlerService:
 	"""
 
 	def __init__(self, oDTB=None):
-		self.oCNT = HandlerConnection()
-		self.oDTB = HandlerSQL(DB_FILE, TAG_QUERY) if oDTB is None else oDTB
+		self.oCNT = Handler_connection()
+		self.oDTB = Handler_SQL(DB_FILE, TAG_QUERY) if oDTB is None else oDTB
 		self.pThr = None
 		self.STOP = False
 		self.cache_country = {}		# Cache de países y códigos
@@ -52,7 +52,7 @@ class HandlerService:
 
 	def complete_films(self):
 		# Obtener todas las filas de películas que le falten un dato de Internet
-		if not self.oCNT.isOnline():
+		if not self.oCNT.is_online():
 			lg_prt('y', '[▲] Unable to connect to the Internet')
 			return False
 
@@ -73,7 +73,7 @@ class HandlerService:
 
 	def update_film(self, row):
 		# Actualizar información de una película con datos provenientes de Internet
-		if not self.oCNT.isOnline():
+		if not self.oCNT.is_online():
 			lg_prt('y', '[▲] Unable to connect to the Internet')
 			return False
 
@@ -260,7 +260,7 @@ class HandlerService:
 			Guarda las sugerencias en cache (DDBB) para no volver a descargar
 		'''
 
-		for year in range(YEAR_INIT_RATING, year_now()):
+		for year in range(YEAR_INIT_RATING, dt_format('iy')):
 			url_list = f'{URL_BASE}/es/topgen.php?genres=&chv=0&orderby=avg&movietype=movie|ex-anim:ex-tv&country=&fromyear={year}&toyear={year}&ratingcount=2&runtimemin=0&runtimemax=0'
 			lg_prt('by', '\nAño: ', year)
 

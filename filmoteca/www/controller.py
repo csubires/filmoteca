@@ -1,3 +1,12 @@
+'''
+# Filename: controller.py
+# Version: 1.0
+# By: CSUBIRES <j3xuz_cobmetal88@hotmail.com>
+# Created: 2024/08/12 12:04:39 by CSUBIRES
+# Updated: 2024/08/12 12:04:39 by CSUBIRES
+# Description: controller
+'''
+
 import os
 from functools import wraps
 from datetime import timedelta
@@ -8,7 +17,7 @@ from flask import Flask, request, jsonify, render_template, Response, session, s
 from flask.helpers import flash, url_for
 from werkzeug.utils import redirect
 
-from modules.utils import lg_prt, datetime_now			# Mostrar y Colorear texto en consola
+from modules.utils import lg_prt, dt_format			# Mostrar y Colorear texto en consola
 from www.service import HandlerService
 from www.auxiliary import allowed_file
 
@@ -115,7 +124,7 @@ def signup():
 			repeat = password == request.form['repeat_password']
 			agent = request.headers.get('User-Agent')
 			ip = request.remote_addr
-			date = datetime_now()
+			date = dt_format('symdhms')
 
 			result = oSRVC.validate_signup(name, email, password, repeat, ip, agent, date)
 

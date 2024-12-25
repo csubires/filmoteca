@@ -92,6 +92,9 @@ TAG_QUERY_REPORT = {
 	'set_present': 'UPDATE rating SET is_present=1 WHERE id_rating = :id_rating',
 	'get_rating': 'SELECT id_rating, src_img, url, title, year, rating, is_present FROM rating WHERE year is :year ORDER BY rating DESC',
 	'get_years': 'SELECT DISTINCT year, COUNT(*) FROM rating WHERE is_present=0 GROUP BY year ORDER BY year DESC',
+	# TORRENT
+	'select_urlend': 'SELECT url_end, date_end FROM data WHERE id_data = 0',
+	'update_urlend': 'UPDATE data SET url_end = :url_end, date_end = :date_end WHERE id_data = 0',
 }
 
 TAG_QUERY_FUNCTION = {

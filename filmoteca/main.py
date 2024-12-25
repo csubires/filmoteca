@@ -1,11 +1,19 @@
 #!/usr/bin/python3
+'''
+# Filename: main.py
+# Version: 1.0
+# By: CSUBIRES <j3xuz_cobmetal88@hotmail.com>
+# Created: 2024/08/12 12:03:12 by CSUBIRES
+# Updated: 2024/08/12 12:03:12 by CSUBIRES
+# Description: main
+'''
 
 import sys 													# Para salir al sistema
 import signal												# Para controlar el Control+C salida del programa
 
 from modules.core import HandlerScan						# Para listar películas e incorporarlas a la BD
 from modules.service import HandlerService					# Para obtener más información de una película
-from modules.utils import lg_prt, filename_datetime			# Mostrar y Colorear texto en consola
+from modules.utils import lg_prt, dt_format			# Mostrar y Colorear texto en consola
 from helper import help 									# Mostrar el panel de ayuda
 
 oSCN = oSRVC = None
@@ -72,7 +80,7 @@ def main():
 		lg_prt('t', 'CREAR UNA COPIA DE LA BASE DE DATOS ')
 		from shutil import copy							# Para hacer el backup de la base de datos
 		from config.global_constant import DB_FILE		# Nombre de la BD
-		backup_date = filename_datetime()
+		backup_date = dt_format('symdthms')
 		copy(DB_FILE, f'backups/{backup_date}_movieDB.db')
 		lg_prt('gy', '[✔] Backup created in', f'"backups/{backup_date}_movieDB.db"')
 

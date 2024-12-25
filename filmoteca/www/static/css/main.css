@@ -27,8 +27,8 @@
   border-color: #1089cd;
 }
 .btn-primary:hover, .btn-primary:active {
-  background-color: #0c699e;
-  border-color: #0e79b5;
+  background-color: rgb(12.3076923077, 105.3846153846, 157.6923076923);
+  border-color: rgb(14.1538461538, 121.1923076923, 181.3461538462);
 }
 .btn-primary:focus {
   box-shadow: rgb(49, 132, 253);
@@ -51,7 +51,7 @@
   text-decoration: underline;
 }
 .btn-primary-link:hover, .btn-primary-link:active {
-  color: black;
+  color: hsl(201.5873015873, 85.520361991%, -46.6666666667%);
   border-color: transparent;
 }
 
@@ -61,8 +61,8 @@
   border-color: #6c757d;
 }
 .btn-secondary:hover, .btn-secondary:active {
-  background-color: #545b62;
-  border-color: #60686f;
+  background-color: rgb(84.3605150215, 91.3905579399, 97.6394849785);
+  border-color: rgb(96.1802575107, 104.19527897, 111.3197424893);
 }
 .btn-secondary:focus {
   box-shadow: rgb(49, 132, 253);
@@ -85,7 +85,7 @@
   text-decoration: underline;
 }
 .btn-secondary-link:hover, .btn-secondary-link:active {
-  color: black;
+  color: hsl(208.2352941176, 7.2961373391%, -44.3137254902%);
   border-color: transparent;
 }
 
@@ -95,8 +95,8 @@
   border-color: #55ba54;
 }
 .btn-success:hover, .btn-success:active {
-  background-color: #409c3f;
-  border-color: #47ae46;
+  background-color: rgb(63.875, 156.0375, 62.9625);
+  border-color: rgb(71.3125, 174.20625, 70.29375);
 }
 .btn-success:focus {
   box-shadow: rgb(49, 132, 253);
@@ -119,7 +119,7 @@
   text-decoration: underline;
 }
 .btn-success-link:hover, .btn-success-link:active {
-  color: black;
+  color: hsl(119.4117647059, 42.5%, -37.0588235294%);
   border-color: transparent;
 }
 
@@ -129,8 +129,8 @@
   border-color: #dc3545;
 }
 .btn-danger:hover, .btn-danger:active {
-  background-color: #bd2130;
-  border-color: #d32535;
+  background-color: rgb(189.2151898734, 32.7848101266, 47.7721518987);
+  border-color: rgb(210.9493670886, 36.5506329114, 53.2594936709);
 }
 .btn-danger:focus {
   box-shadow: rgb(49, 132, 253);
@@ -153,7 +153,7 @@
   text-decoration: underline;
 }
 .btn-danger-link:hover, .btn-danger-link:active {
-  color: black;
+  color: hsl(354.251497006, 70.4641350211%, -36.4705882353%);
   border-color: transparent;
 }
 
@@ -163,8 +163,8 @@
   border-color: #ffc107;
 }
 .btn-warning:hover, .btn-warning:active {
-  background-color: #d39e00;
-  border-color: #edb100;
+  background-color: rgb(211, 158.25, 0);
+  border-color: rgb(236.5, 177.375, 0);
 }
 .btn-warning:focus {
   box-shadow: rgb(49, 132, 253);
@@ -187,7 +187,7 @@
   text-decoration: underline;
 }
 .btn-warning-link:hover, .btn-warning-link:active {
-  color: black;
+  color: hsl(45, 100%, -38.6274509804%);
   border-color: transparent;
 }
 
@@ -197,8 +197,8 @@
   border-color: #0dcaf0;
 }
 .btn-info:hover, .btn-info:active {
-  background-color: #0aa1c0;
-  border-color: #0cb6d8;
+  background-color: rgb(10.3794466403, 161.2806324111, 191.6205533597);
+  border-color: rgb(11.6897233202, 181.6403162055, 215.8102766798);
 }
 .btn-info:focus {
   box-shadow: rgb(49, 132, 253);
@@ -221,7 +221,7 @@
   text-decoration: underline;
 }
 .btn-info-link:hover, .btn-info-link:active {
-  color: black;
+  color: hsl(190.0440528634, 89.7233201581%, -40.3921568627%);
   border-color: transparent;
 }
 
@@ -231,8 +231,8 @@
   border-color: #dee2e6;
 }
 .btn-light:hover, .btn-light:active {
-  background-color: #c1c9d0;
-  border-color: #cfd5db;
+  background-color: rgb(192.9827586207, 200.5, 208.0172413793);
+  border-color: rgb(207.4913793103, 213.25, 219.0086206897);
 }
 .btn-light:focus {
   box-shadow: rgb(49, 132, 253);
@@ -255,7 +255,7 @@
   text-decoration: underline;
 }
 .btn-light-link:hover, .btn-light-link:active {
-  color: black;
+  color: hsl(210, 13.7931034483%, -1.3725490196%);
   border-color: transparent;
 }
 
@@ -265,8 +265,8 @@
   border-color: #212529;
 }
 .btn-dark:hover, .btn-dark:active {
-  background-color: #0a0c0d;
-  border-color: #16181b;
+  background-color: rgb(10.2567567568, 11.5, 12.7432432432);
+  border-color: rgb(21.6283783784, 24.25, 26.8716216216);
 }
 .btn-dark:focus {
   box-shadow: rgb(49, 132, 253);
@@ -289,7 +289,7 @@
   text-decoration: underline;
 }
 .btn-dark-link:hover, .btn-dark-link:active {
-  color: black;
+  color: hsl(210, 10.8108108108%, -75.4901960784%);
   border-color: transparent;
 }
 
@@ -299,8 +299,8 @@
   border-color: transparent;
 }
 .btn-link:hover, .btn-link:active {
-  background-color: rgba(0, 0, 0, 0);
-  border-color: rgba(0, 0, 0, 0);
+  background-color: hsla(0, 0%, -10%, 0);
+  border-color: hsla(0, 0%, -5%, 0);
 }
 .btn-link:focus {
   box-shadow: rgb(49, 132, 253);
@@ -323,7 +323,7 @@
   text-decoration: underline;
 }
 .btn-link-link:hover, .btn-link-link:active {
-  color: rgba(0, 0, 0, 0);
+  color: hsla(0, 0%, -90%, 0);
   border-color: transparent;
 }
 
@@ -459,7 +459,7 @@ label .folder {
   font-weight: bolder;
 }
 #alerts-container .alert-info .alert-link:hover {
-  color: #136df3;
+  color: rgb(19.4, 109.3, 242.6);
 }
 #alerts-container .alert-success {
   color: #0f5132;
@@ -472,7 +472,7 @@ label .folder {
   font-weight: bolder;
 }
 #alerts-container .alert-success .alert-link:hover {
-  color: #1fa767;
+  color: rgb(30.9375, 167.0625, 103.125);
 }
 #alerts-container .alert-warning {
   color: #664d03;
@@ -485,7 +485,7 @@ label .folder {
   font-weight: bolder;
 }
 #alerts-container .alert-warning .alert-link:hover {
-  color: #c99806;
+  color: rgb(201.0857142857, 151.8, 5.9142857143);
 }
 #alerts-container .alert-danger {
   color: #842029;
@@ -498,7 +498,7 @@ label .folder {
   font-weight: bolder;
 }
 #alerts-container .alert-danger .alert-link:hover {
-  color: #cf3b48;
+  color: rgb(207.3902439024, 58.6097560976, 72);
 }
 #alerts-container .bi {
   max-width: 1.2rem;
@@ -876,7 +876,7 @@ dialog menu {
 
 html {
   scroll-behavior: smooth;
-  scrollbar-color: #65727e, #212529;
+  scrollbar-color: rgb(101.2297297297, 113.5, 125.7702702703), #212529;
 }
 
 body {
@@ -1010,7 +1010,7 @@ header nav .menu .container-right .mark-opt .alert-link {
 }
 header nav .menu .container-left .mark-opt .alert-link:hover,
 header nav .menu .container-right .mark-opt .alert-link:hover {
-  color: #136df3;
+  color: rgb(19.4, 109.3, 242.6);
 }
 header nav .menu .container-left a,
 header nav .menu .container-right a {
@@ -1543,7 +1543,7 @@ header nav i {
   width: 20rem;
 }
 .maintenance-list div a p {
-  color: #52b8f1;
+  color: rgb(81.5384615385, 183.9230769231, 241.4615384615);
 }
 
 .head-result {
@@ -1810,6 +1810,58 @@ header nav i {
   transform: translateY(-0.3rem);
 }
 
+#films-torrent h2, #series-torrent h2 {
+  text-align: center;
+  color: yellowgreen;
+}
+#films-torrent article, #series-torrent article {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0 auto;
+  margin: 0.5rem;
+  background-color: cornsilk;
+  border-radius: 5px;
+}
+#films-torrent article a, #series-torrent article a {
+  text-decoration: none;
+  font-weight: bold;
+  margin: 1rem;
+  padding: 0.5rem;
+  background-color: cornflowerblue;
+  color: antiquewhite;
+  border-radius: 5px;
+  border: 1px transparent solid;
+  letter-spacing: 1px;
+}
+#films-torrent article a:hover, #series-torrent article a:hover {
+  background-color: aliceblue;
+  color: darkslategray;
+  border: 1px aliceblue solid;
+}
+#films-torrent article .rating, #series-torrent article .rating {
+  padding: 0 10px;
+  color: tomato;
+}
+#films-torrent article .rating::before, #series-torrent article .rating::before {
+  content: "★ ";
+}
+#films-torrent article .year, #series-torrent article .year {
+  font-weight: bold;
+  text-decoration-line: underline;
+}
+#films-torrent article .index, #series-torrent article .index {
+  color: gray;
+}
+#films-torrent article .title, #series-torrent article .title {
+  margin-left: auto;
+  margin-right: 1rem;
+  font-size: larger;
+  font-style: italic;
+}
+
 /*
 
 IMPORTANTE
@@ -1835,7 +1887,7 @@ https://icons.getbootstrap.com/
 
 
 
-BEM: La metodología BEM (bloque, elemento, modificador) 
+BEM: La metodología BEM (bloque, elemento, modificador)
 Block component
 .btn {}
 
@@ -1843,7 +1895,7 @@ Element that depends upon the block
 .btn__price {}
 
 Modifier that changes the style of the block
-.btn--orange {} 
+.btn--orange {}
 .btn--big {}
 
 

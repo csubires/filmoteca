@@ -1,3 +1,5 @@
+@use "sass:color";
+@use "sass:map";
 /* 	MIXINS
 	Funciones y metodos
 */
@@ -21,8 +23,8 @@
 	border-color: $background;
 	&:hover,
 	&:active {
-		background-color: darken($background, 10%);
-		border-color:  darken($background, 5%);
+		background-color: color.adjust($background, $lightness: -10%);
+		border-color:  color.adjust($background, $lightness: -5%);
 	}
 
 	&:focus {
@@ -49,7 +51,7 @@
 		text-decoration: underline;
 		&:hover,
 		&:active {
-			color: darken($background, 90%);
+			color: color.adjust($background, $lightness: -90%);
 			border-color: transparent;
 		}
 	}
@@ -60,7 +62,7 @@
 	@each $name, $value in $buttons {
 		.btn-#{$name} {
 			@extend .btn;
-			@include make-button(map-get($value, color), map-get($value, bkg));
+			@include make-button(map.get($value, color), map.get($value, bkg));
 		} 
 	}
 }
@@ -75,7 +77,7 @@
         color: $color;
 		font-weight: bolder;
 		&:hover {
-			color: lighten($color, 20%);
+			color: color.adjust($color, $lightness: 20%);
 		}
     }
 }

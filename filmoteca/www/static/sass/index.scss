@@ -10,6 +10,8 @@
 // Vistas de mantenimiento del proyecto en particular
 @use "maintenance";
 
+// Vistas de descarga de nuevos torrents
+@use "torrents";
 
 /*
 
@@ -36,7 +38,7 @@ https://icons.getbootstrap.com/
 
 
 
-BEM: La metodología BEM (bloque, elemento, modificador) 
+BEM: La metodología BEM (bloque, elemento, modificador)
 Block component
 .btn {}
 
@@ -44,9 +46,8 @@ Element that depends upon the block
 .btn__price {}
 
 Modifier that changes the style of the block
-.btn--orange {} 
+.btn--orange {}
 .btn--big {}
 
 
 */
-

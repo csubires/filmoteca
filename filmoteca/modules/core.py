@@ -1,11 +1,20 @@
+'''
+# Filename: core.py
+# Version: 1.0
+# By: CSUBIRES <j3xuz_cobmetal88@hotmail.com>
+# Created: 2024/08/12 12:03:58 by CSUBIRES
+# Updated: 2024/08/12 12:03:58 by CSUBIRES
+# Description: core
+'''
+
 import os 						# Recorrer carpetas
 import threading				# Para generar threads con funciones
 
-from .database import HandlerSQL						# Manejador de la base de datos
+from .database import Handler_SQL						# Manejador de la base de datos
 from .models import FilmFile
 from .auxiliary import timestamp2Date, seconds_to_time, bytes_to_human
 from .analyser import path_file_splits, get_fileMetaData, get_real_path_size
-from .utils import lg_prt, singleton, datetime_now		# Mostrar y Colorear texto en consola
+from .utils import lg_prt, singleton, dt_format		# Mostrar y Colorear texto en consola
 
 from config.global_constant import MOVIE_PATH, MOVIEXT, DB_FILE
 from config.queries_database import TAG_QUERY
@@ -27,7 +36,7 @@ class HandlerScan:
 	def __init__(self, path_number):
 		self.path_number = path_number
 		self.base_dir = MOVIE_PATH[path_number]
-		self.report_date = datetime_now()
+		self.report_date = dt_format('symdhms')
 		# Cache de géneros y subgéneros para no tener que buscar el ID en bd constantemente
 		self.genre_cache = {}
 		self.ext_counter = {}								# Contador de extensiones
@@ -37,7 +46,7 @@ class HandlerScan:
 		self.oDTB = None
 
 		if os.path.exists(self.base_dir):
-			self.oDTB = HandlerSQL(DB_FILE, TAG_QUERY)		# Crear el manejador de BBDD
+			self.oDTB = Handler_SQL(DB_FILE, TAG_QUERY)		# Crear el manejador de BBDD
 		else:
 			lg_prt('ryr', '[✖] Error.', self.base_dir, 'doesnt exist')
 			self.STOP = True

@@ -1,6 +1,7 @@
 from modules.service import HandlerService as HandlerServiceMod
-from modules.database import HandlerSQL, list_to_dict				# Manejador de la base de datos
-from modules.utils import lg_prt, singleton							# Mostrar y Colorear texto en consola
+from modules.database import Handler_SQL							# Manejador de la base de datos
+from modules.extras import list_to_dict
+from modules.utils import lg_prt, singleton, dt_format				# Mostrar y Colorear texto en consola
 from www.auxiliary import isValidEmail, htmlFilterChars, min_len
 
 from config.queries_database import TAG_QUERY_REPORT
@@ -17,8 +18,8 @@ class HandlerService:
 	"""
 
 	def __init__(self):
-		self.cache_formsearch = {}
-		self.oDTB = HandlerSQL(DB_FILE, TAG_QUERY_REPORT)		# Crear el manejador de BBDD
+		self.cache_storage = {}
+		self.oDTB = Handler_SQL(DB_FILE, TAG_QUERY_REPORT)		# Crear el manejador de BBDD
 		self.oSRVC = None
 
 	def __del__(self):
@@ -139,6 +140,27 @@ class HandlerService:
 		elif menu == 'inventories':
 			response = ('Listados', 'inventories.html', [])
 
+		elif menu == 'torrent':
+
+			data = self.cache_storage.get('cache_torrent', None)
+
+			if data is None:
+				from modules.torrent import get_torrents
+
+				result = self.oDTB.execute('select_urlend')
+				if result is not None:
+					url_end, date_end = result[0]
+					if date_end != dt_format("symd"):
+						if self.oSRVC is None:
+							self.oSRVC = HandlerServiceMod(self.oDTB)
+						data = get_torrents(self.oSRVC.oCNT, url_end)		# Películas y series encontradas
+						self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd")})
+						self.cache_storage['cache_torrent'] = data
+			if data is not None and len(data) > 0:
+				response = ('Torrent Downloads', 'torrent.html', data)
+			else:
+				response = ('Sin resultados', 'torrent.html', None)
+
 		else:
 			# Si no hay opción por defecto se muestran las estadísticas
 			# Listado de reportes y datos globales
@@ -167,7 +189,7 @@ class HandlerService:
 
 	def searchAdvanced(self, search=None):
 		# Datos para rellenar los datalist
-		data = self.cache_formsearch.get('cache_search', None)
+		data = self.cache_storage.get('cache_search', None)
 
 		# Busqueda con parametros avanzados
 		if search is None:
@@ -181,7 +203,7 @@ class HandlerService:
 				country = self.oDTB.execute('select_country')
 				data = [quality, extension, resolution, fps, country]
 				data = data if all(data) else None
-				self.cache_formsearch['cache_search'] = data
+				self.cache_storage['cache_search'] = data
 
 			response = ('Busqueda Avanzada', 'auth/search.html', data, None)
 
@@ -248,11 +270,11 @@ class HandlerService:
 			lg_prt('t', result)
 			dataSQL = dataSQL if result else None
 			lg_prt('t', dataSQL)
-		
+
 		elif tagSQL == 'modify_movie':
 			# Se modificó una película y hay que ver si es necesario mover la imagen a otra carpeta
 			pass
-			
+
 
 		# Obtener cabeceras si existen y trasnformar a diccionario
 		headers = HEADERS_JSON.get(tagSQL, None)

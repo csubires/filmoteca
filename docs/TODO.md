@@ -1,13 +1,28 @@
 ## TODO (Hay otros en el código)
 ---
 
+postgres
+https://github.com/psycopg/psycopg2
+https://www.removepaywall.com/search?url=https://medium.com/@eng.fadishaar/step-by-step-guide-configuring-nginx-with-https-on-localhost-for-secure-web-application-testing-c78febc26c78
+muñiz
+https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu
+https://medium.com/@rangabashyam22/nginx-and-python-flask-how-to-scale-secure-and-optimize-your-web-applications-7069947afa87
+
+https://stackoverflow.com/questions/22432826/best-practice-for-setting-up-flaskuwsginginx
+https://monicalent.com/blog/2013/12/06/set-up-nginx-and-uwsgi/
+dockerignore
+https://loadforge.com/guides/deploying-flask-applications-with-gunicorn-and-nginx-for-scalability
+cProfile
+SQL profiler to identify slow queries
+ORM like SQLAlchemy
+https://loadforge.com/guides/deploying-flask-applications-with-gunicorn-and-nginx-for-scalability
 
 ### APLICACIÓN PRINCIPAL
 
 - [ ] Arreglar el setup.py
 - [x] Refactorización
 models.py o entities.py
-: Definir modelos de datos (clases) que utilizarán en el proyecto. `Ex: unaPelicula` 
+: Definir modelos de datos (clases) que utilizarán en el proyecto. `Ex: unaPelicula`
 :La idea es crear una capa que trabaje sobre el mismo objeto para no llenar memoria, asegurandose de que se limpia cada vez que se "crea"
 
 ``` python
@@ -66,7 +81,7 @@ Catalogar Queries por aparición en archivos: archivo.js, core.py.. etc
 - ~~[ ] Calcular mediana, mejorar las estadisticas~~
 - [ ] Empaquetar proyecto como /src setup.py
 - [ ] Hacer que se detecten los cambios de películas entre carpetas (evitar redescargar metadatos)
-- [ ] Buscar alternativa a filmaffinity service_filmmafinity.py, service_otro.py 
+- [ ] Buscar alternativa a filmaffinity service_filmmafinity.py, service_otro.py
 - [X] Mostrar un mensaje de "no encontrado ningun elemento" en mantenimiento al no obtener pelis, pais, etc
 - [x] rating is present script check
 ---
@@ -117,12 +132,18 @@ https://github.com/chrischase011/simple_flask
 - Refactorizar Javascript fillDataList
 ---
 ### MEJORAS
+
+- [ ] multiples origin
+- preparar projectos en python e ir subiendo a github
+acer corte < 5 y mandar a trash juzgar
+- [ ] Opción web pasar a eliminadas
+- [ ] En el listado de peores películas marcar las nuevas para cortar a EX y evitar el recopiado
 - [ ] Crear un script para copia automática de películas script robocopy automatic???
 - [x] Mejorar y añadir gráficos
 - Mejorar honeypot
 - Cookie y privacidad
 - Implementar cache, evitar remandar css, js, iconos desde cliente
-- [x] Poner elegir el listado por orden de nombre o año, duracion, estrellas (eso requiere listado javascript o no?) 
+- [x] Poner elegir el listado por orden de nombre o año, duracion, estrellas (eso requiere listado javascript o no?)
 - [ ] viewport virtual scroll
 - INSERT INTO t0(c) VALUES(random()) RETURNING *;
 - pasar pelis borradas a una tabla nueva ??
@@ -155,12 +176,14 @@ https://github.com/chrischase011/simple_flask
 ---
 
 ## ERRORES
+- [ ] Los globos de alerta se quedan atrás al modificar una película (zindex). ¿Crear sass jerarquía de zindex?
+- [ ] Cuando se habre el listado de peores películas y antes has volteado una tarjeta de película, está aparece encima de todo (indexz)
 - [X] listado y descargar se unen
 - [X] Cuando no se devuelven busquedas en buscador salta error con cada tecla que se pulsa
 - [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir. Ver en Windows por qué se obtiene mal. Ver time to secon, y filemetadata
 - [X] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
 NO el problema es que has puesto la fecha como UNIQUE y hace un reporte de external o internal en el mismo día se pisen (ARREGLADO PERO COMPROBAR)
-- [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set. 
+- [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set.
 app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'super secret key'
 - [-] Error al clonar no encuentra www/logs
@@ -182,16 +205,19 @@ app.config['SECRET_KEY'] = 'super secret key'
 - [ ] cuando el pais no esta en la bd da error
 {'id_movie': 1518, 'title': 'El caftán azul', 'realtitle': 'The Blue Caftan', 'urldesc': '/es/film999656.html', 'ratings': 7.2, 'urlpicture': '/the_blue_caftan-747001033-mmed.jpg', 'country': 'Marruecos', 'id_country': None, 'year': 2022}  'NoneType' object is not subscriptable
  [4/4]  [✖] Error complete_films(). Failed to update movie  (1518, 'El caftán azul', 18, None, 2022, '/es/film999656.html')
+[✖] Error update_film()  {'id_movie': 1548, 'title': 'Los guardianes de la fórmula', 'realtitle': 'Cuvari formule', 'urldesc': '/es/film184482.html', 'ratings': 6.2, 'urlpicture': '/cuvari_formule-674562975-mmed.jpg', 'country': 'Serbia', 'id_country': None, 'year': 2023}  'NoneType' object is not subscriptable
+ [4/4]  [✖] Error complete_films(). Failed to update movie  (1548, 'Los guardianes de la fórmula', 18, None, 2023, '/es/film184482.html')
 
 
 ---
 ## TEST
-* Al mostrar la busquedad general de películas tiene límite???, Quitar límite 
+* Al mostrar la busquedad general de películas tiene límite???, Quitar límite
 * Los datos int se parsean automaticamente de str a int al guardar en sqlite????
 * Comprobar que las estadísticas de géneros son reales
 * python3 -m cProfile test_utils.py
 ---
 ## SUGERENCIAS
+- Crear Makefile
 - matploit 366 Imagenes en SVG, o escalable + 533 media de duracion , tamaño
 - Comprimir imagenes desde aplicación, compressimage como opción .popen pag449
 - Listados de películas a PDF
@@ -209,11 +235,11 @@ app.config['SECRET_KEY'] = 'super secret key'
     except Exception as inst:
 
 	    lg_ 'ry', instt.args
-	    
+
         print(type(inst))    # the exception instance
 
         print(inst.args)     # arguments stored in .args
-    
+
 ```
 
 > Args:
@@ -244,4 +270,3 @@ https://stackoverflow.com/questions/45732458/ignore-files-committed-to-git-and-a
 https://codepen.io/ndangelo/pen/BaamRam
 https://github.com/purecatamphetamine/country-flag-icons/tree/gh-pages/1x1
 https://noticiasseguridad.com/tutoriales/como-proteger-cualquier-servidor-linux-proteccion-automatizada-de-servidor/
-
