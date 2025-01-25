@@ -141,7 +141,6 @@ class HandlerService:
 			response = ('Listados', 'inventories.html', [])
 
 		elif menu == 'torrent':
-
 			data = self.cache_storage.get('cache_torrent', None)
 
 			if data is None:
@@ -149,13 +148,18 @@ class HandlerService:
 
 				result = self.oDTB.execute('select_urlend')
 				if result is not None:
-					url_end, date_end = result[0]
-					if date_end != dt_format("symd"):
+					url_end, date_end, npseries = result[0]
+
+					if (year is not None):
+						return ('Cartelera', 'torrent.html', [None, url_end, date_end, npseries])
+
+					if date_end != dt_format("symd") or data is None:
 						if self.oSRVC is None:
 							self.oSRVC = HandlerServiceMod(self.oDTB)
-						data = get_torrents(self.oSRVC.oCNT, url_end)		# Películas y series encontradas
-						self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd")})
+						data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
+						self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd"), 'npseries': npseries})
 						self.cache_storage['cache_torrent'] = data
+
 			if data is not None and len(data) > 0:
 				response = ('Torrent Downloads', 'torrent.html', data)
 			else:

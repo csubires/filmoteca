@@ -64,7 +64,7 @@ class Handler_SQL:
 		"""
 		response = None
 		sentence = self.tag_query.get(tag, False)			# Obtener la consulta según su tag
-		# lg_prt('by', sentence, params)
+		# print('[ DEBUG ]', sentence, params)
 
 		try:
 			self.lock.acquire(True)

@@ -33,7 +33,7 @@ window.addEventListener('load', function () {
                 dataJson = dataJson.data[0]
                 if (dataJson) {
                     cardInfoFilm.insertAdjacentHTML('afterbegin', `
-                    
+
                     <strong>${dataJson.realtitle}</strong>
                     <img src="/covers/${dataJson.id_genre}${dataJson.urlpicture}">
                     <a target="_blank" href="https://www.filmaffinity.com${dataJson.urldesc}">
@@ -71,8 +71,8 @@ window.addEventListener('load', function () {
         },
 
         // BOTÓN - Salvar código de un país
-        'edit-country': async (e) =>  {    
-            let code = (document.querySelector(`#input-country-${e.target.dataset.idCountry}`).value).toLowerCase() || 'n/a'    
+        'edit-country': async (e) =>  {
+            let code = (document.querySelector(`#input-country-${e.target.dataset.idCountry}`).value).toLowerCase() || 'n/a'
             let params = {
                 'csrf_token_form': e.target.dataset.csrfTokenForm,
                 'id_country': e.target.dataset.idCountry,
@@ -91,12 +91,12 @@ window.addEventListener('load', function () {
             let dataJson = await cnt.send('DELETE', '/api/delete_movie', params)
             if (dataJson) {
                 let cardInfoFilm = document.querySelector(`#card-info-film-${e.target.dataset.idFilm}`)
-                cardInfoFilm.innerHTML = `<strong>Película ${e.target.dataset.titleFilm} eliminada</strong><p>${dataJson.message}</p>` 
+                cardInfoFilm.innerHTML = `<strong>Película ${e.target.dataset.titleFilm} eliminada</strong><p>${dataJson.message}</p>`
             }
         },
 
         // BOTÓN - Borrar reporte en mantenimiento
-        'delete-report': async (e) =>  {  
+        'delete-report': async (e) =>  {
             let params = {
                 'id_report': e.target.dataset.idReport,
                 'csrf_token_form': e.target.dataset.csrfTokenForm
@@ -104,12 +104,12 @@ window.addEventListener('load', function () {
             let dataJson = await cnt.send('DELETE', '/api/delete_report', params)
             if (dataJson) {
                 let trReport = document.querySelector(`#report-tr-${e.target.dataset.idReport}`)
-                trReport.innerHTML = `<tr><td colspan="11"${e.target.dataset.dateReport} ${dataJson.message}</td><tr>`  
-            }         
+                trReport.innerHTML = `<tr><td colspan="11"${e.target.dataset.dateReport} ${dataJson.message}</td><tr>`
+            }
         },
 
         // BOTÓN - Establecer película como presente
-        'set-present': async (e) =>  { 
+        'set-present': async (e) =>  {
             let params = {
                 'id_rating': e.target.dataset.idRating,
                 'csrf_token_form': e.target.dataset.csrfTokenForm
@@ -117,7 +117,7 @@ window.addEventListener('load', function () {
             let dataJson = await cnt.send('PUT', '/api/set_present', params)
             if (dataJson) {
                 let trReport = document.querySelector(`#rating-tr-${e.target.dataset.idRating}`)
-                trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`  
+                trReport.innerHTML = `<tr><td colspan="4"ddddd</td><tr>`
             }
         },
 
@@ -145,18 +145,18 @@ window.addEventListener('load', function () {
                     if (input.type == "checkbox") {
                         value = input.checked ? 1 : 0
                     } else if (input.type == "radio") {
-                        value = parseInt(movieForm[input.name].value)    
+                        value = parseInt(movieForm[input.name].value)
                     }
                     params[input.name] = value
                 }
             })
-    
+
             await cnt.send('PUT', '/api/modify_movie', params)
             //fillFormEdit()                          // Refrescar los datos modificados
         },
 
         // BOTÓN - Actualizar los datos de una película
-        'update-film': async (e) =>  {  
+        'update-film': async (e) =>  {
             e.preventDefault()
             showAndHidde(screenBlock, 'visible, 99')  // Trae al frente la pantalla de bloqueo
             // Guardar las modificaciones (url_desc) en la base de datos
@@ -182,7 +182,7 @@ window.addEventListener('load', function () {
                 let orderBy = e.target.dataset.idSort
                 return str1[orderBy] > str2[orderBy] ? 1 : -1
             }
-            
+
             // Filtrar solo los nodos tipo 1, ordenar, mostrar
             let aux = [...items.children]
                 .filter(item => item.nodeType == 1)
@@ -197,7 +197,7 @@ window.addEventListener('load', function () {
                 let params = `{"search": "%${strSearch}%", "year": "${strSearch}", "limit": 10, "csrf_token_form": "${searchForm.csrf_token_form.value }"}`
                 let dataJson = await cnt.send('GET', `/api/search_movies/${params}`)
                 console.log(dataJson)
-                
+
                 if (dataJson) {
                     dataJson = dataJson.data
                     // Rellenar datalist con sugerencias
@@ -234,6 +234,21 @@ window.addEventListener('load', function () {
             searchForm['text-search'].value = ''
         },
 
+        // BUTTON - Actualizar opciones de cartelera
+        'save-billboard': async (e) => {
+            let params = {
+                'url_end': document.querySelector(`#last_torrent`).value,
+				'date_end': document.querySelector(`#last_date`).value,
+                'npseries': document.querySelector(`#vserie`).value,
+				'csrf_token_form': e.target.dataset.csrfTokenForm
+            }
+            await cnt.send('PUT', '/api/update_urlend', params)
+        },
+        // BUTTON - Buscar cartelera
+        'search-billboard': async (e) => {
+			document.getElementById("loading").style.display = "block"
+			window.location.href = "/menu/torrent";
+        },
         // BUTTON - Copiar la lista al portapapeles
         'copy-clipboard': () => {
             let content = document.querySelector('.list-copy').innerText
@@ -242,12 +257,12 @@ window.addEventListener('load', function () {
         },
 
         // RADIO - Modo tema claro
-        'light-mode': () =>  {  
+        'light-mode': () =>  {
             document.body.setAttribute('class', '')
-            localStorage.setItem('theme', '') 
+            localStorage.setItem('theme', '')
             const themeSwitch = document.querySelector('.theme-switch');
             themeSwitch.checked = localStorage.getItem('switchedTheme') === 'true';
-            
+
             themeSwitch.addEventListener('change', function (e) {
                 if(e.currentTarget.checked === true) {
                 // Add item to localstorage
@@ -262,13 +277,13 @@ window.addEventListener('load', function () {
         },
 
         // RADIO - Modo tema oscuro
-        'dark-mode': () =>  {  
+        'dark-mode': () =>  {
             document.body.setAttribute('class', 'theme theme-dark')
-            localStorage.setItem('theme', 'dark') 
-        },        
+            localStorage.setItem('theme', 'dark')
+        },
 
     }   // END callbackCollection
-    
+
     // VINCULAR UN OBJECTO A UN EVENTO Y SU ACCIÓN
     const makeClickeable = (type, target) => {
         document.querySelectorAll(target).forEach(item => {
@@ -311,7 +326,7 @@ window.addEventListener('load', function () {
                 let option = document.createElement('option')
                 if (target == '#id_country') {
                     option.text = item.name
-                    option.value = item.id_country  
+                    option.value = item.id_country
                 } else {
                     option.text = model ? item[0] : item[1]
                     option.value = item[0]
@@ -371,7 +386,7 @@ window.addEventListener('load', function () {
             // Sacar de localStorage
             let dataJsonDataList = JSON.parse(localStorage.dataJson)
             // Rellenar datalist de calidades
-            fillFormDataList('#dlQuality', dataJsonDataList.select_quality, true) 
+            fillFormDataList('#dlQuality', dataJsonDataList.select_quality, true)
             // Rellenar datalist de extensiones
             fillFormDataList('#dlExtension', dataJsonDataList.select_extension, true)
             // Rellenar datalist de resoluciones

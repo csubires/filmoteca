@@ -25,9 +25,11 @@ def get_movies(oCNT, index):
 			if status == 200:
 				film_info = get_film(page)
 				url = URL_FILMAFFINITY.format(film_info['title'], film_info['year'], film_info['year'])
+				url2 = URL_IMBD.format(film_info['title'], film_info['year'], film_info['year'])
 				sleep(1)
 				film_info.update({'index': str(idx + 1)})
 				film_info.update({'url_filma': oCNT.encode_url(url)})
+				film_info.update({'url_imbd': oCNT.encode_url(url2)})
 				film_info.update({'url_rojo': item})
 				page, status = oCNT.send('GET', url)
 				(status == 200) and get_rating(page, film_info)
@@ -81,7 +83,7 @@ def get_series(oCNT, index):
 		return False
 	return True
 
-def get_torrents(oCNT, url_end):
+def get_torrents(oCNT, url_end, npseries):
 	global last_movie
 	last_movie = url_end
 
@@ -92,7 +94,7 @@ def get_torrents(oCNT, url_end):
 
 	lg_prt('bw', '[+] Searching series...')
 	index = 1
-	while (index < 2 and get_series(oCNT, index)):
+	while (index <= npseries and get_series(oCNT, index)):
 		index += 1
 
-	return [all_movies, all_series, all_movies[-1]['url_rojo']]
+	return [all_movies, all_series, all_movies[0]['url_rojo'] if len(all_movies) > 0 else None]

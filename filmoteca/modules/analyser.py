@@ -264,7 +264,7 @@ def get_serie(raw_html):
 		pass
 
 	return {
-		'title': title,
+		'title': title.split('-')[0].strip(),
 		'chapters': chapters,
 		'url_rojo': '',
 		'url_filma': ''
@@ -279,11 +279,15 @@ def get_rating(raw_html, film_info):
 		rating = soup.select('div.avgrat-box')[0].text.strip()
 		if len(soup.select('div.avgrat-box')) > 1:
 			rating += " *M"
+		else:
+			film_info['url_filma'] = soup.select('.mc-title > a')[0]['href']
 	except Exception:
 		try:
 			rating = soup.select('div#movie-rat-avg')[0].text.strip()
 			if len(soup.select('div#movie-rat-avg')) > 1:
 				rating += " *M"
+			else:
+				film_info['url_filma'] = soup.select('.mc-title > a')[0]['href']
 		except Exception:
-			pass
+			rating = 'n/a'
 	film_info.update({'rating': rating})

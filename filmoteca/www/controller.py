@@ -25,10 +25,10 @@ from config.server_config import IMAGES_FOLDER, RESOURCES_CSS
 
 
 app = Flask(__name__)
+
 import www.error_handler
 
 oSRVC = HandlerService()
-
 
 @app.before_request
 def make_session_permanent():
@@ -67,6 +67,10 @@ def check_csrf_token(tag, csrf_token):
 # --------------------------------------------------------------------
 # 																ROUTES
 
+# Archivos estáticos
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename, cache_timeout=3600)
 
 @app.route('/')
 def index():

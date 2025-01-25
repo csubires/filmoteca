@@ -1,0 +1,24 @@
+name: Deploy Filmoteca to production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: gitea-runner-1
+    steps:
+      - name: Pull latest changes
+        run: |
+          cd /var/www/web-flask
+          echo "git pull origin main"
+          ls
+
+      - name: Unzip images
+        run: |
+          echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/var/www/web-flask/filmoteca/www"
+
+      - name: Run deployment script
+        run: |
+          echo "bash /webserver/run.sh"

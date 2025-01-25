@@ -30,6 +30,8 @@ MAINTENANCE_OPTIONS = {
 	'overevalued_movies': 'Mejor Valoradas (>6.7)',
 	'missing_movies_hdd1': 'Desaparecidas HDD 1 (Externo)',
 	'incomplete_genre': 'Géneros incompletos',
+	'incomplete_genre': 'Géneros incompletos',
+	'select_urlend': 'Cartelera',
 }
 
 # TAG_QUERY_REPORT : Mensaje de acción realizada correctamente API REST CRUD
@@ -39,7 +41,8 @@ MESSAGE_SUCCESS = {
 	'delete_movie': 'Película eliminada correctamente',
 	'modify_movie': 'Película modificada correctamente',
 	'update_inet_movie': 'Película actualizada correctamente',
-	'set_present': 'Película establecida como presente'
+	'set_present': 'Película establecida como presente',
+	'update_urlend': 'Cartelera actualizada',
 }
 
 # TAG_QUERY_REPORT : Mensaje de fallo al realizar acción API REST CRUD
@@ -50,7 +53,8 @@ MESSAGE_FAILURE = {
 	'set_code_country': 'No se pudo editar la información del país',
 	'delete_movie': 'Ocurrio un error al eliminar la película',
 	'modify_movie': 'La película no pudo ser modificada',
-	'update_inet_movie': 'No se pudo actualizar la película'
+	'update_inet_movie': 'No se pudo actualizar la película',
+	'update_urlend': 'Cartelera no pudo actualizarse',
 }
 
 # Cabecera para datos convertidos de list SQL a JSON
@@ -65,3 +69,4 @@ HEADERS_JSON = {
 URL_BASE_R, URL_FILM, URL_PAGE = 'https://rojotorrent.com', '/peliculas', '/page/%s'
 URL_BASE_S, URL_SERIE, URL_PAGE_S = 'https://rojotorrent.com', '/series', '/page/%s'
 URL_FILMAFFINITY = "https://filmaffinity.com/es/advsearch.php?stext={}&stype%5B%5D=title&fromyear={}&toyear={}"
+URL_IMBD = "https://www.imdb.com/search/title/?title={}&release_date={}-01-01,{}-12-31"

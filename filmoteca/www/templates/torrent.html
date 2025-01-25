@@ -7,8 +7,9 @@
 		<span class="rating">{{ film["rating"] }}</span>
 		<span class="title">{{ film["title"] }}</span>
 		<span class="year">{{ film["year"] }}</span>
-		<span class="rojo"><a href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
-		<span class="filma"><a href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+		<span><a href="{{ film['url_imbd'] }}" target="_blank">IMBD</a> </span>
+		<span><a href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
+		<span><a href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
 	</article>
 
 {% endmacro %}
@@ -19,14 +20,14 @@
 		<span class="index">{{ serie["index"] }}</span>
 		<span class="rating">Chapters:{{ serie["chapters"] }}</span>
 		<span class="title">{{ serie["title"] }}</span>
-		<span class="rojo"><a href="{{ serie['url_rojo'] }}" target="_blank">TORRENT</a> </span>
-		<span class="filma"><a href="{{ serie['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+		<span><a href="{{ serie['url_rojo'] }}" target="_blank">TORRENT</a> </span>
+		<span><a href="{{ serie['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
 	</article>
 
 {% endmacro %}
 
-{% block content%}
-	{% if response %}
+{% block content %}
+	{% if response is not none and response[0] is not none %}
 
 	<section id="films-torrent">
 		<h2>Películas Disponibles para descargar</h2>
@@ -40,6 +41,35 @@
 			{{ render_serie_torrent(serie) }}
 		{% endfor %}
 	</section>
+
+	{% else %}
+
+<div class="edit">
+	<form method="dialog" id="form-login">
+		<header><h3>Configurar cartelera</h3></header>
+		<article class="edit" id="billboard-menu">
+			<div class="row">
+				<label for="last_torrent"><span>Último torrent</span>
+					<input type="text" name="last_torrent" id="last_torrent" placeholder="{{ response[1] }}">
+					<input type="text" name="last_date" id="last_date" disabled maxlength="12" placeholder="{{ response[2] }}">
+				</label>
+
+				<label for="npseries" class="row"><span>Número de páginas de series</span>
+					<input type="number" class="noborder" id="vserie" placeholder="1" value="{{ response[3] }}" disabled="">
+				</label>
+				<input type="range" id="range" name="npseries" size="2" step="1" value="{{ response[3] }}" min="1" max="10" oninput="vserie.value=value">
+			</div>
+		</article>
+		<footer>
+			<menu>
+				<!-- Animación de carga (inicialmente oculta) -->
+				<div id="loading" style="display: none;"></div>
+				<button class="btn btn-primary-outline" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="save-billboard">Guardar</button>
+				<button class="btn btn-primary" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="search-billboard">Buscar</button>
+			</menu>
+		</footer>
+	</form>
+</div>
 
     {% endif %}
 {% endblock %}
