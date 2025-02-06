@@ -30,9 +30,6 @@ venv.bak/
 # C extensions
 *.so
 
-# Ignorar carpetas
-docker/
-
 # Ignorar backups
 **/backups/*
 
