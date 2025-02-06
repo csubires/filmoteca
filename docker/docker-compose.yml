@@ -5,13 +5,14 @@ services:
     restart: unless-stopped
     volumes:
       - "/home/user/docker-app/webserver/filmoteca/filmoteca:/usr/src/app/filmoteca"
+      - "/home/user/docker-app/webserver/filmoteca/docker/wsgi.ini:/usr/src/app/filmoteca/wsgi.ini"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/mnt/hgfs/films:/mnt/hgfs/movies:ro"
-      - "/mnt/hgfs/ext_films:/mnt/hgfs/ext_movies:ro"
+#      - "/mnt/hgfs/films:/mnt/hgfs/movies:ro"
+#      - "/mnt/hgfs/ext_films:/mnt/hgfs/ext_movies:ro"
     environment:
       - FLASK_ENV=production
-    command: sh -c "uwsgi --ini /usr/src/app/filmoteca/docker/wsgi.ini"
+    command: sh -c "uwsgi --ini /usr/src/app/filmoteca/wsgi.ini"
     networks:
       - netflask
 
@@ -20,14 +21,15 @@ services:
     container_name: filmoteca-flask2
     restart: unless-stopped
     volumes:
-      - /home/user/docker-app/webserver/filmoteca/filmoteca:/usr/src/app/filmoteca
+      - "/home/user/docker-app/webserver/filmoteca/filmoteca:/usr/src/app/filmoteca2"
+      - "/home/user/docker-app/webserver/filmoteca/docker/wsgi2.ini:/usr/src/app/filmoteca2/wsgi.ini"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/mnt/hgfs/films:/mnt/hgfs/movies:ro"
-      - "/mnt/hgfs/ext_films:/mnt/hgfs/ext_movies:ro"
+#      - "/mnt/hgfs/films:/mnt/hgfs/movies:ro"
+#      - "/mnt/hgfs/ext_films:/mnt/hgfs/ext_movies:ro"
     environment:
       - FLASK_ENV=development
-    command: sh -c "uwsgi --ini /usr/src/app/filmoteca/docker/wsgi2.ini"
+    command: sh -c "uwsgi --ini /usr/src/app/filmoteca2/wsgi.ini"
     networks:
       - netflask
 
@@ -36,17 +38,19 @@ services:
     container_name: nginx-flask
     restart: unless-stopped
     volumes:
-      - "./filmoteca/docker/nginx.conf:/etc/nginx/conf.d/nginx.conf"
+      - "/home/user/docker-app/webserver/filmoteca/docker/nginx.conf:/etc/nginx/nginx.conf"
+#      - "/home/user/docker-app/webserver/filmoteca/docker/default.conf:/etc/nginx/conf.d/default.conf"
       - "/var/log/nginx-flask:/var/log/nginx"
+#      - "/home/user/docker-app/webserver/filmoteca/docker/sites.conf:/etc/nginx/conf.d/default.conf"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-    command: sh -c "rm /etc/nginx/conf.d/default.conf"
+#    command: sh -c "rm /etc/nginx/conf.d/default.conf"
     ports:
       - 8080:80
       - 8084:81
     depends_on:
-      - filmoteca-flask
-      - filmoteca-flask2
+      - flask
+      - flask2
     networks:
       - netflask
 

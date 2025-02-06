@@ -25,6 +25,9 @@ from config.server_config import IMAGES_FOLDER, RESOURCES_CSS
 
 
 app = Flask(__name__)
+# TO-DO
+app.config['SESSION_TYPE'] = 'memcached'
+app.config['SECRET_KEY'] = 'super secret key'
 
 import www.error_handler
 
