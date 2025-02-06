@@ -63,6 +63,7 @@ HEADERS_JSON = {
 	'get_movie': ('id_movie', 'title', 'realtitle', 'year', 'quality', 'extension', 'size', 'size_str', 'duration', 'duration_str', 'pathfile', 'resolution', 'fps', 'urldesc', 'ratings', 'urlpicture', 'censure', 'file_created', 'report_date', 'id_genre', 'id_subgenre', 'id_country', 'hdd_code'),
 	'select_country': ('id_country', 'name'),
 	'search_movies': ('id_movie', 'title', 'year', 'duration_str', 'ratings', 'urlpicture', 'id_genero'),
+	'select_urlend': ('data00', 'data01', 'data02'),
 }
 
 # Torrents

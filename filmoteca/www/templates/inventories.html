@@ -9,11 +9,11 @@
     <div>
         <a class="btn btn-primary-outline" target="_blank" data-descr="Colección de libros en PDF" href="/inventories/20230327_Listado Libros.html"><strong>Libros</strong></a>
         <a class="btn btn-primary-outline" target="_blank" data-descr="Canciones sueltas" href="/inventories/20230327_Listado Miscellaneous.html"><strong>Miscellaneous</strong></a>
-        <a class="btn btn-primary-outline" target="_blank" data-descr="Discografías de artístas" href="/inventories/20230327_Listado Música.html"><strong>Música</strong></a>        
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Discografías de artístas" href="/inventories/20230327_Listado Música.html"><strong>Música</strong></a>
         <a class="btn btn-primary-outline" target="_blank" data-descr="Películas en el disco interno" href="/inventories/20230328_Listado Películas.html"><strong>Películas</strong></a>
         <a class="btn btn-primary-outline" target="_blank" data-descr="Películas de peor calidad" href="/inventories/20230328_Listado Películas EXTRA.html"><strong>Películas EXTRA</strong></a>
         <a class="btn btn-primary-outline" target="_blank" data-descr="Listado de series por categorías" href="/inventories/20230328_Listado Series.html"><strong>Series</strong></a>
-        <a class="btn btn-primary-outline" target="_blank" data-descr="Listado de series peor valoradas" href="/inventories/20230328_Listado Series EXTRA.html"><strong>Series EXTRA</strong></a>   
+        <a class="btn btn-primary-outline" target="_blank" data-descr="Listado de series peor valoradas" href="/inventories/20230328_Listado Series EXTRA.html"><strong>Series EXTRA</strong></a>
     </div>
 </div>
 {% endif %}
@@ -42,7 +42,7 @@
     <section class="table__header">
         <h1>Películas de {{response[1][0][4]}}</h1>
     </section>
-    <section class="table__body"> 
+    <section class="table__body">
         <table>
             <thead>
             <tr>
@@ -54,7 +54,7 @@
             </thead>
             <tbody>
             {% for data in response[1] %}
-            <tr id="rating-tr-{{ data[0] }}">
+            <tr id="rating-tr-{{ data[0] }}" class="{{ ' ' if data[6] else 'rating-no-present' }}">
                 <td><a target="_blank" href="https://www.filmaffinity.com{{ data[2] }}">{{ data[3] }}</a></td>
                 <td><strong>{{ data[5] }}</strong></td>
                 <td>{{ "SÍ" if data[6] else "NO" }} </td>

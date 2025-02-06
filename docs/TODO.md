@@ -19,7 +19,7 @@ https://loadforge.com/guides/deploying-flask-applications-with-gunicorn-and-ngin
 
 ### APLICACIÓN PRINCIPAL
 
-- [ ] Arreglar el setup.py
+- [x] Arreglar el setup.py
 - [x] Refactorización
 models.py o entities.py
 : Definir modelos de datos (clases) que utilizarán en el proyecto. `Ex: unaPelicula`
@@ -176,6 +176,8 @@ acer corte < 5 y mandar a trash juzgar
 ---
 
 ## ERRORES
+- [ ] al compartir modulo connecion coge configuracion de module ????
+- [ ] 504 Gateway time-out al esperar a que cargue cartelera
 - [ ] Los globos de alerta se quedan atrás al modificar una película (zindex). ¿Crear sass jerarquía de zindex?
 - [ ] Cuando se habre el listado de peores películas y antes has volteado una tarjeta de película, está aparece encima de todo (indexz)
 - [X] listado y descargar se unen
@@ -183,11 +185,9 @@ acer corte < 5 y mandar a trash juzgar
 - [ ] Hay un problema a la hora de pasar timestamp a horas, da números de 5, 9 horas una película. Hacer script y corregir. Ver en Windows por qué se obtiene mal. Ver time to secon, y filemetadata
 - [X] Cuando de hace update en INTERNO, aparecen todas las pelis de EXTERNO como desaparecidas (FECHA EN EXTERNO no se actualiza???)
 NO el problema es que has puesto la fecha como UNIQUE y hace un reporte de external o internal en el mismo día se pisen (ARREGLADO PERO COMPROBAR)
-- [ ] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set.
-app.config['SESSION_TYPE'] = 'memcached'
-app.config['SECRET_KEY'] = 'super secret key'
+- [X] Problemas al obtener secret key en producción  RuntimeError: The session is unavailable because no secret key was set.
 - [-] Error al clonar no encuentra www/logs
-- [ ] vuelta ciclista al descargar inet... error ..
+- [X] vuelta ciclista al descargar inet... error ..
 - [x] No se puede cerrar las pelis abiertas"" si no estas logeado
 - [x] En datos globales aparece 2 veces EXTERNO(1)
 - [x] Películas no encontradas Salen demasiadas en Extern

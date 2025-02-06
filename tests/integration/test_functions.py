@@ -21,20 +21,20 @@ def time_to_seconds(timeStamp):
 
 def get_fileMetaData(fullPath):
 	''' Obtener los metadatos de la película
-		Args: 
+		Args:
 			fullPath(str) > '/mnt/hgfs/movies/Acción/Desterrado [HDRip] (2014).avi'
 		Returns:
 			list(duration, resolution, fps)
 	'''
 	duration=resolution=fps = None
-	
+
 	try:
 		cmds = ['ffmpeg', '-i', fullPath, '-hide_banner']
 		p = subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		p.wait()
 		_, err = p.communicate()
 		err = str(err).lower()
-		
+
 		duration = re.search(r'\d{2}:\d{2}:\d{2}', err)		# Encontrar horas hh:mm:ss
 		duration = time_to_seconds(duration[0]) if duration is not None else None
 		resolution = re.search(r'\d{3,5}x\d{3,5}', err)		# Encontrar resolución 9999x999
@@ -45,12 +45,12 @@ def get_fileMetaData(fullPath):
 	except Exception as e:
 		lg_prt('ryr', '[✖] Error in get_fileMetaData()', fullPath, e)
 		if DEBUG_MODE:
-			lg_prt('999', 'get_fileMetaData', f'{fullPath}, {duration}, {resolution}, {fps}')
+			lg_prt('ry', 'get_fileMetaData', f'{fullPath}, {duration}, {resolution}, {fps}')
 
 
 
 def check_function():
-	
+
     #result = get_fileMetaData('/mnt/hgfs/movies/Anime/Dragon Ball/Dragon Ball GT - 100 años después  (1997).mpg')
     result = get_fileMetaData('/mnt/hgfs/movies/Acción/Atómica [DVDRip] (2017).avi')
     lg_prt('g', result)

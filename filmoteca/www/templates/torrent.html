@@ -4,12 +4,20 @@
 
 	<article>
 		<span class="index">{{ film["index"] }}</span>
-		<span class="rating">{{ film["rating"] }}</span>
+		<span class="rating{{ ' big-rating' if film['rating'] < -6.5 or film['rating'] > 6.5 else '' }}">
+		{% if film['rating'] == 0 %}
+			n/a
+		{% elif film['rating'] < 0 %}
+			{{ film["rating"] * -1 }}*M
+		{% else %}
+			{{ film["rating"] }}
+		{% endif %}
+		</span>
 		<span class="title">{{ film["title"] }}</span>
 		<span class="year">{{ film["year"] }}</span>
-		<span><a href="{{ film['url_imbd'] }}" target="_blank">IMBD</a> </span>
-		<span><a href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
-		<span><a href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+		<span><a class="link1" href="{{ film['url_imbd'] }}" target="_blank">IMBD</a> </span>
+		<span><a class="link2" href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
+		<span><a class="link3" href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
 	</article>
 
 {% endmacro %}
@@ -63,7 +71,7 @@
 		<footer>
 			<menu>
 				<!-- Animación de carga (inicialmente oculta) -->
-				<div id="loading" style="display: none;"></div>
+				<div id="loading" style="visibility: hidden;"></div>
 				<button class="btn btn-primary-outline" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="save-billboard">Guardar</button>
 				<button class="btn btn-primary" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="search-billboard">Buscar</button>
 			</menu>

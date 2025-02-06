@@ -4,30 +4,19 @@
 # Version: 1.0
 # By: CSUBIRES <j3xuz_cobmetal88@hotmail.com>
 # Created: 2024/08/12 12:03:35 by CSUBIRES
-# Updated: 2024/08/12 12:03:35 by CSUBIRES
+# Updated: 2025/02/06 08:08:36 by CSUBIRES
 # Description: server
 '''
 
+import os
 import sys
 
 from www.controller import app as application
-from config.server_config import DevelopmentConfig, ProductionConfig, TestingConfig
+from config.server_config import set_config
 
 if __name__ == '__main__':
-
-	mode = 'default'
-	if sys.argv[1:]:
-		mode = sys.argv[1]				# Opción
-
-	configurations = {
-		'default': ProductionConfig,
-		'development': DevelopmentConfig,
-		'production': ProductionConfig,
-		'testing': TestingConfig
-	}
-
-	# import os
-	# print(os.getcwd())
-	print('Executing in mode', configurations[mode])
-	application.config.from_object(configurations[mode])
-	application.run()
+	print('Executing in:', os.getcwd())
+	# export FLASK_ENV=development
+	mode_obj = set_config(os.environ.get('FLASK_ENV', 'default'))
+	application.config.from_object(mode_obj)
+	application.run(mode_obj.FLASK_RUN_HOST, mode_obj.FLASK_RUN_PORT)

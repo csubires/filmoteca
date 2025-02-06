@@ -9,13 +9,17 @@ with pathlib.Path('requirements.txt').open() as requirements_txt:
 		for requirement in parse_requirements(requirements_txt)
 	]
 
+with open("docs/README.md", 'r') as f:
+    long_description = f.read()
+
 setup(
 	name='Filmoteca',
-	version='1.1.0',
+	version='2.1.0',
 	description='Proyecto para gestionar las películas',
-	author='Sr. cjsm',
-	author_email='develop@servermedia.com',
-	url='http://192.168.65.22',
+	author='csubires',
+	author_email='develop@servermedia.local',
+	long_description=long_description,
+	url='https://github.com/csubires',
 	license='Apache',
 	install_requires=install_requires,
 	entry_points={
@@ -25,7 +29,9 @@ setup(
 			'test=tests:algo'
 		]
 	},
-
-	setup_requires=['flake8'],
-	tests_require=['unittest']
+	setup_requires=['flake8', 'matplotlib'],
+	tests_require=['unittest'],
+	scripts=[
+				'scripts/deploy.sh',
+			]
 )

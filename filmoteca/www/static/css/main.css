@@ -659,6 +659,10 @@ main.table {
   overflow: overlay;
 }
 
+.rating-no-present {
+  background-color: #f4cfd3 !important;
+}
+
 table, th, td {
   border-collapse: collapse;
   padding: 1rem;
@@ -1870,24 +1874,30 @@ nav .menu .container-right {
 }
 #films-torrent article a:hover, #series-torrent article a:hover {
   background-color: #f8f9fa;
-  color: #198754;
+  color: #212529;
   border: 1px #f8f9fa solid;
 }
-#films-torrent article a:nth-of-type(1), #series-torrent article a:nth-of-type(1) {
-  color: #fd7e14;
+#films-torrent article a.link1, #series-torrent article a.link1 {
+  background-color: #fd7e14 !important;
 }
-#films-torrent article a:nth-of-type(2), #series-torrent article a:nth-of-type(2) {
-  color: #dc3545;
+#films-torrent article a.link2, #series-torrent article a.link2 {
+  background-color: #dc3545 !important;
 }
-#films-torrent article a:nth-of-type(3), #series-torrent article a:nth-of-type(3) {
-  color: #1089cd;
+#films-torrent article a.link3, #series-torrent article a.link3 {
+  background-color: #1089cd !important;
 }
 #films-torrent article .rating, #series-torrent article .rating {
   padding: 0 10px;
-  color: #dc3545;
+  color: #6f42c1;
+  font-size: 0.5rem;
 }
-#films-torrent article .rating::before, #series-torrent article .rating::before {
+#films-torrent article .rating::after, #series-torrent article .rating::after {
   content: "★ ";
+}
+#films-torrent article .rating.big-rating, #series-torrent article .rating.big-rating {
+  font-size: 1rem;
+  font-weight: bolder;
+  color: #dc3545;
 }
 #films-torrent article .year, #series-torrent article .year {
   font-weight: bold;
@@ -1895,6 +1905,7 @@ nav .menu .container-right {
 }
 #films-torrent article .index, #series-torrent article .index {
   color: #6c757d;
+  width: 1rem;
 }
 #films-torrent article .title, #series-torrent article .title {
   margin-left: auto;

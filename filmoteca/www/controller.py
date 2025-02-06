@@ -101,6 +101,7 @@ def login():
 				return redirect(url_for('index'), 301)
 			elif result[0] is False:
 				flash('Email o contraseña no válida', 'danger')
+				return render_template('auth/login.html')
 			else:
 				flash(result[0], result[1])
 				return render_template('auth/login.html')
@@ -241,7 +242,7 @@ def querySQL(querySQL, params=None):
 	# API REST CRUD Manejador de peticiones a la base de datos JavaScript
 	def need_check_token(nameToken, token):
 		# Comprueba peticiones en las que hay que checkear el token
-		if querySQL not in ('extra_info_movie') and not check_csrf_token(nameToken, token):
+		if querySQL not in ('extra_info_movie', 'select_urlend') and not check_csrf_token(nameToken, token):
 			abort(401, f'Altered {nameToken} "{querySQL}"')
 
 	if request.is_json:		# Parametros json. PUT, POST, DELETE

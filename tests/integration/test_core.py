@@ -10,12 +10,12 @@ report_date = datetime_now()
 
 def path_file_splits(fullPath, fileName):
 	''' Trocea el path de un archivo para extraer información de nombre, calidad, etc
-		Args: 
+		Args:
 			fullPath (str):		/mnt/hgfs/movies/genero/subgenero/El renacido [HDRip] (2015).avi
 			fileName (str):		El renacido [HDRip] (2015).avi
 	'''
 	title=quality=year=genre=subgenre=path_genre = None
-	
+
 	fileName, _ = os.path.splitext(fileName)				# 'filename.extension' -> 'filename', 'extension'
 	# auxfullPath = os.path.dirname(fullPath)					# '/root/algo/filename' -> '/root/algo'
 
@@ -29,18 +29,18 @@ def path_file_splits(fullPath, fileName):
 		path_genre = os.path.dirname('genero/subgenero/El renacido [HDRip] (2015).avi')			# genero/subgenero
 		path_split = path_genre.split('/')
 		genre = path_split[0].strip().lower() or None
-		subgenre = path_split[-1].strip().lower() if len(path_split)>1 else None	
+		subgenre = path_split[-1].strip().lower() if len(path_split)>1 else None
 
 	except Exception as e:
 		lg_prt('ryr', '[✖] Error in path_file_splits()', fullPath, e)
 		if DEBUG_MODE:
-			lg_prt('999', 'path_file_splits', f'{fullPath}, {title}, {quality}, {year}, {extension}, {genre}, {subgenre}, {created}, {path_genre}')
+			lg_prt('ry', 'path_file_splits', f'{fullPath}, {title}, {quality}, {year}, {extension}, {genre}, {subgenre}, {created}, {path_genre}')
 
 	finally:
 		data_movie = {
-			'title': title, 
-			'year': year, 
-			'quality': quality, 
+			'title': title,
+			'year': year,
+			'quality': quality,
 			'genre': genre,
 			'subgenre': subgenre,
 			'path_genre': path_genre

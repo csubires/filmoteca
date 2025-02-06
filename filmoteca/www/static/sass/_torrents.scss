@@ -33,29 +33,35 @@
 			letter-spacing: 1px;
 			&:hover {
 				background-color: c.$bs-gray-100;
-				color: c.$bs-success;
+				color: c.$bs-btn-color;
 				border: 1px c.$bs-gray-100 solid;
 			}
-
-			&:nth-of-type(1) {
-				color: c.$bs-orange;
+			&.link1 {
+				background-color: c.$bs-orange !important;
 			}
 
-			&:nth-of-type(2) {
-				color: c.$bs-red;
+			&.link2 {
+				background-color: c.$bs-red !important;
 			}
 
-			&:nth-of-type(3) {
-				color: c.$bs-blue;
+			&.link3 {
+				background-color: c.$bs-blue !important;
 			}
 		}
 
 		.rating {
 			padding: 0 10px;
-			color: c.$bs-danger;
-			&::before {
+			color: c.$bs-purple;
+			font-size: .5rem;
+			&::after {
 				content: "★ ";
 			}
+		}
+
+		.rating.big-rating {
+			font-size: 1rem;
+			font-weight: bolder;
+			color: c.$bs-danger;
 		}
 
 		.year {
@@ -65,6 +71,7 @@
 
 		.index {
 			color: c.$bs-secondary;
+			width: 1rem;
 		}
 
 		.title {

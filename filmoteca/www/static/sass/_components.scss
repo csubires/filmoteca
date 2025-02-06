@@ -322,6 +322,10 @@ main.table {
     overflow: overlay;
 }
 
+.rating-no-present {
+	background-color: #f4cfd3 !important;
+}
+
 table, th, td {
     border-collapse: collapse;
     padding: 1rem;

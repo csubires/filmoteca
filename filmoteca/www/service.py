@@ -279,6 +279,9 @@ class HandlerService:
 			# Se modificó una película y hay que ver si es necesario mover la imagen a otra carpeta
 			pass
 
+		elif tagSQL == 'select_urlend':
+			# Se modificó una película y hay que ver si es necesario mover la imagen a otra carpeta
+			self.getMenu('torrent', None)
 
 		# Obtener cabeceras si existen y trasnformar a diccionario
 		headers = HEADERS_JSON.get(tagSQL, None)

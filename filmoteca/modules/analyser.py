@@ -272,22 +272,23 @@ def get_serie(raw_html):
 
 def get_rating(raw_html, film_info):
 	# Obtener la valoración de una película
-	rating = 'n/a'
+	rating = 0
 	soup = BeautifulSoup(raw_html.content, 'html.parser')
-
 	try:
-		rating = soup.select('div.avgrat-box')[0].text.strip()
-		if len(soup.select('div.avgrat-box')) > 1:
-			rating += " *M"
-		else:
+		rating = soup.select('.avg.mx-0')[0].text.strip()
+		rating = float(rating.replace(",", "."))
+		if len(soup.select('.avg.mx-0')) == 1:
 			film_info['url_filma'] = soup.select('.mc-title > a')[0]['href']
+		else:
+			rating *= -1
 	except Exception:
 		try:
 			rating = soup.select('div#movie-rat-avg')[0].text.strip()
-			if len(soup.select('div#movie-rat-avg')) > 1:
-				rating += " *M"
+			rating = float(rating.replace(",", "."))
+			if len(soup.select('div#movie-rat-avg')) == 1:
+				film_info['url_filma'] = soup.select('.active.slick-slide.slick-current.slick-active > a')[0]['href']
 			else:
-				film_info['url_filma'] = soup.select('.mc-title > a')[0]['href']
+				rating *= -1
 		except Exception:
-			rating = 'n/a'
+			rating = 0
 	film_info.update({'rating': rating})

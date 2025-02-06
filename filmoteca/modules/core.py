@@ -233,7 +233,7 @@ class HandlerScan:
 			lg_prt('gb', '[✔] Insert Movie:', params)
 		else:
 			lg_prt('ry', '[✖] Error inserting movie (data None)', params)
-			lg_prt('999', 'insert_movie', params)
+			lg_prt('ry', 'insert_movie', params)
 
 	def update_statistics(self):
 		# Generar datos de reporte de la sesión y guardarlos en la BBDD

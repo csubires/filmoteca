@@ -13,7 +13,7 @@ export class Handler_connection {
         // PUT, DELETE, POST METHOD
         if (method !== 'GET') {
             configuration.headers = { 'Content-Type': 'application/json' }
-            configuration.body = JSON.stringify(params)  
+            configuration.body = JSON.stringify(params)
         }
 
         return fetch(url_page, configuration)
@@ -25,7 +25,7 @@ export class Handler_connection {
                 }
                 // console.log(data)
                 return data
-        
+
             } else {
                 throw Error(data.message)
             }
@@ -34,7 +34,7 @@ export class Handler_connection {
             if (error.message == null)
                 showMessage(error.message, 'danger')
             return null
-        }) 
+        })
 
     }   // END send
 }   // END Handler_connection

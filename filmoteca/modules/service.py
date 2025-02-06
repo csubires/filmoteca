@@ -269,9 +269,9 @@ class HandlerService:
 			if status == 200:
 				result = get_ranking_page(page)
 				lg_prt('ygw', 'GET ', len(result), result)
+				sleep(random.uniform(1, 3))
 				self.oDTB.execute_many('set_rating', result)
 				lg_prt('gy', '[✔] Películas añadidas:', self.oDTB.affected())
-
 
 			params = {
 				'from': '30',

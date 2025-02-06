@@ -1,6 +1,5 @@
 from modules.utils import lg_prt
 
-
 def help():
 	# Panel de ayuda
 	lg_prt('w', '')

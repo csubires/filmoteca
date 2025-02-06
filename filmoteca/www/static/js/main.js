@@ -246,8 +246,17 @@ window.addEventListener('load', function () {
         },
         // BUTTON - Buscar cartelera
         'search-billboard': async (e) => {
-			document.getElementById("loading").style.display = "block"
-			window.location.href = "/menu/torrent";
+			let waitMe = document.querySelector(`#loading`)
+			showAndHidde(waitMe, 'visible', 99)
+
+			let dataJson = await cnt.send('GET', '/api/select_urlend/{"null": null}')
+			console.log(dataJson)
+			if (dataJson) {
+				showAndHidde(waitMe, 'hidden', -1)
+				window.location.href = "/menu/torrent/9999";
+			} else {
+				showMessage('No se puedo cargar la cartelera', 'danger')
+			}
         },
         // BUTTON - Copiar la lista al portapapeles
         'copy-clipboard': () => {

@@ -1,9 +1,7 @@
 name: Deploy Filmoteca to production
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,13 +9,13 @@ jobs:
     steps:
       - name: Pull latest changes
         run: |
-          cd /var/www/web-flask
+          cd /data/filmoteca
           echo "git pull origin main"
           ls
 
       - name: Unzip images
         run: |
-          echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/var/www/web-flask/filmoteca/www"
+          echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/data/filmoteca/www"
 
       - name: Run deployment script
         run: |
