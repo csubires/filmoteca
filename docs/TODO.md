@@ -59,6 +59,12 @@ run.py o server.py > controller.py
 controller.py /paginaindex.html
 service.py -> browser
 
+- [X] cartelera sigue sin actualizar por fecha flask
+- [X] show or change fecha default=datetime.now not (), modo ejecu
+- [X] el tema de la cuenta admin
+- [X] aumenta  size font purple
+- [ ] Asegúrate de que todos los archivos de tu página web (HTML, CSS, etc.) estén guardados con la codificación UTF-8.
+
 - [X] En el script de reduce imagen descartar .regex los .cmp.jpg
 - [X] Crear carpeta uTest de pruebas unitarias.
 Crear una bd que se carge en memoria con valores ficticios.
@@ -149,11 +155,12 @@ acer corte < 5 y mandar a trash juzgar
 - pasar pelis borradas a una tabla nueva ??
 - [ ] .gitignore para desarrollo y para producción
 - [ ] Web alternativa para consegir datos cine.com
+- [ ] Añadir imagen del bandera en estadisticas pais. Leyenda mapa + bandera
 
 ---
 ### CSS
 - [ ] linear gradiend en search
-- [ ] Meter los mensajes poppup por encima del dialog (form update film)
+- [X] Meter los mensajes poppup por encima del dialog (form update film)
 - [X] Cuando haces una busqueda y el cursos sale de text al intentar darle al boton buscar, acabas dandole a borrar texto
 - [ ] Agrupar todas las opciones para una pelí en un icono con li, o select
 - [ ] En vez de botones tool edit un list icon con ver, editar borrar solo para admins

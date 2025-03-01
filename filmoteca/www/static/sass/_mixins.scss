@@ -7,7 +7,7 @@
 // Crear contenedor
 @mixin make-container($padding, $margin, $background) {
 	background-color: $background;
-    width: calc(100vw - $margin * 3); 
+    width: calc(100vw - $margin * 3);
     max-width: calc(100vw - $margin * 3);
 	margin: $margin;
 	padding: $padding;
@@ -63,12 +63,13 @@
 		.btn-#{$name} {
 			@extend .btn;
 			@include make-button(map.get($value, color), map.get($value, bkg));
-		} 
+		}
 	}
 }
 
 // Crear un popup de alerta
 @mixin make-alert($color, $background, $border) {
+	z-index: 999;
     color:$color;
     background-color: $background;
     border-color: $border;

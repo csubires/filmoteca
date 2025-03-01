@@ -449,6 +449,7 @@ label .folder {
   background-color: transparent;
 }
 #alerts-container .alert-info {
+  z-index: 999;
   color: #084298;
   background-color: #cfe2ff;
   border-color: #b6d4fe;
@@ -462,6 +463,7 @@ label .folder {
   color: #136df3;
 }
 #alerts-container .alert-success {
+  z-index: 999;
   color: #0f5132;
   background-color: #d1e7dd;
   border-color: #badbcc;
@@ -475,6 +477,7 @@ label .folder {
   color: #1fa767;
 }
 #alerts-container .alert-warning {
+  z-index: 999;
   color: #664d03;
   background-color: #fff3cd;
   border-color: #ffecb5;
@@ -488,6 +491,7 @@ label .folder {
   color: #c99806;
 }
 #alerts-container .alert-danger {
+  z-index: 999;
   color: #842029;
   background-color: #f8d7da;
   border-color: #f5c2c7;
@@ -1027,6 +1031,7 @@ header nav .menu .container-right {
 }
 header nav .menu .container-left .mark-opt,
 header nav .menu .container-right .mark-opt {
+  z-index: 999;
   color: #084298;
   background-color: #cfe2ff;
   border-color: #b6d4fe;
@@ -1889,7 +1894,7 @@ nav .menu .container-right {
 #films-torrent article .rating, #series-torrent article .rating {
   padding: 0 10px;
   color: #6f42c1;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
 }
 #films-torrent article .rating::after, #series-torrent article .rating::after {
   content: "★ ";

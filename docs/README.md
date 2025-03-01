@@ -17,7 +17,7 @@
 codigo
 ~~~
 
-`codigo esto no es 
+`codigo esto no es
 `
 
 1. Ele
@@ -62,5 +62,3 @@ Usa PUT cuando necesitas reemplazar el estado de cierta información ya existent
 Usa DELETE cuando necesitas borrar un recurso (relativo a la URI que envias) en el sistema.
 Usa OPTIONS cuando necesitas saber que tipos de métodos de respuesta soporta el servidor. Se usa para el CORS.
 '''
-
-En produccion aumental el número de procesos thearts???

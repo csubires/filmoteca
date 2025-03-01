@@ -1,7 +1,11 @@
+import os
+import hashlib
+
 from modules.service import HandlerService as HandlerServiceMod
 from modules.database import Handler_SQL							# Manejador de la base de datos
 from modules.extras import list_to_dict
 from modules.utils import lg_prt, singleton, dt_format				# Mostrar y Colorear texto en consola
+from modules.torrent import get_torrents
 from www.auxiliary import isValidEmail, htmlFilterChars, min_len
 
 from config.queries_database import TAG_QUERY_REPORT
@@ -29,7 +33,6 @@ class HandlerService:
 
 	def validate_user(self, email, password):
 		# Comprobar que las credenciales son correctas
-		import hashlib
 		password_valid = False
 
 		if not isValidEmail(email):
@@ -55,9 +58,6 @@ class HandlerService:
 
 	def validate_signup(self, name, email, password, repeat, ip, agent, date):
 		# Registrar una cuenta de usuario
-		import os
-		import hashlib
-
 		if not repeat:
 			return ('La contraseña y su repetición no coinciden', 'danger')
 		if not isValidEmail(email):
@@ -142,10 +142,9 @@ class HandlerService:
 
 		elif menu == 'torrent':
 			data = self.cache_storage.get('cache_torrent', None)
+			date_end = self.cache_storage.get('date_end', None)
 
-			if data is None:
-				from modules.torrent import get_torrents
-
+			if data is None or date_end is None or date_end != dt_format("symd"):
 				result = self.oDTB.execute('select_urlend')
 				if result is not None:
 					url_end, date_end, npseries = result[0]
@@ -153,12 +152,13 @@ class HandlerService:
 					if (year is not None):
 						return ('Cartelera', 'torrent.html', [None, url_end, date_end, npseries])
 
-					if date_end != dt_format("symd") or data is None:
-						if self.oSRVC is None:
-							self.oSRVC = HandlerServiceMod(self.oDTB)
-						data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
-						self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd"), 'npseries': npseries})
-						self.cache_storage['cache_torrent'] = data
+					if self.oSRVC is None:
+						self.oSRVC = HandlerServiceMod(self.oDTB)
+
+					data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
+					self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd"), 'npseries': npseries})
+					self.cache_storage['cache_torrent'] = data
+					self.cache_storage['date_end'] = dt_format("symd")
 
 			if data is not None and len(data) > 0:
 				response = ('Torrent Downloads', 'torrent.html', data)
