@@ -201,9 +201,9 @@
         }
 
         img {
-            background-image: url('img/break.png');
+            background-image: url('icons/break.png');
             background-repeat: no-repeat;
-            background-size: contain;	
+            background-size: contain;
             height: 7rem;
             min-width: 21rem;
         }
@@ -230,7 +230,7 @@
 .card-subgenre {
     background-color: c.$bs-gray-300;
     @extend .card-genre;
-    
+
     a {
         background-color: c.$bs-gray-200;
     }
@@ -261,11 +261,11 @@
             max-height: 25rem;
             overflow-y: scroll;
         }
-    
+
         figcaption {
             position: sticky;
             bottom: 0;
-            color: c.$bs-gray-700; 
+            color: c.$bs-gray-700;
         }
     }
 }

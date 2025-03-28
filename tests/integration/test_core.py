@@ -2,7 +2,7 @@
 import os
 import re							# Usar expresiones regulares para extraer información de un texto
 from modules.utils import lg_prt, datetime_now
-from modules.auxiliary import timestamp2Date
+from modules.security import timestamp2Date
 
 
 base_dir = '/mnt/hgfs/movies/'

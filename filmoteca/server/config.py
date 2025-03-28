@@ -1,9 +1,5 @@
 from secrets import token_urlsafe
 
-IMAGES_FOLDER = 'images/'				   # Covers
-RESOURCES_CSS = 'static/css/img/'		   # Web assets
-LOGGING = False
-
 class Config(object):
 	FLASK_APP='filmoteca'
 	TESTING = False
@@ -14,7 +10,9 @@ class Config(object):
 	SESSION_COOKIE_SAMESITE = 'Lax'
 	MAX_CONTENT_LENGTH = 5 * 1000 * 1000		# Archivos maximo 5MB
 	SESSION_COOKIE_SECURE = False				# Cambiar si se usa HTTPS
-
+	IMAGES_FOLDER = 'server/assets/'					# Covers
+	RESOURCES_CSS = 'server/static/css/icons/'			# Web assets
+	LOGGING = False
 
 class ProductionConfig(Config):
 	SESSION_TYPE = 'memcached'
@@ -25,7 +23,6 @@ class ProductionConfig(Config):
 	FLASK_ENV = 'production'
 	SESSION_COOKIE_SAMESITE = 'Strict'
 
-
 class DevelopmentConfig(Config):
 	global LOGGING
 	DEBUG = True
@@ -33,7 +30,6 @@ class DevelopmentConfig(Config):
 	TESTING = True
 	LOGGING = True
 	FLASK_ENV = 'development'
-
 
 class TestingConfig(Config):
 	TESTING = True

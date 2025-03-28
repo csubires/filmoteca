@@ -4,13 +4,13 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <link rel="shortcut icon" href="../static/img/favicon.png">
+        <link rel="shortcut icon" href="../static/assets/favicon.png">
         <meta charset="utf-8"/>
-        
+
         <title>Bélico</title>
-        
+
         <meta name="title" content="Gestor de Películas">
-        <meta name="description" content="Web para gestionar las películas">     
+        <meta name="description" content="Web para gestionar las películas">
         <link rel="stylesheet" href="../static/css/main.css" />
         <script type="text/javascript" src="/static/js/main.js"></script>
     </head>
@@ -28,7 +28,7 @@
                 aria-label="Close"></button>
 
                 <input type="hidden" name="csrf_token_form" value="XFQTH-ar98Jc1__u8FMZlwJul878F_BwEv05CJNIPF4">
-            
+
                 <!-- Line 1 -->
                 <div class="row">
                     <label for="id_movie" class="row"><span>id_movie</span>
@@ -40,7 +40,7 @@
                             <input type="button" onclick="this.parentNode.querySelector('#year').stepDown()" value="-">
                             <input type="number" id="year" class="noborder" min="1800" max="2900" name="year" maxlength="4" placeholder="9999" value="1990">
                             <input type="button" onclick="this.parentNode.querySelector('#year').stepUp()" value="+">
-                        </div>    
+                        </div>
                     </label>
 
 
@@ -51,7 +51,7 @@
 
 
                 <div class="row">
- 
+
                     <label for="ratings" class="row"><span>HDD</span>
                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                             <input type="radio" class="btn-check" name="btnradio" id="hdd_code_int" autocomplete="off" checked>
@@ -60,7 +60,7 @@
                             <label class="btn btn-primary-outline" for="hdd_code_ext">Externo</label>
                         </div>
                     </label>
-       
+
                     <label for="censure" class="row"><span>censure</span>
                         <input type="checkbox" name="censure" value="0">
                     </label>
@@ -77,17 +77,17 @@
                         <input type="text" name="realtitle">
                     </label>
                 </div>
-            
+
                 <!-- Line 2 -->
                 <div>
                     <label for="size"><span>size (bytes)</span>
-                        
+
 
                         <div class="inp-number">
                             <input type="button" onclick="this.parentNode.querySelector('#size').stepDown()" value="-">
                             <input type="number" id="size" name="size" class="noborder" placeholder="9999999">
                             <input type="button" onclick="this.parentNode.querySelector('#size').stepUp()" value="+">
-                        </div> 
+                        </div>
 
                     </label>
                     <label for="size_str"><span>size_str</span>
@@ -115,7 +115,7 @@
                             <input type="number" id="fps" name="fps" placeholder="99.99" step="1.00" list="dlFps">
                             <datalist id="dlFps"><option value="29.97">29.97</option><option value="26.07">26.07</option><option value="24.83">24.83</option><option value="24.39">24.39</option><option value="23.98">23.98</option><option value="23.97">23.97</option><option value="23">23</option><option value="null">null</option></datalist>
                             <input type="button" onclick="this.parentNode.querySelector('#fps').stepUp()" value="+">
-                        </div>    
+                        </div>
                     </label>
 
 
@@ -124,7 +124,7 @@
                         <datalist id="dlResolution"><option value="1280x528">1280x528</option><option value="1280x532">1280x532</option><option value="1280x536">1280x536</option><option value="1280x544">1280x544</option><option value="1280x690">1280x690</option><option value="1280x692">1280x692</option><option value="1280x696">1280x696</option><option value="1280x720">1280x720</option><option value="1616x1080">1616x1080</option><option value="1792x1028">1792x1028</option><option value="1844x992">1844x992</option><option value="1910x888">1910x888</option><option value="1916x818">1916x818</option><option value="1920x1024">1920x1024</option><option value="1920x1040">1920x1040</option><option value="1920x1080">1920x1080</option><option value="1920x798">1920x798</option><option value="1920x800">1920x800</option><option value="1920x802">1920x802</option><option value="1920x804">1920x804</option><option value="1920x816">1920x816</option><option value="1920x818">1920x818</option><option value="1920x832">1920x832</option><option value="320x240">320x240</option><option value="352x272">352x272</option><option value="352x288">352x288</option></datalist>
                     </label>
                 </div>
-            
+
                 <!-- Line 3 -->
                 <div>
                     <label for="duration"><span>duration (segundos)</span>
@@ -132,7 +132,7 @@
                             <input type="button" onclick="this.parentNode.querySelector('#duration').stepDown()" value="-">
                         <input type="number" id="duration" name="duration" placeholder="9999">
                         <input type="button" onclick="this.parentNode.querySelector('#duration').stepUp()" value="+">
-                    </div> 
+                    </div>
                     </label>
 
 
@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="row">
-               
+
                     <label for="ratings" class="row"><span>ratings</span>
                         <input type="number" class="noborder" id="vratings" placeholder="9.9" disabled="">
                     </label>
@@ -152,7 +152,7 @@
 
                 </div>
 
-            
+
                 <!-- Line 4 -->
                 <div>
                     <label for="pathfile"><span>pathfile</span>
@@ -175,7 +175,7 @@
                         <input type="text" class="folder"  name="urlpicture" placeholder="/namefile-mmed.jpg">
                     </label>
                 </div>
-            
+
                 <!-- Line 5 -->
                 <div>
 
@@ -188,14 +188,14 @@
                     </label>
                 </div>
 
-    
-                
+
+
                 <!-- Line 6 -->
                 <div>
                     <button class="btn btn-primary-outline" id="btnUpdate" disabled="">Actualizar</button>
                     <button class="btn btn-primary" id="btnSave">Guardar</button>
                 </div>
-            
+
             </form>
         </section>
 

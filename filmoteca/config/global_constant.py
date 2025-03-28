@@ -7,8 +7,8 @@ MOVIEXT = ('3gp', 'asf', 'avi', 'divx', 'dvd', 'flv', 'mkv', 'mov', 'mp4', 'mpeg
 GENRE_TAG = {'acción': 'AC', 'animación': 'AN', 'aventuras': 'AV', 'bélico': 'BE', 'ciencia ficción': 'C-F', 'cinenegro': 'F-N', 'comedia': 'CO', 'desconocido': 'DESC', 'documental': 'DO', 'drama': 'DR', 'fantástico': 'FAN', 'infantil': 'INF', 'intriga': 'INT', 'musical': 'MU', 'romance': 'RO', 'seriedetv': 'TV_SE', 'terror': 'TE', 'thriller': 'TH', 'western': 'WE'}
 URL_BASE = 'https://www.filmaffinity.com'
 URL_PICT = 'https://pics.filmaffinity.com'
-PATH_COVERS = './www/images/covers/%s'
-PATH_CHARTS = './www/images/charts/'
+PATH_COVERS = './server/assets/covers/%s'
+PATH_CHARTS = './server/assets/charts/'
 YEAR_INIT_RATING = 2024
 
 # -------------------------- SERVER ----------------------
@@ -24,7 +24,8 @@ MAINTENANCE_OPTIONS = {
 	'missing_movies_hdd0': 'Desaparecidas HDD 0 (Interno)',
 	'incomplete_movie_info': 'Incompletas',
 	'censured_movies': 'Censuradas',
-	'devalued_movies': 'Peor Valoradas (<6.5)',
+	'devalued_movies': 'Peor Valoradas HDD Interno',
+	'shit_movies': 'Peor Valoradas Global',
 	'corrupt_movies': 'Corrompidas',
 	'uncoded_country': 'País desconocido',
 	'overevalued_movies': 'Mejor Valoradas (>6.7)',

@@ -248,12 +248,10 @@ window.addEventListener('load', function () {
         'search-billboard': async (e) => {
 			let waitMe = document.querySelector(`#loading`)
 			showAndHidde(waitMe, 'visible', 99)
-
 			let dataJson = await cnt.send('GET', '/api/select_urlend/{"null": null}')
-			console.log(dataJson)
 			if (dataJson) {
 				showAndHidde(waitMe, 'hidden', -1)
-				window.location.href = "/menu/torrent/9999";
+				window.location.href = "/menu/torrent";
 			} else {
 				showMessage('No se puedo cargar la cartelera', 'danger')
 			}

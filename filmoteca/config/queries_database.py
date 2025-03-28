@@ -56,6 +56,7 @@ TAG_QUERY_REPORT = {
 	'incomplete_movie_info': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE year IS NULL OR size IS NULL or duration IS NULL OR urldesc IS NULL OR id_country IS NULL',
 	'censured_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE censure = 1',
 	'devalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, (CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END) AS idgenre, pathfile FROM movies WHERE ratings < 6.5 AND hdd_code = 0 ORDER BY idgenre, ratings ASC',
+	'shit_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, (CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END) AS idgenre, pathfile FROM movies WHERE ratings < 4.5 ORDER BY ratings ASC',
 	'corrupt_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE size < 100 ORDER BY size ASC',
 	'overevalued_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, (CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END) AS idgenre, pathfile FROM movies WHERE ratings > 6.7 AND hdd_code = 1 ORDER BY idgenre, ratings DESC',
 	'get_info_genre': 'SELECT id_genre, name, num_movies, local_size_str, local_duration_str, is_subgenre FROM genre ORDER BY is_subgenre ASC, name ASC',

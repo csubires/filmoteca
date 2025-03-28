@@ -1734,7 +1734,7 @@ nav .menu .container-right {
   cursor: pointer;
 }
 .card-genre a img, .card-subgenre a img {
-  background-image: url("img/break.png");
+  background-image: url("icons/break.png");
   background-repeat: no-repeat;
   background-size: contain;
   height: 7rem;
@@ -1894,13 +1894,13 @@ nav .menu .container-right {
 #films-torrent article .rating, #series-torrent article .rating {
   padding: 0 10px;
   color: #6f42c1;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 #films-torrent article .rating::after, #series-torrent article .rating::after {
   content: "★ ";
 }
 #films-torrent article .rating.big-rating, #series-torrent article .rating.big-rating {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bolder;
   color: #dc3545;
 }

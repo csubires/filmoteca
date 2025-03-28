@@ -11,7 +11,7 @@
 '''
 
 import time 								# Para contar tiempos
-from datetime import datetime				# Para extraer la fecha actual
+from datetime import datetime, timezone		# Para extraer la fecha actual
 
 
 PALETTE = {
@@ -159,7 +159,7 @@ class Logging():
 
 def dt_format(format):
 	# Obtener la fecha o la hora actual en un determinado formato
-	aux = datetime.now().strftime(DATETIME_FORMAT[format])
+	aux = datetime.now(timezone.utc).strftime(DATETIME_FORMAT[format])
 	return str(aux) if format[0] == 's' else int(aux)
 
 # ------------------------------------------------------------------------------------------

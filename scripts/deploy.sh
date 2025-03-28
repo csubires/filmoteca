@@ -8,4 +8,4 @@ cd web-flask
 pwd
 
 git clone http://192.168.65.22:8020/developer/filmoteca
-7z x "./filmoteca/data/pack_images.7z" -o"./filmoteca/filmoteca/www"
+7z x "/home/user/docker-app/webserver/filmoteca/data/pack_images.7z" -o"/home/user/docker-app/webserver/filmoteca/filmoteca/www"

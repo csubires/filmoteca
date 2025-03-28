@@ -29,12 +29,12 @@ PALETTE[t]="\t\e[1;42;97m"
 
 # Colorear cada mensaje pasado por parametro
 function lg_prt() {
-	# Como mínimo tiene que tener 3 argumentos. namescript, colors, mensajes 
-	if [[ ! "$2" ]]; then 
+	# Como mínimo tiene que tener 3 argumentos. namescript, colors, mensajes
+	if [[ ! "$2" ]]; then
 		echo -e "${PALETTE[r]} Error (lg_prt), Número de argumentos insuficientes\033[0m\e[0m"
 		return 1
 	fi
-	
+
 	# Controlar que el número de colores sea igual que el de mensajes
 	colors=$(printf "$1%${#@}s\n" | tr ' ' 'b')
 
@@ -49,7 +49,7 @@ function lg_prt() {
 
 # Variables globales
 # DIR="/mnt/hgfs/COMPRESS/"	# Carpeta de media
-DIR="./../filmoteca/www/images/covers"	# Carpeta de media
+DIR="./../filmoteca/server/assets/covers"	# Carpeta de media
 
 
 # Se ejecuta al pulsar Ctrl+C
@@ -61,7 +61,7 @@ function ctrl_c() {
 }
 
 
-# ----------------------------------------------------------------------------- 
+# -----------------------------------------------------------------------------
 
 clear
 
@@ -73,7 +73,7 @@ else
 	exit 1
 fi
 
-# ----------------------------------------------------------------------------- 
+# -----------------------------------------------------------------------------
 
 init_size=$(du -bsh | awk '{print $1}')		# Tamaño inicial de la carpeta
 
@@ -90,7 +90,7 @@ function findDuple(){
 	clear
 
 	lg_prt "v" "Buscando archivos duplicados..."
-	fdupes -S -r . 
+	fdupes -S -r .
 	# lg_prt "v" "Buscando archivos con doble extensión..."
 	# ls *.*.*
 	lg_prt "g" "\n[✔] Tarea finalizada correctamente"
@@ -108,11 +108,11 @@ function removeEXIT(){
 	[[ $REPLY =~ ^[Ss]$ ]] && lg_prt "w" " \n"  || return 0
 	clear
 
-	find . -type f -iregex ".*\.jpg\|.*\.jpeg\|.*\.png\|.*\.bmp" ! -name "*_cmp*" -print0 | while read -d $'\0' file; do 
+	find . -type f -iregex ".*\.jpg\|.*\.jpeg\|.*\.png\|.*\.bmp" ! -name "*_cmp*" -print0 | while read -d $'\0' file; do
 		# BORRAR if [[ $file != *"_cmp"* ]]; then		# Descartar si ya ha sido anteriormente procesado
 		mogrify -verbose -strip "$file"
-		#fi		
-	done 
+		#fi
+	done
 
 	lg_prt "g" "\n[✔] Tarea finalizada correctamente"
 	return 0
@@ -148,12 +148,12 @@ function reduceMedia() {
 	clear
 
 	lg_prt "v"  "Comprimiendo imagenes con perdida..."
-	find . -type f -iregex ".*\.jpg\|.*\.jpeg\|.*\.png\|.*\.bmp" ! -name "*_cmp*" -print0 | while read -d $'\0' file; do 
+	find . -type f -iregex ".*\.jpg\|.*\.jpeg\|.*\.png\|.*\.bmp" ! -name "*_cmp*" -print0 | while read -d $'\0' file; do
 		# BORRAR if [[ $file != *"_cmp"* ]]; then		# Descartar si ya ha sido anteriormente procesado
 		mogrify -verbose -quality 60 "$file"
-		mv "${file}" "${file%.*}_cmp.jpg" 
-		#fi		
-	done 
+		mv "${file}" "${file%.*}_cmp.jpg"
+		#fi
+	done
 
 	lg_prt "g" "\n[✔] Tarea finalizada correctamente"
 

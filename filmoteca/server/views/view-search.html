@@ -4,28 +4,28 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <link rel="shortcut icon" href="../static/img/favicon.png">
+        <link rel="shortcut icon" href="../static/assets/favicon.png">
         <meta charset="utf-8"/>
-        
+
         <title>Películas Encontradas</title>
-        
+
         <meta name="title" content="Gestor de Películas">
-        <meta name="description" content="Web para gestionar las películas">     
+        <meta name="description" content="Web para gestionar las películas">
         <link rel="stylesheet" type="text/css" href="../static/css/main.css">
         <link rel="stylesheet" type="text/css" href="css/flags.css">
         <script type="text/javascript" src="/static/js/main.js"></script>
     </head>
 
     <body class="theme-dark">
-       
+
 
         <!-- Bloque principal -->
         <section>
-            
+
 
 <div class="container-advance-search">
     <details>
-        <summary class="btn btn-primary">Busqueda Avanzada</summary>    
+        <summary class="btn btn-primary">Busqueda Avanzada</summary>
 
         <form id="form-advance-search" action="/auth/advanced" method="POST">
 
@@ -40,77 +40,77 @@
             <div>
                 <label for="quality"><span>Por calidad</span>
                     <select id="quality" name="quality">
-                        <option value="">n/a</option>                    
-                        <option value="HDRip">HDRip</option>                    
-                        <option value="DVDRip">DVDRip</option>                    
-                        <option value="BRRip">BRRip</option>                    
-                        <option value="None">None</option>                    
-                        <option value="BR-SCR">BR-SCR</option>                    
-                        <option value="BrRip">BrRip</option>                    
-                        <option value="BDRip">BDRip</option>                    
-                        <option value="HDTV-SCR">HDTV-SCR</option>                    
-                        <option value="DVDrip">DVDrip</option>                    
-                        <option value="HDTV-SCS">HDTV-SCS</option>                    
-                        <option value="microHD">microHD</option>    
+                        <option value="">n/a</option>
+                        <option value="HDRip">HDRip</option>
+                        <option value="DVDRip">DVDRip</option>
+                        <option value="BRRip">BRRip</option>
+                        <option value="None">None</option>
+                        <option value="BR-SCR">BR-SCR</option>
+                        <option value="BrRip">BrRip</option>
+                        <option value="BDRip">BDRip</option>
+                        <option value="HDTV-SCR">HDTV-SCR</option>
+                        <option value="DVDrip">DVDrip</option>
+                        <option value="HDTV-SCS">HDTV-SCS</option>
+                        <option value="microHD">microHD</option>
                     </select>
                 </label>
             </div>
 
             <div>
                 <label for="extension"><span>Por Extensión</span>
-                    <select id="extension" name="extension">                
-                        <option value="">n/a</option>                
-                        <option value="avi">avi</option>                
-                        <option value="mp4">mp4</option>                
-                        <option value="mkv">mkv</option>                
-                        <option value="mpg">mpg</option>                
-                        <option value="divx">divx</option>                
+                    <select id="extension" name="extension">
+                        <option value="">n/a</option>
+                        <option value="avi">avi</option>
+                        <option value="mp4">mp4</option>
+                        <option value="mkv">mkv</option>
+                        <option value="mpg">mpg</option>
+                        <option value="divx">divx</option>
                     </select>
                 </label>
             </div>
 
             <div>
                 <label for="resolution"><span>Por Resolución</span>
-                    <select id="resolution" name="resolution">                     
-                        <option value="">n/a</option>                    
-                        <option value="1280x528">1280x528</option>                    
-                        <option value="1280x532">1280x532</option>                    
-                        <option value="1280x536">1280x536</option>                    
-                        <option value="1280x544">1280x544</option>                    
-                        <option value="1280x690">1280x690</option>                    
+                    <select id="resolution" name="resolution">
+                        <option value="">n/a</option>
+                        <option value="1280x528">1280x528</option>
+                        <option value="1280x532">1280x532</option>
+                        <option value="1280x536">1280x536</option>
+                        <option value="1280x544">1280x544</option>
+                        <option value="1280x690">1280x690</option>
                     </select>
                 </label>
             </div>
 
             <div>
                 <label for="fps"><span>Por FPS</span>
-                    <select id="fps" name="fps">                      
-                        <option value="">n/a</option>                    
-                        <option value="29.97">29.97</option>                    
-                        <option value="26.07">26.07</option>                    
-                        <option value="24.83">24.83</option>                    
-                        <option value="24.39">24.39</option>                    
-                        <option value="23.98">23.98</option>                    
-                        <option value="23.97">23.97</option>                    
-                        <option value="23.0">23.0</option>                    
-                        <option value="None">None</option>                    
+                    <select id="fps" name="fps">
+                        <option value="">n/a</option>
+                        <option value="29.97">29.97</option>
+                        <option value="26.07">26.07</option>
+                        <option value="24.83">24.83</option>
+                        <option value="24.39">24.39</option>
+                        <option value="23.98">23.98</option>
+                        <option value="23.97">23.97</option>
+                        <option value="23.0">23.0</option>
+                        <option value="None">None</option>
                     </select>
                 </label>
             </div>
 
             <div>
                 <label for="id_country"><span>Por País</span>
-                    <select id="id_country" name="id_country">                     
-                        <option value="">n/a</option>                    
-                        <option value="1" style="padding: 0 1rem;background-size: 1rem;background-image:url('icons/flags/us.svg');">Estados Unidos (us)</option>                    
-                        <option value="3">&#127462;&#127479; Canadá (ca)</option>                    
-                        <option value="4">Francia (fr)</option>                    
-                        <option value="5">&#127465;&#127472;Reino Unido (gb)</option>                    
-                        <option value="6">China (cn)</option>                    
-                        <option value="7">Hong Kong (hk)</option>                    
-                        <option value="8">Indonesia (id)</option>                    
-                        <option value="9">Corea del Sur (kr)</option>                    
-                        <option value="10">Japón (jp)</option> 
+                    <select id="id_country" name="id_country">
+                        <option value="">n/a</option>
+                        <option value="1" style="padding: 0 1rem;background-size: 1rem;background-image:url('icons/flags/us.svg');">Estados Unidos (us)</option>
+                        <option value="3">&#127462;&#127479; Canadá (ca)</option>
+                        <option value="4">Francia (fr)</option>
+                        <option value="5">&#127465;&#127472;Reino Unido (gb)</option>
+                        <option value="6">China (cn)</option>
+                        <option value="7">Hong Kong (hk)</option>
+                        <option value="8">Indonesia (id)</option>
+                        <option value="9">Corea del Sur (kr)</option>
+                        <option value="10">Japón (jp)</option>
                     </select>
                 </label>
             </div>
@@ -120,7 +120,7 @@
                 <label><span>Por Calificación (0/10)</span>
                     <label class="row" for="min_rating"><span>Mínimo</span>
                         <input type="number" class="noborder" id=v1 value="" disabled>
-                        <input type="range" id="v1r" name="min_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v1.value=value">   
+                        <input type="range" id="v1r" name="min_rating" size="2" step="0.5" min="0.0" max="10.0" oninput="v1.value=value">
                     </label>
                     <label class="row" for="max_rating"><span>Máximo</span>
                         <input type="number" class="noborder" id=v2 value="" disabled>
@@ -128,17 +128,17 @@
                     </label>
                 </label>
             </div>
-            
+
             <div>
                 <label><span>Por fecha de Creación</span>
-          
+
                         <label class="row" for="min_date"><span>Fecha Inicio</span>
-                            <input type="date" name="min_date" min="1800-01-01" max="2900-01-01">  
-                        </label>      
+                            <input type="date" name="min_date" min="1800-01-01" max="2900-01-01">
+                        </label>
                         <label class="row" for="max_date"><span>Fecha Fin</span>
                             <input type="date" name="max_date" min="1800-01-01" max="2900-01-01">
                         </label>
-            
+
                 </label>
             </div>
 
@@ -147,10 +147,10 @@
                 <button type="submit" class="btn btn-primary">BUSCAR</button>
             </div>
         </form>
-        
+
     </details>
 </div>
-    
+
     <section class="item-list">
 
         <!-- CARTA FILM -->
@@ -161,7 +161,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -169,7 +169,7 @@
     </div>
 </div>
 
-        <!-- CARTA REVERSA -->    
+        <!-- CARTA REVERSA -->
 
 <div class="card-film" id=2021>
     <div class="card-click-film" data-id-film="1197"></div>
@@ -179,7 +179,7 @@
         <strong>Overlord asdasd a sdasd as</strong>
 
         <img src="img/image.jpg">
-    
+
         <a target="_blank" href="https://www.filmaffinity.com/es/film183164.html">
             <span><i class="icon-file"></i>avi</span>
             <span><i class="icon-film"></i>BRRip</span>
@@ -198,7 +198,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -208,7 +208,7 @@
 
 
 
-            
+
 
 <div class="card-film" id=2021>
     <div class="card-click-film" data-id-film="1197"></div>
@@ -216,7 +216,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -231,7 +231,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -250,7 +250,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -266,7 +266,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -281,7 +281,7 @@
 
     <img src="img/image.jpg" loading="lazy">
     <strong>Una sombra en mi ojo</strong>
-    
+
     <div>
         <div>6.7<i class="icon-star"></i></div>
         <div><i class="icon-calendar"></i>2021</div>
@@ -291,10 +291,10 @@
 
 
             <div id="message-container">
-    
-        
-             
-</div>  
+
+
+
+</div>
         </section>
 
         <noscript>

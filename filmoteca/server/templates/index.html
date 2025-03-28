@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="title" content="Gestor de Películas">
         <meta name="description" content="Web para gestionar las películas">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.png') }}">
         {% if title %}
         <title>{{ title|title }}</title>
         {% else %}
@@ -35,7 +35,7 @@
                         <a href="/view/0"> Recientes </a>
                         <a href="/menu/recommended"> Sugeridas </a>
                         <a href="/menu/inventories"> Listados </a>
-						<a href="/menu/torrent/9999"> Torrents </a>
+						<a href="/menu/torrent"> Torrents </a>
                         {% if session['auth'] %}
                         <a class="mark-opt" href="/auth/logout"> Salir </a>
                         {% endif %}

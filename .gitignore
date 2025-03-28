@@ -41,8 +41,8 @@ venv.bak/
 .vscode
 
 # Ignorar bancos de imagenes
-filmoteca/www/images/**/*.png
-filmoteca/www/images/**/*.jpg
+filmoteca/server/assets/**/*.png
+filmoteca/server/assets/**/*.jpg
 
 filmoteca/wsgi.ini
 

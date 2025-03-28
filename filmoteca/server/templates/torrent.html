@@ -15,9 +15,9 @@
 		</span>
 		<span class="title">{{ film["title"] }}</span>
 		<span class="year">{{ film["year"] }}</span>
-		<span><a class="link1" href="{{ film['url_imbd'] }}" target="_blank">IMBD</a> </span>
-		<span><a class="link2" href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a> </span>
-		<span><a class="link3" href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+		<span><a class="link1" href="{{ film['url_imbd'] }}" target="_blank">IMBD</a></span>
+		<span><a class="link2" href="https://rojotorrent.com{{ film['url_rojo'] }}" target="_blank">TORRENT</a></span>
+		<span><a class="link3" href="{{ film['url_filma'] }}" target="_blank">FILMAFFINITY</a></span>
 	</article>
 
 {% endmacro %}
@@ -28,28 +28,31 @@
 		<span class="index">{{ serie["index"] }}</span>
 		<span class="rating">Chapters:{{ serie["chapters"] }}</span>
 		<span class="title">{{ serie["title"] }}</span>
-		<span><a href="{{ serie['url_rojo'] }}" target="_blank">TORRENT</a> </span>
-		<span><a href="{{ serie['url_filma'] }}" target="_blank">FILMAFFINITY</a> </span>
+		<span><a href="{{ serie['url_rojo'] }}" target="_blank">TORRENT</a></span>
+		<span><a href="{{ serie['url_filma'] }}" target="_blank">FILMAFFINITY</a></span>
 	</article>
 
 {% endmacro %}
 
 {% block content %}
-	{% if response is not none and response[0] is not none %}
-
-	<section id="films-torrent">
-		<h2>Películas Disponibles para descargar</h2>
-		{% for movie in response[0] %}
-			{{ render_film_torrent(movie) }}
-		{% endfor %}
-	</section>
-	<section id="series-torrent">
-		<h2>Series disponibles para descargar</h2>
-		{% for serie in response[1] %}
-			{{ render_serie_torrent(serie) }}
-		{% endfor %}
-	</section>
-
+	{% if response[0] is not none %}
+		{% if response[0] is not none and response[0]|length > 1%}
+		<section id="films-torrent">
+			<h2>Películas Disponibles para descargar</h2>
+			{% for movie in response[0] %}
+				{{ render_film_torrent(movie) }}
+			{% endfor %}
+		</section>
+		{% endif %}
+		{% if response[1] is not none and response[1]|length > 1%}
+		<section id="series-torrent">
+			<h2>Series disponibles para descargar</h2>
+			{% for serie in response[1] %}
+				{{ render_serie_torrent(serie) }}
+			{% endfor %}
+		</section>
+    	{% endif %}
+		<span><a class="btn btn-primary-link" href="/menu/torrent/9999">Configuración</a></span>
 	{% else %}
 
 <div class="edit">
@@ -59,7 +62,7 @@
 			<div class="row">
 				<label for="last_torrent"><span>Último torrent</span>
 					<input type="text" name="last_torrent" id="last_torrent" placeholder="{{ response[1] }}">
-					<input type="text" name="last_date" id="last_date" disabled maxlength="12" placeholder="{{ response[2] }}">
+					<input type="text" name="last_date" id="last_date" maxlength="12" placeholder="{{ response[2] }}">
 				</label>
 
 				<label for="npseries" class="row"><span>Número de páginas de series</span>
@@ -78,6 +81,6 @@
 		</footer>
 	</form>
 </div>
-
-    {% endif %}
+<span><a class="btn btn-danger-link" href="https://rojotorrent.com/descargar-peliculas" target="_blank">Torrents</a></span>
+{% endif %}
 {% endblock %}

@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 # 2023.11.27
 # Execute: cd template
-# python3 -m unittest tests.unit.auxiliary
-# python3 -m unittest tests.unit.auxiliary.TestScan.test010_validate
+# python3 -m unittest tests.unit.security
+# python3 -m unittest tests.unit.security.TestScan.test010_validate
 
 import unittest
 # Ejecutar text en el orden en el que se escriben
 # unittest.TestLoader.sortTestMethodsUsing = lambda *args: -1
 
-from filmoteca.modules.auxiliary import *
+from filmoteca.server.security import *
 
 
 class TestScan(unittest.TestCase):
-	
+
 	def test000_create(self):
 		pass
 

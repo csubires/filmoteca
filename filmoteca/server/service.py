@@ -6,7 +6,7 @@ from modules.database import Handler_SQL							# Manejador de la base de datos
 from modules.extras import list_to_dict
 from modules.utils import lg_prt, singleton, dt_format				# Mostrar y Colorear texto en consola
 from modules.torrent import get_torrents
-from www.auxiliary import isValidEmail, htmlFilterChars, min_len
+from server.security import isValidEmail, htmlFilterChars, min_len
 
 from config.queries_database import TAG_QUERY_REPORT
 from config.global_constant import DB_FILE, NUMMOV_X_SEARCH, NUM_LAST_MOV, MAINTENANCE_OPTIONS, MESSAGE_SUCCESS, MESSAGE_FAILURE, HEADERS_JSON
@@ -103,12 +103,9 @@ class HandlerService:
 	def searchAMovie(self, search):
 		# Buscar una película
 		response = ('Sin resultados', 'view.html', None)
-
 		data = self.oDTB.execute('search_movies', {'search': '%' + search + '%', 'year': search, 'limit': NUMMOV_X_SEARCH})
-
 		if data is not None and len(data) > 0:
 			response = ('Resultado Busqueda', 'view.html', data)
-
 		return response
 
 	def getMenu(self, menu, year):
@@ -142,28 +139,30 @@ class HandlerService:
 
 		elif menu == 'torrent':
 			data = self.cache_storage.get('cache_torrent', None)
-			date_end = self.cache_storage.get('date_end', None)
 
-			if data is None or date_end is None or date_end != dt_format("symd"):
+			if year is not None:
+				url_end, date_end, npseries = [
+					None if data is None else data[2],
+					dt_format("symd"),
+					None if data is None else data[3]]
+			else:
 				result = self.oDTB.execute('select_urlend')
-				if result is not None:
-					url_end, date_end, npseries = result[0]
+				url_end, date_end, npseries = result[0] if result is not None else [None] * 3
 
-					if (year is not None):
-						return ('Cartelera', 'torrent.html', [None, url_end, date_end, npseries])
-
-					if self.oSRVC is None:
-						self.oSRVC = HandlerServiceMod(self.oDTB)
-
-					data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
+			if year is None and date_end != dt_format("symd"):
+				if self.oSRVC is None:
+					self.oSRVC = HandlerServiceMod(self.oDTB)
+				data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
+				if data[2] != url_end:
 					self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd"), 'npseries': npseries})
 					self.cache_storage['cache_torrent'] = data
-					self.cache_storage['date_end'] = dt_format("symd")
 
-			if data is not None and len(data) > 0:
+			lg_prt('t', year)
+
+			if year is None:
 				response = ('Torrent Downloads', 'torrent.html', data)
 			else:
-				response = ('Sin resultados', 'torrent.html', None)
+				response = ('Cartelera', 'torrent.html', [None, url_end, date_end, npseries])
 
 		else:
 			# Si no hay opción por defecto se muestran las estadísticas

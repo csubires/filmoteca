@@ -97,4 +97,4 @@ def get_torrents(oCNT, url_end, npseries):
 	while (index <= npseries and get_series(oCNT, index)):
 		index += 1
 
-	return [all_movies, all_series, all_movies[0]['url_rojo'] if len(all_movies) > 0 else None]
+	return [all_movies, all_series, all_movies[0]['url_rojo'] if len(all_movies) > 0 else url_end, npseries]

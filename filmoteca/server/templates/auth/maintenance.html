@@ -8,14 +8,15 @@
     <div>
             <a class="btn btn-primary-outline" data-descr="Películas repetidas" href="/auth/maintenance/repeated_movies"><strong>Repetidas</strong></a>
             <a class="btn btn-primary-outline" data-descr="Películas que ya no se encuentran en el HDD 0 (Interno)" href="/auth/maintenance/missing_movies_hdd0"><strong>Desaparecidas HDD 0 (Interno)</strong></a>
-            <a class="btn btn-primary-outline" data-descr="Películas que ya no se encuentran en el HDD 1 (Externo)" href="/auth/maintenance/missing_movies_hdd1"><strong>Desaparecidas HDD 1 (Externo)</strong></a>        
+            <a class="btn btn-primary-outline" data-descr="Películas que ya no se encuentran en el HDD 1 (Externo)" href="/auth/maintenance/missing_movies_hdd1"><strong>Desaparecidas HDD 1 (Externo)</strong></a>
             <a class="btn btn-primary-outline" data-descr="Películas a las cuales les falta algún dato" href="/auth/maintenance/incomplete_movie_info"><strong>Incompletas</strong></a>
             <a class="btn btn-primary-outline" data-descr="Películas marcadas como censuradas" href="/auth/maintenance/censured_movies"><strong>Censuradas</strong></a>
-            <a class="btn btn-primary-outline" data-descr="Películas con peor valoración (&#60;6.0) en el HDD 0 (Interno)" href="/auth/maintenance/devalued_movies"><strong>Peor Valoradas</strong></a>
-            <a class="btn btn-primary-outline" data-descr="Películas con mejor valoración (&#62;6.7) en el HDD 1 (Externo)" href="/auth/maintenance/overevalued_movies"><strong>Mejor Valoradas</strong></a>
-            <a class="btn btn-primary-outline" data-descr="Películas con archivo corrupto" href="/auth/maintenance/corrupt_movies"><strong>Corrompidas</strong></a>        
+            <a class="btn btn-primary-outline" data-descr="Películas con peor valoración (&#60;6.0) en el HDD 0 (Interno)" href="/auth/maintenance/devalued_movies"><strong>Peor Valoradas HDD 0 (Interno)</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas con mejor valoración (&#62;6.7) en el HDD 1 (Externo)" href="/auth/maintenance/overevalued_movies"><strong>Mejor Valoradas HDD 1 (Externo)</strong></a>
+			<a class="btn btn-primary-outline" data-descr="Películas con peor valoración (&#60;4.5) en todos los HDDS" href="/auth/maintenance/shit_movies"><strong>Peor Valoradas Global</strong></a>
+            <a class="btn btn-primary-outline" data-descr="Películas con archivo corrupto" href="/auth/maintenance/corrupt_movies"><strong>Corrompidas</strong></a>
             <a class="btn btn-primary-outline" data-descr="Países sin código asociado" href="/auth/maintenance/uncoded_country"><strong>País desconocido</strong></a>
-            <a class="btn btn-primary-outline" data-descr="Géneros que no contienen películas o les faltan datos" href="/auth/maintenance/incomplete_genre"><strong>Géneros incompletos</strong></a>    
+            <a class="btn btn-primary-outline" data-descr="Géneros que no contienen películas o les faltan datos" href="/auth/maintenance/incomplete_genre"><strong>Géneros incompletos</strong></a>
     </div>
 </div>
 
@@ -33,9 +34,9 @@
     </article>
 
     {# Películas perdidas, incompletas, cen... #}
-    {% elif response[0] in ['missing_movies_hdd0', 'missing_movies_hdd0', 'missing_movies_hdd1', 'incomplete_movie_info', 'censured_movies', 'devalued_movies', 'overevalued_movies', 'corrupt_movies'] %}
+    {% elif response[0] in ['missing_movies_hdd0', 'missing_movies_hdd0', 'missing_movies_hdd1', 'incomplete_movie_info', 'censured_movies', 'devalued_movies', 'shit_movies', 'overevalued_movies', 'corrupt_movies'] %}
     <h3 class="head-result">{{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
-        {% if response[0] in ['devalued_movies', 'overevalued_movies'] %}
+        {% if response[0] in ['devalued_movies', 'overevalued_movies', 'shit_movies'] %}
         <div class="head-result">
             <details class="list-copy">
                 <summary class="btn btn-primary-outline">Listado limpio</summary>
@@ -66,12 +67,12 @@
         <h3>Géneros incompletos {{ response[2]|length if response[2]|length > 0 }} {{ response[1] }}</h3>
     </div>
     {# 0 id_genre, 1 name, 2 pathfolder, 3 is_subgenre #}
-    <!-- Listado de géneros -->  
+    <!-- Listado de géneros -->
     <main class="table">
         <section class="table__header">
             <h1>Listado de géneros</h1>
         </section>
-        <section class="table__body">       
+        <section class="table__body">
             <table>
                 <caption></caption>
                 <thead>
@@ -100,7 +101,7 @@
     </div>
 
     {# 0 id_country, 1 name, 2 code, 3 flag #}
-    <!-- Listado de países -->  
+    <!-- Listado de países -->
     <main class="table">
         <section class="table__header">
             <h1>Listado de países</h1>

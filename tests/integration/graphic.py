@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # 2023.3.17
 # Execute: cd template
-# python3 -m unittest tests.integration.graphic
-# python3 -m unittest tests.integration.graphic.TestChart.test000_create
+# python3 -m unittest tests.integration.chart
+# python3 -m unittest tests.integration.chart.TestChart.test000_create
 
 import unittest
 # Ejecutar text en el orden en el que se escriben
@@ -10,7 +10,7 @@ import unittest
 
 
 from modules.database import HandlerSQL
-from www.graphic import draw_graphic
+from server.chart import draw_graphic
 
 from config.global_constant import DB_FILE
 from config.queries_database import TAG_QUERY_REPORT

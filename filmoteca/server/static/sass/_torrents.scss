@@ -52,14 +52,14 @@
 		.rating {
 			padding: 0 10px;
 			color: c.$bs-purple;
-			font-size: .8rem;
+			font-size: .9rem;
 			&::after {
 				content: "★ ";
 			}
 		}
 
 		.rating.big-rating {
-			font-size: 1rem;
+			font-size: 1.2rem;
 			font-weight: bolder;
 			color: c.$bs-danger;
 		}

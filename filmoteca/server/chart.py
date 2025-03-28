@@ -1,8 +1,8 @@
 # 2023.03.18
-# python3 -m www.graphic.run
+# python3 -m www.chart.run
 import matplotlib.pyplot as plt						# Generar gráficas con los datos de la BBDD
 
-from modules.auxiliary import date_to_human
+from modules.security import date_to_human
 from modules.utils import lg_prt					# Mostrar y Colorear texto en consola
 
 from config.global_constant import PATH_CHARTS
