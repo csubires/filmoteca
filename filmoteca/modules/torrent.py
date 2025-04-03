@@ -2,12 +2,14 @@
 from time import sleep
 
 from modules.analyser import get_urls, get_film, get_urls_series, get_serie, get_rating
-from modules.utils import lg_prt, dt_format
+from modules.utils import lg_prt, dt_format, Logging
 from config.global_constant import *
 
 last_movie = None
 all_movies = []
 all_series = []
+
+logger = Logging()
 
 def get_movies(oCNT, index):
 	global last_movie, all_movies
@@ -86,6 +88,7 @@ def get_series(oCNT, index):
 def get_torrents(oCNT, url_end, npseries):
 	global last_movie
 	last_movie = url_end
+	logger.info("Init")
 
 	lg_prt('bw', '[+] Searching movies...')
 	index = 1

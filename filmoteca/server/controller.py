@@ -181,7 +181,7 @@ def register_routes(app):
 		# API REST CRUD Manejador de peticiones a la base de datos JavaScript
 		def need_check_token(nameToken, token):
 			# Comprueba peticiones en las que hay que checkear el token
-			if querySQL not in ('extra_info_movie', 'select_urlend') and not check_csrf_token(nameToken, session, token):
+			if querySQL not in ('task_status', 'extra_info_movie', 'select_urlend') and not check_csrf_token(nameToken, session, token):
 				abort(401, f'Altered {nameToken} "{querySQL}"')
 
 		if request.is_json:		# Parametros json. PUT, POST, DELETE

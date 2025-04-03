@@ -139,26 +139,34 @@ class HandlerService:
 
 		elif menu == 'torrent':
 			data = self.cache_storage.get('cache_torrent', None)
+			self.cache_storage['task_status'] = 'No completed'
 
-			if year is not None:
-				url_end, date_end, npseries = [
-					None if data is None else data[2],
-					dt_format("symd"),
-					None if data is None else data[3]]
-			else:
+			# Obtener valores de la base de datos si no hay año especificado
+			if year is None:
 				result = self.oDTB.execute('select_urlend')
-				url_end, date_end, npseries = result[0] if result is not None else [None] * 3
+				url_end, date_end, npseries = result[0] if result else (None, None, None)
 
-			if year is None and date_end != dt_format("symd"):
-				if self.oSRVC is None:
-					self.oSRVC = HandlerServiceMod(self.oDTB)
-				data = get_torrents(self.oSRVC.oCNT, url_end, npseries)		# Películas y series encontradas
-				if data[2] != url_end:
-					self.oDTB.execute('update_urlend', {'url_end': data[2], 'date_end': dt_format("symd"), 'npseries': npseries})
-					self.cache_storage['cache_torrent'] = data
+				# Si la fecha no coincide o no hay datos en caché, obtener nuevos torrents
+				if date_end != dt_format("symd") or data is None:
+					if self.oSRVC is None:
+						self.oSRVC = HandlerServiceMod(self.oDTB)
+					data = get_torrents(self.oSRVC.oCNT, url_end, npseries)
 
-			lg_prt('t', year)
-
+					# Actualizar base de datos y caché si se obtuvieron nuevos datos
+					if data and len(data) > 2:
+						self.oDTB.execute('update_urlend', {
+							'url_end': data[2],
+							'date_end': dt_format("symd"),
+							'npseries': data[3] if len(data) > 3 else npseries
+						})
+						self.cache_storage['cache_torrent'] = data
+			else:
+				url_end, date_end, npseries = (
+					data[2] if data else None,
+					dt_format("symd"),
+					data[3] if data and len(data) > 3 else None
+				)
+			self.cache_storage['task_status'] = 'completed'
 			if year is None:
 				response = ('Torrent Downloads', 'torrent.html', data)
 			else:
@@ -260,6 +268,13 @@ class HandlerService:
 			status (int):		Código de servidor
 		'''
 
+
+		if (tagSQL == 'task_status'):
+			return (({'message': 'task_status', 'data': None, 'taskId': 1, 'task_status': self.cache_storage.get('task_status', None)}, 200))
+
+		if (tagSQL == 'update_urlend'):
+			self.cache_storage['task_status'] = None
+
 		# Ejecutar consulta
 		dataSQL = self.oDTB.execute(tagSQL, params)
 
@@ -281,6 +296,8 @@ class HandlerService:
 		elif tagSQL == 'select_urlend':
 			# Se modificó una película y hay que ver si es necesario mover la imagen a otra carpeta
 			self.getMenu('torrent', None)
+			task_status = self.cache_storage.get('task_status', None)
+			return (({'message': 'task_status', 'data': None, 'taskId': 1, 'task_status': task_status}, 200))
 
 		# Obtener cabeceras si existen y trasnformar a diccionario
 		headers = HEADERS_JSON.get(tagSQL, None)

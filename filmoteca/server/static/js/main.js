@@ -245,17 +245,63 @@ window.addEventListener('load', function () {
             await cnt.send('PUT', '/api/update_urlend', params)
         },
         // BUTTON - Buscar cartelera
-        'search-billboard': async (e) => {
-			let waitMe = document.querySelector(`#loading`)
-			showAndHidde(waitMe, 'visible', 99)
-			let dataJson = await cnt.send('GET', '/api/select_urlend/{"null": null}')
-			if (dataJson) {
-				showAndHidde(waitMe, 'hidden', -1)
+        // 'search-billboard': async (e) => {
+		// 	let waitMe = document.querySelector(`#loading`)
+		// 	showAndHidde(waitMe, 'visible', 99)
+		// 	let dataJson = await cnt.send('GET', '/api/select_urlend/{"null": null}')
+		// 	if (dataJson) {
+		// 		showAndHidde(waitMe, 'hidden', -1)
+		// 		window.location.href = "/menu/torrent";
+		// 	} else {
+		// 		showMessage('No se puedo cargar la cartelera', 'danger')
+		// 	}
+        // },
+
+
+		'search-billboard': async (e) => {
+			const waitMe = document.querySelector('#loading');
+			showAndHidde(waitMe, 'visible', 99);
+
+			try {
+				const startTask = await cnt.send('GET', '/api/select_urlend/{"null": null}');
+
+				if (!startTask || !startTask.taskId) {
+					throw new Error("No se pudo iniciar la tarea");
+				}
+
+				// 2. Función para verificar el estado de la tarea (Polling)
+				const checkTaskStatus = async (taskId) => {
+					const maxAttempts = 30; // Máximo de intentos (evitar bucle infinito)
+					const delay = 5000; // 2 segundos entre intentos
+
+					for (let i = 0; i < maxAttempts; i++) {
+						const response = await cnt.send('GET', `/api/task_status/{"stamp":"${crypto.randomUUID()}"}`);
+
+						if (response && response.task_status === "completed") {
+							return true; // Tarea completada
+						} else if (response && response.task_status === "failed") {
+							throw new Error("La tarea falló en el servidor");
+						}
+
+						await new Promise(resolve => setTimeout(resolve, delay)); // Esperar antes de reintentar
+					}
+
+					throw new Error("La tarea tardó demasiado en completarse");
+				};
+
+				// 3. Verificar periódicamente el estado
+				await checkTaskStatus(startTask.taskId);
+
+				// 4. Si llega aquí, la tarea está lista
+				showAndHidde(waitMe, 'hidden', -1);
 				window.location.href = "/menu/torrent";
-			} else {
-				showMessage('No se puedo cargar la cartelera', 'danger')
+			} catch (error) {
+				showAndHidde(waitMe, 'hidden', -1);
+				showMessage(error.message || 'No se pudo cargar la cartelera', 'danger');
 			}
-        },
+		},
+
+
         // BUTTON - Copiar la lista al portapapeles
         'copy-clipboard': () => {
             let content = document.querySelector('.list-copy').innerText
