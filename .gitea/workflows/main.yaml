@@ -4,11 +4,12 @@ on:
   pull_request:
     types: [closed]
     branches: [main]
+  workflow_dispatch:  # Permite ejecución manual desde la interfaz
 
 jobs:
   deploy:
     runs-on: [gitea-runner-1, docker]
-    if: github.event.pull_request.merged == true  # Solo si fue mergeado (no cerrado sin merge)
+    if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Force-sync repository
         run: |
