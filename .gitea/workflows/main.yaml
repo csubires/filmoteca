@@ -1,22 +1,29 @@
-name: Deploy Filmoteca to production
+name: Deploy on Merge to Main
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches: [main]
 
 jobs:
   deploy:
-    runs-on: gitea-runner-1
+    runs-on: [gitea-runner-1, docker]
+    if: github.event.pull_request.merged == true  # Solo si fue mergeado (no cerrado sin merge)
     steps:
-      - name: Pull latest changes
+      - name: Force-sync repository
         run: |
           cd /data/filmoteca
-          echo "git pull origin main"
-          ls
+          git fetch origin
+          git checkout main
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Unzip images
         run: |
-          echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/data/filmoteca/www"
+          7z x /data/pack_images.7z -o/data/filmoteca/www -y
+          echo "Images extracted successfully"
 
-      - name: Run deployment script
+      - name: Restart container
         run: |
-          echo "bash /webserver/run.sh"
+          docker restart filmoteca-flask
+          echo "Container restarted successfully"
