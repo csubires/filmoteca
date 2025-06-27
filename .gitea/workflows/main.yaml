@@ -24,7 +24,7 @@ jobs:
 
       - name: Unzip images
         run: |
-          7z x /data/pack_images.7z -o/data/filmoteca/www -y
+          docker exec gitea-server 7z x "/home/user/docker-app/webserver/filmoteca/data/pack_images.7z" -o "/home/user/docker-app/webserver/filmoteca/filmoteca/www" -y
           echo "Images extracted successfully"
 
       - name: Restart container
