@@ -58,6 +58,16 @@ def saveBD()
 run.py o server.py > controller.py
 controller.py /paginaindex.html
 service.py -> browser
+## Server
+- [ ] activar y configurar ufw
+- [ ] Mejorar seguridad nginx
+- [ ] Añadir servicios a fail2ban
+- [ ] Configurar grafana
+- [ ] Configurar otros
+- [ ] implementar borntoberotc y meter en grafana
+- [ ] Nextcloud news configurar
+- [ ] Arreglar en el dockerfile build
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) ***
 
 - [X] cartelera sigue sin actualizar por fecha flask
 - [X] show or change fecha default=datetime.now not (), modo ejecu

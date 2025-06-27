@@ -13,7 +13,7 @@ import signal												# Para controlar el Control+C salida del programa
 
 from modules.core import HandlerScan						# Para listar películas e incorporarlas a la BD
 from modules.service import HandlerService					# Para obtener más información de una película
-from modules.utils import lg_prt, dt_format			# Mostrar y Colorear texto en consola
+from modules.utils import lg_prt, dt_format					# Mostrar y Colorear texto en consola
 from helper import help 									# Mostrar el panel de ayuda
 
 oSCN = oSRVC = None

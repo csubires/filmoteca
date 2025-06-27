@@ -12,7 +12,7 @@ import threading				# Para generar threads con funciones
 
 from .database import Handler_SQL						# Manejador de la base de datos
 from .models import FilmFile
-from .security import timestamp2Date, seconds_to_time, bytes_to_human
+from .auxiliary import timestamp2Date, seconds_to_time, bytes_to_human
 from .analyser import path_file_splits, get_fileMetaData, get_real_path_size
 from .utils import lg_prt, singleton, dt_format		# Mostrar y Colorear texto en consola
 

@@ -151,7 +151,6 @@ class HandlerService:
 					if self.oSRVC is None:
 						self.oSRVC = HandlerServiceMod(self.oDTB)
 					data = get_torrents(self.oSRVC.oCNT, url_end, npseries)
-
 					# Actualizar base de datos y caché si se obtuvieron nuevos datos
 					if data and len(data) > 2:
 						self.oDTB.execute('update_urlend', {
@@ -166,6 +165,7 @@ class HandlerService:
 					dt_format("symd"),
 					data[3] if data and len(data) > 3 else None
 				)
+
 			self.cache_storage['task_status'] = 'completed'
 			if year is None:
 				response = ('Torrent Downloads', 'torrent.html', data)

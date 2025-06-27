@@ -257,47 +257,48 @@ window.addEventListener('load', function () {
 		// 	}
         // },
 
-
 		'search-billboard': async (e) => {
 			const waitMe = document.querySelector('#loading');
 			showAndHidde(waitMe, 'visible', 99);
 
 			try {
+				// 1. Iniciar tarea
 				const startTask = await cnt.send('GET', '/api/select_urlend/{"null": null}');
+				if (!startTask?.taskId) throw new Error("No se pudo iniciar la tarea");
 
-				if (!startTask || !startTask.taskId) {
-					throw new Error("No se pudo iniciar la tarea");
-				}
-
-				// 2. Función para verificar el estado de la tarea (Polling)
+				// 2. Función para polling con backoff
 				const checkTaskStatus = async (taskId) => {
-					const maxAttempts = 30; // Máximo de intentos (evitar bucle infinito)
-					const delay = 5000; // 2 segundos entre intentos
+					const maxAttempts = 30;
+					let delay = 2000; // Empezar con 2 segundos
 
 					for (let i = 0; i < maxAttempts; i++) {
-						const response = await cnt.send('GET', `/api/task_status/{"stamp":"${crypto.randomUUID()}"}`);
+						try {
+							// Usar timestamp en lugar de crypto.randomUUID()
+							const response = await cnt.send('GET', `/api/task_status/{"stamp":"${Date.now()}"}`);
 
-						if (response && response.task_status === "completed") {
-							return true; // Tarea completada
-						} else if (response && response.task_status === "failed") {
-							throw new Error("La tarea falló en el servidor");
+							if (response?.task_status === "completed") return true;
+							if (response?.task_status === "failed") throw new Error("La tarea falló en el servidor");
+
+							// Delay incremental (backoff)
+							await new Promise(resolve => setTimeout(resolve, delay));
+							delay = Math.min(delay * 1.5, 10000); // Máximo 10 segundos
+						} catch (err) {
+							if (i === maxAttempts - 1) throw err; // Lanzar error en último intento
 						}
-
-						await new Promise(resolve => setTimeout(resolve, delay)); // Esperar antes de reintentar
 					}
-
 					throw new Error("La tarea tardó demasiado en completarse");
 				};
 
-				// 3. Verificar periódicamente el estado
+				// 3. Verificar estado
 				await checkTaskStatus(startTask.taskId);
 
-				// 4. Si llega aquí, la tarea está lista
+				// 4. Recargar solo si todo fue exitoso
 				showAndHidde(waitMe, 'hidden', -1);
 				window.location.href = "/menu/torrent";
+
 			} catch (error) {
 				showAndHidde(waitMe, 'hidden', -1);
-				showMessage(error.message || 'No se pudo cargar la cartelera', 'danger');
+				showMessage(error.message || 'Error al cargar la cartelera', 'danger');
 			}
 		},
 
