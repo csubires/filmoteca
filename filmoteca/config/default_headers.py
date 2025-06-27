@@ -1,18 +1,44 @@
 URL_PROXY_CHECK = 'https://api.ipify.org/'
 
 HEADERS_DEFAULT = {
-	'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0',
-#	'Accept': 'application/json,text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#	'Accept-Language': 'en-US,en;q=0.5',
-#	'Accept-Encoding': 'gzip, deflate, br',
-#	'X-Requested-With': 'XMLHttpRequest',
+    "Host": "www.filmaffinity.com",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Referer": "www.filmaffinity.com",
+    "DNT": "1",
+    "Sec-GPC": "1",
+    "Connection": "keep-alive",
+    "Cookie": "FSID=ssmon2cadqlqve7qdf2dlmsour5ej8g52qd068cntligtllm9d14n5j9ltvvfm05; FCD=c2CojCsB29Z8uJ5z8ArZDCqRT9MFMZYUycxfrmw8a1wnzGjVBFIcjwut6VyodH8e-gVnYdcJNLwrJhdLpq0jregZ2y3zUGXA1kaLgB_Afk7w-d93Jd2UrwOBTGE7QKlIgqW2WjonAUuZdetn8nr13A5ToD_j9CUg; cf_clearance=_zsB75ny7ZHCmQLmuBJ_EQQEyZIe.yhNCOEnRpznVkI-1751038751-1.2.1.1-gILzGvecLQqjqMIc1bAPMZj27jqW9_moCNLRSVOVvd.N5EUzGj0WkFj.z92htHDCZ2I.IE76uhC7BjPJykS8.9peY4HF_chminsjmQ2ZvBaTZpCQDOpeFBtTqaapEN51Cf6JY4jB6cIQSzboOeu2P1gQd94HlPRNkRtkLAdKT7qYPbtNvCJUNIzah1IeZKsaI7vfvZyKtboP88YL4Nh.RajIBcbgFDdMdRhwRGuE.L2SaJMd1aaeXwwYlC1XWDV_cNK5DyLFm6MA9fdQlC39jRz8vtU.RBXc2ftCG3amEt1wc3DdXkKxthn0OzU_WVSTXcIwkWDkFKtkEQ.l02O9qF7ierPqX6JSvXrV_ntEfcQ; euconsent-v2=CQTqrYAQTqrYAAKA8AESBxFsAP_gAEPgAAiQLVNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwSx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgaogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdAYetDfv8ZBKT-9IMd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__qk_e_X_vf_n37v943n77v____BasAEw0KiCMsiBEIlAwggQAKCsIAKBAEAACQNEBACYMCnIGAC6wkQAgBQADBACAAEGAAIAABIAEIgAoAKBAABAIFAAGABAEBAAwMAAYALAQCAAEB0DFMCCAQLABIzIoNMCUABIICWyoQSAIEFcIQizwCCBETBQAAAgAFAQAAPBYDEkgJWJBAFxBNAAAQAABRAgQIpGzAEFAZotBeDJ9GRpgGD5gmaUwDIAiCMjJNiE35TDxyFEKCEAAA.YAAAAAAAAAAA; addtl_consent=1~43.3.9.6.9.13.6.4.15.9.5.2.11.8.1.3.2.10.33.4.15.17.2.9.20.7.20.5.20.7.2.2.1.4.40.4.14.9.13.8.9.6.6.9.41.5.3.1.27.1.17.10.9.1.8.6.2.8.3.4.146.65.1.17.19.25.35.5.18.9.7.21.20.2.4.18.24.4.9.6.5.2.14.25.3.2.2.8.2.26.8.6.3.10.4.20.2.17.10.11.1.3.22.16.2.6.8.6.11.6.5.17.16.11.19.28.12.1.5.2.17.9.6.40.17.4.9.15.8.7.3.12.7.2.4.1.19.13.22.13.2.6.8.10.1.4.15.2.4.9.4.5.4.7.13.5.15.17.4.14.10.15.2.5.6.2.2.1.2.14.7.4.8.2.9.28.12.13.2.18.1.1.3.1.1.9.7.2.16.5.19.8.4.8.5.4.8.4.4.2.14.2.13.4.2.6.9.6.3.2.2.3.7.9.10.11.9.19.8.3.3.1.2.3.9.19.22.4.3.10.17.3.4.6.3.3.3.4.1.7.11.4.1.11.6.1.10.13.3.2.2.4.3.2.2.7.15.7.14.4.3.4.5.4.3.2.2.5.5.3.9.7.9.1.5.3.7.10.11.1.3.1.1.2.1.3.2.6.1.12.8.1.3.1.1.2.2.7.6.1.1.4.3.6.1.2.1.4.1.1.4.1.1.2.1.8.1.7.4.3.3.3.5.3.15.1.15.10.28.1.2.2.12.3.4.1.6.3.4.7.1.3.1.4.1.5.3.1.2.1.4.1.5.2.3.1.2.2.6.2.1.2.2.2.4.1.1.1.2.2.1.1.1.1.2.1.1.1.2.2.1.1.2.1.2.1.7.1.7.1.1.1.1.2.1.4.2.1.1.9.1.6.2.1.6.2.3.2.1.1.1.2.5.2.4.1.1.2.2.1.1.7.1.2.2.1.2.1.2.3.1.1.2.4.1.1.1.9.6.4.5.9.1.2.3.1.4.3.2.2.3.1.1.1.1.12.1.3.1.1.2.2.1.6.3.3.5.2.7.1.1.2.5.1.9.5.1.3.1.8.4.5.1.9.1.1.1.2.1.1.1.4.2.13.1.1.3.1.2.5.1.2.1.1.1.2.1.3.1.1.1.1.2.4.1.5.1.2.4.3.10.2.9.7.2.2.1.3.3.1.6.1.2.5.1.1.2.6.4.2.1.200.200.100.300.400.100.100.100.400.1700.304.596.100.1000.800.500.400.200.200.500.1300.801.99.303.99.104.95.1399.1100.100.4302.1798.2100.600.200.100.800.900.100.200.700.100.800.2900.1700.400.2200.2300.400.1101.899.2100.100.100.2100; IABGPP_HDR_GppString=DBABMA~CQTsyfeQTsyfeAKA8AESBxFsAP_gAEPgAAiQLVNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwSx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgaogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdAYetDfv8ZBKT-9IMd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__qk_e_X_vf_n37v943n77v____BasAEw0KiCMsiBEIlAwggQAKCsIAKBAEAACQNEBACYMCnIGAC6wkQAgBQADBACAAEGAAIAABIAEIgAoAKBAABAIFAAGABAEBAAwMAAYALAQCAAEB0DFMCCAQLABIzIoNMCUABIICWyoQSAIEFcIQizwCCBETBQAAAgAFAQAAPBYDEkgJWJBAFxBNAAAQAABRAgQIpGzAEFAZotBeDJ9GRpgGD5gmaUwDIAiCMjJNiE35TDxyFEKCEAAA.YAAAAAAAAAAA",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-User": "?1",
+    "If-Modified-Since": "Fri, 27 Jun 2025 15:39:03 GMT",
+    "Priority": "u=0, i",
+    "TE": "trailers"
 
 }
 
 HEADERS = {
-	'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0',
-#	'Accept': 'application/json,text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#	'Accept-Language': 'en-US,en;q=0.5',
-#	'Accept-Encoding': 'gzip, deflate, br',
-#	'X-Requested-With': 'XMLHttpRequest',
+    "Host": "www.filmaffinity.com",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Referer": "www.filmaffinity.com",
+    "DNT": "1",
+    "Sec-GPC": "1",
+    "Connection": "keep-alive",
+    "Cookie": "FSID=ssmon2cadqlqve7qdf2dlmsour5ej8g52qd068cntligtllm9d14n5j9ltvvfm05; FCD=c2CojCsB29Z8uJ5z8ArZDCqRT9MFMZYUycxfrmw8a1wnzGjVBFIcjwut6VyodH8e-gVnYdcJNLwrJhdLpq0jregZ2y3zUGXA1kaLgB_Afk7w-d93Jd2UrwOBTGE7QKlIgqW2WjonAUuZdetn8nr13A5ToD_j9CUg; cf_clearance=_zsB75ny7ZHCmQLmuBJ_EQQEyZIe.yhNCOEnRpznVkI-1751038751-1.2.1.1-gILzGvecLQqjqMIc1bAPMZj27jqW9_moCNLRSVOVvd.N5EUzGj0WkFj.z92htHDCZ2I.IE76uhC7BjPJykS8.9peY4HF_chminsjmQ2ZvBaTZpCQDOpeFBtTqaapEN51Cf6JY4jB6cIQSzboOeu2P1gQd94HlPRNkRtkLAdKT7qYPbtNvCJUNIzah1IeZKsaI7vfvZyKtboP88YL4Nh.RajIBcbgFDdMdRhwRGuE.L2SaJMd1aaeXwwYlC1XWDV_cNK5DyLFm6MA9fdQlC39jRz8vtU.RBXc2ftCG3amEt1wc3DdXkKxthn0OzU_WVSTXcIwkWDkFKtkEQ.l02O9qF7ierPqX6JSvXrV_ntEfcQ; euconsent-v2=CQTqrYAQTqrYAAKA8AESBxFsAP_gAEPgAAiQLVNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwSx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgaogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdAYetDfv8ZBKT-9IMd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__qk_e_X_vf_n37v943n77v____BasAEw0KiCMsiBEIlAwggQAKCsIAKBAEAACQNEBACYMCnIGAC6wkQAgBQADBACAAEGAAIAABIAEIgAoAKBAABAIFAAGABAEBAAwMAAYALAQCAAEB0DFMCCAQLABIzIoNMCUABIICWyoQSAIEFcIQizwCCBETBQAAAgAFAQAAPBYDEkgJWJBAFxBNAAAQAABRAgQIpGzAEFAZotBeDJ9GRpgGD5gmaUwDIAiCMjJNiE35TDxyFEKCEAAA.YAAAAAAAAAAA; addtl_consent=1~43.3.9.6.9.13.6.4.15.9.5.2.11.8.1.3.2.10.33.4.15.17.2.9.20.7.20.5.20.7.2.2.1.4.40.4.14.9.13.8.9.6.6.9.41.5.3.1.27.1.17.10.9.1.8.6.2.8.3.4.146.65.1.17.19.25.35.5.18.9.7.21.20.2.4.18.24.4.9.6.5.2.14.25.3.2.2.8.2.26.8.6.3.10.4.20.2.17.10.11.1.3.22.16.2.6.8.6.11.6.5.17.16.11.19.28.12.1.5.2.17.9.6.40.17.4.9.15.8.7.3.12.7.2.4.1.19.13.22.13.2.6.8.10.1.4.15.2.4.9.4.5.4.7.13.5.15.17.4.14.10.15.2.5.6.2.2.1.2.14.7.4.8.2.9.28.12.13.2.18.1.1.3.1.1.9.7.2.16.5.19.8.4.8.5.4.8.4.4.2.14.2.13.4.2.6.9.6.3.2.2.3.7.9.10.11.9.19.8.3.3.1.2.3.9.19.22.4.3.10.17.3.4.6.3.3.3.4.1.7.11.4.1.11.6.1.10.13.3.2.2.4.3.2.2.7.15.7.14.4.3.4.5.4.3.2.2.5.5.3.9.7.9.1.5.3.7.10.11.1.3.1.1.2.1.3.2.6.1.12.8.1.3.1.1.2.2.7.6.1.1.4.3.6.1.2.1.4.1.1.4.1.1.2.1.8.1.7.4.3.3.3.5.3.15.1.15.10.28.1.2.2.12.3.4.1.6.3.4.7.1.3.1.4.1.5.3.1.2.1.4.1.5.2.3.1.2.2.6.2.1.2.2.2.4.1.1.1.2.2.1.1.1.1.2.1.1.1.2.2.1.1.2.1.2.1.7.1.7.1.1.1.1.2.1.4.2.1.1.9.1.6.2.1.6.2.3.2.1.1.1.2.5.2.4.1.1.2.2.1.1.7.1.2.2.1.2.1.2.3.1.1.2.4.1.1.1.9.6.4.5.9.1.2.3.1.4.3.2.2.3.1.1.1.1.12.1.3.1.1.2.2.1.6.3.3.5.2.7.1.1.2.5.1.9.5.1.3.1.8.4.5.1.9.1.1.1.2.1.1.1.4.2.13.1.1.3.1.2.5.1.2.1.1.1.2.1.3.1.1.1.1.2.4.1.5.1.2.4.3.10.2.9.7.2.2.1.3.3.1.6.1.2.5.1.1.2.6.4.2.1.200.200.100.300.400.100.100.100.400.1700.304.596.100.1000.800.500.400.200.200.500.1300.801.99.303.99.104.95.1399.1100.100.4302.1798.2100.600.200.100.800.900.100.200.700.100.800.2900.1700.400.2200.2300.400.1101.899.2100.100.100.2100; IABGPP_HDR_GppString=DBABMA~CQTsyfeQTsyfeAKA8AESBxFsAP_gAEPgAAiQLVNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwSx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgaogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdAYetDfv8ZBKT-9IMd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__qk_e_X_vf_n37v943n77v____BasAEw0KiCMsiBEIlAwggQAKCsIAKBAEAACQNEBACYMCnIGAC6wkQAgBQADBACAAEGAAIAABIAEIgAoAKBAABAIFAAGABAEBAAwMAAYALAQCAAEB0DFMCCAQLABIzIoNMCUABIICWyoQSAIEFcIQizwCCBETBQAAAgAFAQAAPBYDEkgJWJBAFxBNAAAQAABRAgQIpGzAEFAZotBeDJ9GRpgGD5gmaUwDIAiCMjJNiE35TDxyFEKCEAAA.YAAAAAAAAAAA",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-User": "?1",
+    "If-Modified-Since": "Fri, 27 Jun 2025 15:39:03 GMT",
+    "Priority": "u=0, i",
+    "TE": "trailers"
 }

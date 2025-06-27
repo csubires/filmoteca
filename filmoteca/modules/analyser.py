@@ -229,7 +229,7 @@ def get_film(raw_html):
 	return {
 		'title': title,
 		'year': year,
-		'rating': '',
+		'rating': 0.0,
 		'url_rojo': '',
 		'url_filma': ''
 	}
@@ -273,22 +273,16 @@ def get_serie(raw_html):
 def get_rating(raw_html, film_info):
 	# Obtener la valoración de una película
 	rating = 0
+	url_filma = None
 	soup = BeautifulSoup(raw_html.content, 'html.parser')
-	try:
-		rating = soup.select('.avg.mx-0')[0].text.strip()
-		rating = float(rating.replace(",", "."))
-		if len(soup.select('.avg.mx-0')) == 1:
-			film_info['url_filma'] = soup.select('.mc-title > a')[0]['href']
-		else:
-			rating *= -1
-	except Exception:
-		try:
-			rating = soup.select('div#movie-rat-avg')[0].text.strip()
-			rating = float(rating.replace(",", "."))
-			if len(soup.select('div#movie-rat-avg')) == 1:
-				film_info['url_filma'] = soup.select('.active.slick-slide.slick-current.slick-active > a')[0]['href']
-			else:
-				rating *= -1
-		except Exception:
-			rating = 0
-	film_info.update({'rating': rating})
+
+	rating = soup.select('.avg.mx-0')[0].text.strip()
+	rating = float(rating.replace(",", "."))
+	lg_prt('t', rating)
+	if len(soup.select('.avg.mx-0')) == 1:
+		url_filma = soup.select('.mc-title > a')[0]['href']
+	else:
+		rating *= -1
+
+
+	film_info.update({'rating': rating, 'url_filma': url_filma})

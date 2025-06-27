@@ -3,3 +3,5 @@ WORKDIR /usr/src/app
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN apk add --no-cache gcc libc-dev linux-headers
 RUN pip3 install --no-cache-dir -r requirements.txt
+RUN useradd -r -s /bin/false www-data
+USER www-data
