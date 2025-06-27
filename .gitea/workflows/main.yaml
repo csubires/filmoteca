@@ -11,6 +11,9 @@ jobs:
     runs-on: [gitea-runner-1]
     if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
     steps:
+      - name: Mark repo as safe
+        run: git config --global --add safe.directory /data/filmoteca
+
       - name: Force-sync repository
         run: |
           cd /data/filmoteca
