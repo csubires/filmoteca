@@ -33,9 +33,7 @@ def get_movies(oCNT, index):
 				film_info.update({'url_filma': oCNT.encode_url(url)})
 				film_info.update({'url_imbd': oCNT.encode_url(url2)})
 				film_info.update({'url_rojo': item})
-				print(url)
 				page, status = oCNT.send('GET', url)
-				print(status)
 				(status == 200) and get_rating(page, film_info)
 				lg_prt('ywprgb',
 					f'{idx+1: >3}',
@@ -43,6 +41,7 @@ def get_movies(oCNT, index):
 		   			film_info['year'],
 					film_info['rating'],
 				)
+				film_info['url_filma'] = film_info['url_filma'] or url
 				all_movies.append(film_info)
 				lg_prt('yow', f'{idx+1: >3}', item, '\n')
 			else:

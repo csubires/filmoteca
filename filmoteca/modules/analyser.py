@@ -276,13 +276,14 @@ def get_rating(raw_html, film_info):
 	url_filma = None
 	soup = BeautifulSoup(raw_html.content, 'html.parser')
 
-	rating = soup.select('.avg.mx-0')[0].text.strip()
-	rating = float(rating.replace(",", "."))
-	lg_prt('t', rating)
-	if len(soup.select('.avg.mx-0')) == 1:
-		url_filma = soup.select('.mc-title > a')[0]['href']
-	else:
-		rating *= -1
-
+	try:
+		rating = soup.select('.avg.mx-0')[0].text.strip()
+		rating = float(rating.replace(",", "."))
+		if len(soup.select('.avg.mx-0')) == 1:
+			url_filma = soup.select('.mc-title > a')[0]['href']
+		else:
+			rating *= -1
+	except Exception:
+		pass
 
 	film_info.update({'rating': rating, 'url_filma': url_filma})
