@@ -9,9 +9,10 @@
 #	TAMBIÉN SUCEDE CON PROXIES NO ADECUADOS, COMPROBAR ANTES QUE NADA
 '''
 
-import requests 											# Para hacer las peticiones HTTP
-from requests.adapters import HTTPAdapter 					# Para evitar que se cuelge las peticiones HTTP
-from requests.packages.urllib3.util.retry import Retry 		# Para evitar que se cuelge las peticiones HTTP
+##import requests 											# Para hacer las peticiones HTTP
+from curl_cffi import requests								# Para hacer web scrapping
+#from requests.adapters import HTTPAdapter 					# Para evitar que se cuelge las peticiones HTTP
+#from requests.packages.urllib3.util.retry import Retry 		# Para evitar que se cuelge las peticiones HTTP
 from json import dump										# Para poder guardar las cookies en un fichero
 
 from .utils import Logging, singleton						# Mostrar y Colorear texto en consola
@@ -42,13 +43,16 @@ class Handler_connection:
 		# Produce Max retries exceeded with URL in requests junto con URL_PROXY_CHECK https
 		self.inetObj.verify = True
 		self.inetObj.timeout = 3
+		self.inetObj.impersonate = 'chrome'
 		self.set_headers(self.headers)
 		# Evitar el error de Max retries exceeded with url
+		'''
 		retry = Retry(connect=3, backoff_factor=0.5)
 		adapter = HTTPAdapter(max_retries=retry)
 		self.inetObj.mount('http://', adapter)
 		self.inetObj.mount('https://', adapter)
 		self.inetObj.mount('ftp://', adapter)
+		 '''
 		self.logger.object('Connection created', self)
 		# Cargar sesión anterior
 		if self.__persistence is True:
