@@ -1,22 +1,58 @@
-name: Deploy Filmoteca to production
+name: Deploy on Merge to Main
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches: [main] #branches: [main]
+  workflow_dispatch:  # Permite ejecución manual desde la interfaz
 
 jobs:
   deploy:
-    runs-on: gitea-runner-1
+    runs-on: [gitea-runner-1]
+    if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
     steps:
-      - name: Pull latest changes
+      - name: Mark repo as safe
+        run: git config --global --add safe.directory /data/filmoteca
+
+      - name: Force-sync repository
         run: |
           cd /data/filmoteca
-          echo "git pull origin main"
-          ls
+          #git fetch origin
+          git checkout developer
+          git pull
+          #git reset --hard origin/developer
+          #git clean -fd
 
-      - name: Unzip images
-        run: |
-          echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/data/filmoteca/www"
+      #- name: Restart container
+      #  run: |
+       #   docker restart filmoteca-flask
+       #   echo "Container restarted successfully"
 
-      - name: Run deployment script
-        run: |
-          echo "bash /webserver/run.sh"
+      #- name: Unzip images
+       # run: |
+        #  docker exec gitea-server 7z x "/home/user/docker-app/webserver/filmoteca/data/pack_images.7z" -o "/home/user/docker-app/webserver/filmoteca/filmoteca/www" -y
+         # echo "Images extracted successfully"
+
+
+# name: Deploy Filmoteca to production
+
+# on:
+#   workflow_dispatch:
+
+# jobs:
+#   deploy:
+#     runs-on: gitea-runner-1
+#     steps:
+#       - name: Pull latest changes
+#         run: |
+#           cd /data/filmoteca
+#           echo "git pull origin main"
+#           ls
+
+#       - name: Unzip images
+#         run: |
+#           echo "7z x /var/wwww/web-flask/data/pack_images.7z -o/data/filmoteca/www"
+
+#       - name: Run deployment script
+#         run: |
+#           echo "bash /webserver/run.sh"

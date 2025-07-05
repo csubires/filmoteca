@@ -115,7 +115,7 @@ class HandlerService:
 			# Descargar la portada de la película
 			if self.oFilmInet.urlpicture is not None:
 				self.download_img(self.oFilmInet.urlpicture, id_subgenre or id_genre)
-				sleep(random.uniform(2, 5))			# Añadir retardo entre peticiones al servidor
+				sleep(random.uniform(5, 15))			# Añadir retardo entre peticiones al servidor
 
 			return True
 		except Exception as e:
@@ -145,14 +145,14 @@ class HandlerService:
 				# Buscar en la página de busqueda la películas
 				page, status = self.oCNT.send('GET', f'{URL_BASE}/es/advsearch.php', params)
 				posible_url = get_posible_url(page) if status == 200 else None
-				sleep(random.uniform(1, 3))				# Añadir retardo entre peticiones al servidor
+				sleep(random.uniform(5, 10))				# Añadir retardo entre peticiones al servidor
 				if posible_url is None:
 					lg_prt('rwry', '[✖] Error get_inet_info(). Web of film not found in', f'{URL_BASE}/es/advsearch.php', 'with params:', params)
 					return False
 
 			# Una vez se tiene la URL se busca y actualiza la información
 			page, status = self.oCNT.send('GET', f'{URL_BASE}{posible_url}')
-			sleep(random.uniform(1, 3))					# Añadir retardo entre peticiones al servidor
+			sleep(random.uniform(5, 10))					# Añadir retardo entre peticiones al servidor
 			result = parse_film(page, posible_url) if status == 200 else None
 			# Rellenar película
 			self.oFilmInet.urldesc = result['urldesc']
@@ -184,7 +184,7 @@ class HandlerService:
 		else:
 			try:
 				page, status = self.oCNT.send('GET', f'{URL_PICT}{urlpicture}')
-				sleep(random.uniform(1, 3))			# Añadir retardo entre peticiones al servidor
+				sleep(random.uniform(5, 10))			# Añadir retardo entre peticiones al servidor
 				if status == 200:
 					if not os.path.exists(path):
 						os.makedirs(path) 			# Crear directiorio si no existe
@@ -265,11 +265,11 @@ class HandlerService:
 			lg_prt('by', '\nAño: ', year)
 
 			page, status = self.oCNT.send('GET', url_list)
-			sleep(random.uniform(1, 3))					# Añadir retardo entre peticiones al servidor
+			sleep(random.uniform(5, 10))					# Añadir retardo entre peticiones al servidor
 			if status == 200:
 				result = get_ranking_page(page)
 				lg_prt('ygw', 'GET ', len(result), result)
-				sleep(random.uniform(1, 3))
+				sleep(random.uniform(5, 10))
 				self.oDTB.execute_many('set_rating', result)
 				lg_prt('gy', '[✔] Películas añadidas:', self.oDTB.affected())
 
@@ -289,7 +289,7 @@ class HandlerService:
 				'showHeader': '0',
 			}
 			page, status = self.oCNT.send('POST', url_list, params)
-			sleep(random.uniform(1, 3))					# Añadir retardo entre peticiones al servidor
+			sleep(random.uniform(5, 10))					# Añadir retardo entre peticiones al servidor
 			if status == 200:
 				result = get_ranking_page(page)
 				lg_prt('ygw', 'POST', len(result), result)

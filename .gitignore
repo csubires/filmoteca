@@ -44,7 +44,5 @@ venv.bak/
 filmoteca/server/assets/**/*.png
 filmoteca/server/assets/**/*.jpg
 
-filmoteca/wsgi.ini
-
 docs/HELP.md
 docs/TODO.md

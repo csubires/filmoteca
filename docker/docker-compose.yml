@@ -21,15 +21,15 @@ services:
     container_name: filmoteca-flask2
     restart: unless-stopped
     volumes:
-#      - "/home/user/docker-app/webserver/filmoteca/filmoteca:/usr/src/app/filmoteca2"
-#      - "/home/user/docker-app/webserver/filmoteca/docker/uwsgi2.ini:/usr/src/app/filmoteca2/uwsgi.ini"
+      - "/home/user/docker-app/webserver/filmoteca/filmoteca:/usr/src/app/filmoteca2"
+      - "/home/user/docker-app/webserver/filmoteca/docker/uwsgi2.ini:/usr/src/app/filmoteca2/uwsgi.ini"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
 #      - "/mnt/hgfs/films:/mnt/hgfs/movies:ro"
 #      - "/mnt/hgfs/ext_films:/mnt/hgfs/ext_movies:ro"
     environment:
       - FLASK_ENV=development
-#    command: sh -c "uwsgi --ini /usr/src/app/filmoteca2/uwsgi.ini"
+    command: sh -c "uwsgi --ini /usr/src/app/filmoteca2/uwsgi.ini"
     networks:
       - netflask
 

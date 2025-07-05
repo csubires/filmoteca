@@ -1,5 +1,6 @@
 
 from time import sleep
+import random 											# Pequeño descanso aleatorio entre peticiones web
 
 from modules.analyser import get_urls, get_film, get_urls_series, get_serie, get_rating
 from modules.utils import lg_prt, dt_format, Logging
@@ -28,7 +29,7 @@ def get_movies(oCNT, index):
 				film_info = get_film(page)
 				url = URL_FILMAFFINITY.format(film_info['title'], film_info['year'], film_info['year'])
 				url2 = URL_IMBD.format(film_info['title'], film_info['year'], film_info['year'])
-				sleep(1)
+				sleep(random.uniform(5, 15))
 				film_info.update({'index': str(idx + 1)})
 				film_info.update({'url_filma': oCNT.encode_url(url)})
 				film_info.update({'url_imbd': oCNT.encode_url(url2)})
@@ -47,7 +48,7 @@ def get_movies(oCNT, index):
 			else:
 				lg_prt('ry', '[✖] ERROR', film_info['url_rojo'] + '\a\n')
 				return False
-			sleep(1)
+			sleep(random.uniform(5, 15))
 	else:
 		lg_prt('ry', '[✖] ERROR, Visiting ', f'{URL_BASE_R}{URL_FILM}{URL_PAGE}' % index)
 		return False
@@ -66,7 +67,7 @@ def get_series(oCNT, index):
 			if status == 200:
 				serie_info = get_serie(page)
 				url = URL_FILMAFFINITY.format(serie_info['title'], '', '')
-				sleep(1)
+				sleep(random.uniform(5, 15))
 				serie_info.update({'index': str(idx + 1)})
 				serie_info.update({'url_filma': oCNT.encode_url(url)})
 				serie_info.update({'url_rojo': oCNT.encode_url(f'{URL_BASE_S}{item}')})
@@ -80,7 +81,7 @@ def get_series(oCNT, index):
 			else:
 				lg_prt('ry', '[✖] ERROR', film_info['url_rojo'] + '\a\n')
 				return False
-			sleep(1)
+			sleep(random.uniform(5, 15))
 	else:
 		lg_prt('ry', '[✖] ERROR, Visiting ', f'{URL_BASE_S}{item}')
 		return False
