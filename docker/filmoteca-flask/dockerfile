@@ -2,6 +2,10 @@ FROM python:3.13.1-alpine3.21
 WORKDIR /usr/src/app
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN apk add --no-cache gcc libc-dev linux-headers
-RUN pip3 install --no-cache-dir -r requirements.txt
-RUN useradd -r -s /bin/false www-data
-USER www-data
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+# RUN useradd -r -s /bin/false www-data
+# RUN adduser -D -S -G www-data www-data
+# RUN adduser -D -S -H -u 1001 -G www-data www-data
+# USER www-data
+# WORKDIR /usr/src/app
