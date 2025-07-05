@@ -27,11 +27,13 @@ def role_required(role, session):
 
 def set_csrf_token(tag, session):
 	# Establecer un token csrf para la seguridad en los formularios
+	session.update({tag: ''})
 	session[tag] = secrets.token_urlsafe(32)
 	return session[tag]
 
 def check_csrf_token(tag, session, csrf_token):
 	# Comprobar que el token es válido
+	session.update({tag: ''})
 	return session[tag] == csrf_token
 
 def htmlFilterChars(text):
