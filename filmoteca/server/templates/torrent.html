@@ -4,7 +4,7 @@
 
 	<article>
 		<span class="index">{{ film["index"] }}</span>
-		<span class="rating{{ ' big-rating' if film['rating'] < -6.5 or film['rating'] > 6.5 else '' }}">
+		<span class="rating{{ ' big-rating' if film['rating']|float < -6.5 or film['rating']|float > 6.5 else '' }}">
 		{% if film['rating'] == 0.0 %}
 			n/a
 		{% elif film['rating'] < 0.0 %}

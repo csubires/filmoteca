@@ -36,6 +36,10 @@ def get_movies(oCNT, index):
 				film_info.update({'url_rojo': item})
 				page, status = oCNT.send('GET', url)
 				(status == 200) and get_rating(page, film_info)
+				try:
+					film_info['rating'] = float(film_info['rating']) if film_info['rating'] else 0.0
+				except (ValueError, TypeError):
+					film_info['rating'] = 0.0
 				lg_prt('ywprgb',
 					f'{idx+1: >3}',
 					film_info['title'],
