@@ -1,6 +1,7 @@
 import os
 import hashlib
 
+
 from modules.service import HandlerService as HandlerServiceMod
 from modules.database import Handler_SQL							# Manejador de la base de datos
 from modules.extras import list_to_dict
@@ -24,7 +25,7 @@ class HandlerService:
 	def __init__(self):
 		self.cache_storage = {}
 		self.oDTB = Handler_SQL(DB_FILE, TAG_QUERY_REPORT)		# Crear el manejador de BBDD
-		self.oSRVC = None
+		self.oSRVC = HandlerServiceMod(self.oDTB)
 
 	def __del__(self):
 		del self.oDTB
@@ -138,39 +139,24 @@ class HandlerService:
 			response = ('Listados', 'inventories.html', [])
 
 		elif menu == 'torrent':
-			data = self.cache_storage.get('cache_torrent', None)
-			self.cache_storage['task_status'] = 'No completed'
 
-			# Obtener valores de la base de datos si no hay año especificado
-			if year is None:
+			# Obtener configuración actual
+			result = self.oDTB.execute('select_urlend')
+			url_end, date_end, npseries = result[0] if result else (None, None, 1)
+			current_date = dt_format("symd")
+			# Si hay datos en caché, mostrarlos
+
+			if not date_end or str(date_end) != str(current_date):
+				# Si no hay datos, mostrar formulario de configuración
 				result = self.oDTB.execute('select_urlend')
 				url_end, date_end, npseries = result[0] if result else (None, None, None)
-
-				# Si la fecha no coincide o no hay datos en caché, obtener nuevos torrents
-				if date_end != dt_format("symd") or data is None:
-					if self.oSRVC is None:
-						self.oSRVC = HandlerServiceMod(self.oDTB)
-					data = get_torrents(self.oSRVC.oCNT, url_end, npseries)
-					# Actualizar base de datos y caché si se obtuvieron nuevos datos
-					if data and len(data) > 2:
-						self.oDTB.execute('update_urlend', {
-							'url_end': data[2],
-							'date_end': dt_format("symd"),
-							'npseries': data[3] if len(data) > 3 else npseries
-						})
-						self.cache_storage['cache_torrent'] = data
-			else:
-				url_end, date_end, npseries = (
-					data[2] if data else None,
-					dt_format("symd"),
-					data[3] if data and len(data) > 3 else None
-				)
-
-			self.cache_storage['task_status'] = 'completed'
-			if year is None:
-				response = ('Torrent Downloads', 'torrent.html', data)
-			else:
 				response = ('Cartelera', 'torrent.html', [None, url_end, date_end, npseries])
+			else:
+				data = self.cache_storage.get('cache_torrent', None)
+				response = ('Torrent Downloads', 'torrent.html', data)
+
+
+			return response
 
 		else:
 			# Si no hay opción por defecto se muestran las estadísticas
@@ -281,8 +267,6 @@ class HandlerService:
 		# Consulta con comando
 		if tagSQL == 'update_inet_movie':
 			# Actualizar los datos de Internet de una película
-			if self.oSRVC is None:
-				self.oSRVC = HandlerServiceMod(self.oDTB)
 			lg_prt('bu', 'Update film ', dataSQL[0])
 			result = self.oSRVC.update_film(dataSQL[0])
 			lg_prt('t', result)

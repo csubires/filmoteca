@@ -33,7 +33,8 @@ def set_csrf_token(tag, session):
 
 def check_csrf_token(tag, session, csrf_token):
 	# Comprobar que el token es válido
-	session.update({tag: ''})
+	# session.update({tag: ''})
+	print(tag, '  ', session[tag],'  ', csrf_token)
 	return session[tag] == csrf_token
 
 def htmlFilterChars(text):

@@ -23,13 +23,13 @@
 
 html {
 	scroll-behavior: smooth;
-	scrollbar-color: color.adjust(c.$bs-gray-900, $lightness: 30%), c.$bs-gray-900;	
+	scrollbar-color: color.adjust(c.$bs-gray-900, $lightness: 30%), c.$bs-gray-900;
 }
 
 body {
 	background: rgb(244,244,250);
 	background: radial-gradient(circle, rgba(244,244,250,1) 22%, rgba(218,214,221,1) 88%);
-	
+
 	color: var(--color-text);
 	font-family: c.$bs-body-font-family;
 	font-size: c.$bs-body-font-size;
@@ -127,10 +127,10 @@ header {
 
 			z-index: 5;
 
-			&:hover .container-left, 
+			&:hover .container-left,
 			&:hover .container-right {
 				display: block;
-				border-radius: 15px; 
+				border-radius: 15px;
 			}
 
 			i {
@@ -146,13 +146,13 @@ header {
 					border-radius: 50%;
 					background-color: c.$bs-gray-300;
 					// filter: invert(7%) sepia(3%) saturate(4695%) hue-rotate(169deg) brightness(10%) contrast(83%);
-				}				
+				}
 			}
 
-			.container-left, 
+			.container-left,
 			.container-right {
 				background-color: c.$bs-gray-100;
-				border: 1px solid c.$bs-gray-500;  
+				border: 1px solid c.$bs-gray-500;
 				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 				display: none;
 				position: absolute;
@@ -189,7 +189,7 @@ header {
 				max-height: 80vh;
 			}
 		}	// .menu
-		
+
 		i {
 			opacity: 1;
 			border-radius: 50%;
@@ -222,7 +222,7 @@ header {
 
 .form-group {
 	position: relative;
-	
+
 	.form-control {
 		font-family: c.$bs-font-sans-serif;
 		height: calc(3.5rem + 2px);
@@ -232,13 +232,13 @@ header {
 		border: 1px solid #ced4da;
 		border-radius: .375rem;
 		transition: border-color 0.5s ease-out;
-		
+
 	}
 
 	&:last-child {
 		display: flex;
 		flex-direction: row-reverse;
-	}	
+	}
 
 	input[type=checkbox] {
 		position: absolute;
@@ -259,7 +259,7 @@ header {
 		transform-origin: 0 0;
 		transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
 		opacity: 0.65;
-		transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);		
+		transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
 	}
 }
 
@@ -281,7 +281,7 @@ header {
 		margin: 0;
 		padding: 0;
 		min-width: 100%;
-		
+
 		figure {
 			padding: 0;
 			min-width: calc(100vw - 6rem);
@@ -305,7 +305,7 @@ header {
 		.menu {
 			text-align: left;
 			width: 10% !important;
-			
+
 			.container-left,
 			.container-right {
 				left: 0 !important;
@@ -348,7 +348,7 @@ header {
 		margin: 0;
 		padding: 0;
 		min-width: calc(100vw - 2rem);
-		
+
 		figure {
 			padding: 0;
 			width: 100%;
@@ -364,7 +364,7 @@ header {
 // Pantalla monitor
 @media screen and (min-width: 1000px) {
 	// TODO
-	/* 
+	/*
 	menu fijos a los lados
 	container al 80%
 	*/

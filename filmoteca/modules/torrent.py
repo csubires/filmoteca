@@ -1,7 +1,5 @@
-
 from time import sleep
-import random 											# Pequeño descanso aleatorio entre peticiones web
-
+import random
 from modules.analyser import get_urls, get_film, get_urls_series, get_serie, get_rating
 from modules.utils import lg_prt, dt_format, Logging
 from config.global_constant import *
@@ -9,101 +7,222 @@ from config.global_constant import *
 last_movie = None
 all_movies = []
 all_series = []
+logger = Logging('logs/torrents.log')
 
-logger = Logging()
+def safe_get_film(page, item_url):
+    """Wrapper seguro para get_film con manejo de errores"""
+    try:
+        film_info = get_film(page)
+        # Validar campos críticos
+        if not film_info or not film_info.get('title') or not film_info.get('year'):
+            lg_prt('ry', '[✖] ERROR: Datos de película incompletos', item_url)
+            return None
 
-def get_movies(oCNT, index):
-	global last_movie, all_movies
-	collection = None
+        # Asegurar que todos los campos necesarios existen
+        film_info.setdefault('rating', 0.0)
 
-	lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
-	page, status = oCNT.send('GET', f'{URL_BASE_R}{URL_FILM}{URL_PAGE}' % index)
-	if status == 200:
-		collection = get_urls(page)
-		for idx, item in enumerate(collection):
-			if item == last_movie:
-				lg_prt('y', f'\nFinish item == last_movie ({last_movie})\n')
-				return False
-			page, status = oCNT.send('GET', f'{URL_BASE_R}{item}')
-			if status == 200:
-				film_info = get_film(page)
-				url = URL_FILMAFFINITY.format(film_info['title'], film_info['year'], film_info['year'])
-				url2 = URL_IMBD.format(film_info['title'], film_info['year'], film_info['year'])
-				sleep(random.uniform(5, 15))
-				film_info.update({'index': str(idx + 1)})
-				film_info.update({'url_filma': oCNT.encode_url(url)})
-				film_info.update({'url_imbd': oCNT.encode_url(url2)})
-				film_info.update({'url_rojo': item})
-				page, status = oCNT.send('GET', url)
-				(status == 200) and get_rating(page, film_info)
-				try:
-					film_info['rating'] = float(film_info['rating']) if film_info['rating'] else 0.0
-				except (ValueError, TypeError):
-					film_info['rating'] = 0.0
-				lg_prt('ywprgb',
-					f'{idx+1: >3}',
-					film_info['title'],
-		   			film_info['year'],
-					film_info['rating'],
-				)
-				film_info['url_filma'] = film_info['url_filma'] or url
-				all_movies.append(film_info)
-				lg_prt('yow', f'{idx+1: >3}', item, '\n')
-			else:
-				lg_prt('ry', '[✖] ERROR', film_info['url_rojo'] + '\a\n')
-				return False
-			sleep(random.uniform(5, 15))
-	else:
-		lg_prt('ry', '[✖] ERROR, Visiting ', f'{URL_BASE_R}{URL_FILM}{URL_PAGE}' % index)
-		return False
-	return True
+        return film_info
+    except Exception as e:
+        lg_prt('ry', f'[✖] ERROR en get_film: {e}', item_url)
+        return None
 
-def get_series(oCNT, index):
-	global all_series
-	collection = None
+def get_movies(oCNT, index, should_continue_callback=None):
+    global last_movie, all_movies
 
-	lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
-	page, status = oCNT.send('GET', f'{URL_BASE_S}{URL_SERIE}{URL_PAGE_S}' % index)
-	if status == 200:
-		collection = get_urls_series(page)
-		for idx, item in enumerate(collection):
-			page, status = oCNT.send('GET', f'{URL_BASE_S}{item}')
-			if status == 200:
-				serie_info = get_serie(page)
-				url = URL_FILMAFFINITY.format(serie_info['title'], '', '')
-				sleep(random.uniform(5, 15))
-				serie_info.update({'index': str(idx + 1)})
-				serie_info.update({'url_filma': oCNT.encode_url(url)})
-				serie_info.update({'url_rojo': oCNT.encode_url(f'{URL_BASE_S}{item}')})
-				all_series.append(serie_info)
-				lg_prt('ywpgb',
-					f'{idx+1: >3}',
-					serie_info['title'],
-		   			serie_info['chapters'],
-				)
-				lg_prt('yow', f'{idx+1: >3}', item, '\n')
-			else:
-				lg_prt('ry', '[✖] ERROR', film_info['url_rojo'] + '\a\n')
-				return False
-			sleep(random.uniform(5, 15))
-	else:
-		lg_prt('ry', '[✖] ERROR, Visiting ', f'{URL_BASE_S}{item}')
-		return False
-	return True
+    if should_continue_callback and not should_continue_callback():
+        return False
 
-def get_torrents(oCNT, url_end, npseries):
-	global last_movie
-	last_movie = url_end
-	logger.info("Init")
+    lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
+    page_url = f'{URL_BASE_R}{URL_FILM}{URL_PAGE}' % index
+    page, status = oCNT.send('GET', page_url)
 
-	lg_prt('bw', '[+] Searching movies...')
-	index = 1
-	while (index < 9 and get_movies(oCNT, index)):
-		index += 1
+    if status != 200:
+        lg_prt('ry', '[✖] ERROR visitando', page_url)
+        return False
 
-	lg_prt('bw', '[+] Searching series...')
-	index = 1
-	while (index <= npseries and get_series(oCNT, index)):
-		index += 1
+    collection = get_urls(page)
+    if not collection:
+        lg_prt('yw', '[!] No se encontraron películas en la página', index)
+        return False
 
-	return [all_movies, all_series, all_movies[0]['url_rojo'] if len(all_movies) > 0 else url_end, npseries]
+    for idx, item in enumerate(collection):
+        if should_continue_callback and not should_continue_callback():
+            return False
+
+        if item == last_movie:
+            lg_prt('yg', f'\nFin: item == last_movie ({last_movie})\n')
+            return False
+
+        # Obtener detalles de la película
+        movie_url = f'{URL_BASE_R}{item}'
+        page, status = oCNT.send('GET', movie_url)
+
+        if status != 200:
+            lg_prt('ry', '[✖] ERROR visitando película', movie_url)
+            continue
+
+        film_info = get_film(page)
+        if not film_info:
+            lg_prt('ry', '[✖] ERROR: No se pudo obtener información de la película')
+            continue
+
+        # Construir URLs de forma segura
+        try:
+            safe_title = film_info['title'].replace(' ', '+') if film_info.get('title') else 'unknown'
+            safe_year = film_info.get('year', '0000')
+
+            url_filma = URL_FILMAFFINITY.format(safe_title, safe_year, safe_year)
+            url_imbd = URL_IMBD.format(safe_title, safe_year, safe_year)
+        except Exception as e:
+            lg_prt('ry', f'[✖] ERROR construyendo URLs: {e}')
+            url_filma = URL_FILMAFFINITY.format('unknown', '0000', '0000')
+            url_imbd = URL_IMBD.format('unknown', '0000', '0000')
+
+        sleep(random.uniform(5, 15))
+
+        # Actualizar información
+        film_info.update({
+            'index': str(idx + 1),
+            'url_filma': oCNT.encode_url(url_filma) if oCNT.encode_url(url_filma) else url_filma,
+            'url_imbd': oCNT.encode_url(url_imbd) if oCNT.encode_url(url_imbd) else url_imbd,
+            'url_rojo': item
+        })
+
+        # Obtener rating (manejando posibles errores)
+        try:
+            rating_page, rating_status = oCNT.send('GET', url_filma)
+            if rating_status == 200:
+                get_rating(rating_page, film_info)
+            else:
+                lg_prt('yw', f'[!] No se pudo obtener rating (status {rating_status})')
+        except Exception as e:
+            lg_prt('ry', f'[!] ERROR obteniendo rating: {e}')
+
+        # Asegurar que el rating es float válido
+        try:
+            film_info['rating'] = float(film_info.get('rating', 0))
+        except (ValueError, TypeError):
+            film_info['rating'] = 0.0
+
+        # Log exitoso
+        lg_prt('ywprgb',
+            f'{idx+1: >3}',
+            film_info.get('title', 'Sin título'),
+            film_info.get('year', '0000'),
+            film_info.get('rating', 0.0),
+        )
+
+        # Log seguro para archivo
+        logger.file('INFO',
+            f'{idx+1: >3}',
+            film_info.get('title', 'Sin título'),
+            str(film_info.get('year', '0000')),
+            str(film_info.get('rating', 0.0)),
+            film_info.get('url_filma', ''),
+        )
+
+        all_movies.append(film_info)
+        lg_prt('yow', f'{idx+1: >3}', item, '\n')
+
+        sleep(random.uniform(5, 15))
+
+    return True
+
+def get_series(oCNT, index, should_continue_callback=None):
+    global all_series
+
+    if should_continue_callback and not should_continue_callback():
+        return False
+
+    lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
+    page_url = f'{URL_BASE_S}{URL_SERIE}{URL_PAGE_S}' % index
+    page, status = oCNT.send('GET', page_url)
+
+    if status != 200:
+        lg_prt('ry', '[✖] ERROR visitando', page_url)
+        return False
+
+    collection = get_urls_series(page)
+    if not collection:
+        lg_prt('yw', '[!] No se encontraron series en la página', index)
+        return False
+
+    for idx, item in enumerate(collection):
+        if should_continue_callback and not should_continue_callback():
+            return False
+
+        serie_url = f'{URL_BASE_S}{item}'
+        page, status = oCNT.send('GET', serie_url)
+
+        if status != 200:
+            lg_prt('ry', '[✖] ERROR visitando serie', serie_url)
+            continue
+
+        serie_info = get_serie(page)
+        if not serie_info:
+            continue
+
+        url_filma = URL_FILMAFFINITY.format(serie_info['title'].replace(' ', '+'), '', '')
+        sleep(random.uniform(5, 15))
+
+        serie_info.update({
+            'index': str(idx + 1),
+            'url_filma': oCNT.encode_url(url_filma),
+            'url_rojo': oCNT.encode_url(serie_url)
+        })
+
+        all_series.append(serie_info)
+
+        lg_prt('ywpgb',
+            f'{idx+1: >3}',
+            serie_info['title'],
+            serie_info.get('chapters', 'N/A'),
+        )
+
+        logger.file('INFO',
+            f'{idx+1: >3}',
+            serie_info['title'],
+            str(serie_info.get('chapters', 'N/A')),
+        )
+
+        lg_prt('yow', f'{idx+1: >3}', item, '\n')
+        sleep(random.uniform(5, 15))
+
+    return True
+
+def get_torrents(oCNT, url_end, npseries, should_continue_callback=None):
+    global last_movie, all_movies, all_series
+
+    # Reiniciar listas globales
+    all_movies = []
+    all_series = []
+    last_movie = url_end
+
+    lg_prt('bw', '[+] Buscando películas...')
+
+    # Películas (máximo 8 páginas)
+    for index in range(1, 9):
+        if should_continue_callback and not should_continue_callback():
+            lg_prt('yw', '[!] Búsqueda de películas cancelada')
+            break
+
+        if not get_movies(oCNT, index, should_continue_callback):
+            break
+
+    lg_prt('bw', '[+] Buscando series...')
+
+    # Series
+    for index in range(1, npseries + 1):
+        if should_continue_callback and not should_continue_callback():
+            lg_prt('yw', '[!] Búsqueda de series cancelada')
+            break
+
+        if not get_series(oCNT, index, should_continue_callback):
+            break
+
+    return [
+        all_movies,
+        all_series,
+        all_movies[0]['url_rojo'] if all_movies else url_end,
+        npseries
+    ]

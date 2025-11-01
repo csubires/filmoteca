@@ -1,22 +1,25 @@
 {% from "macros.html" import form_message %}
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="title" content="Gestor de Películas">
-        <meta name="description" content="Web para gestionar las películas">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.png') }}">
-        {% if title %}
-        <title>{{ title|title }}</title>
-        {% else %}
-        <title>Gestor de Películas</title>
-        {% endif %}
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-        <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="Gestor de Películas">
+    <meta name="description" content="Web para gestionar las películas">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.png') }}">
+    {% if title %}
+    <title>{{ title|title }}</title>
+    {% else %}
+    <title>Gestor de Películas</title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <!-- Agregar esta línea para cargar el JavaScript -->
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+    <div class="main-container">
         <header>
             <nav>
                 <!-- Menú de administración -->
@@ -35,7 +38,7 @@
                         <a href="/view/0"> Recientes </a>
                         <a href="/menu/recommended"> Sugeridas </a>
                         <a href="/menu/inventories"> Listados </a>
-						<a href="/menu/torrent/9999"> Torrents </a>
+						<a href="/menu/torrent"> Torrents </a>
                         {% if session['auth'] %}
                         <a class="mark-opt" href="/auth/logout"> Salir </a>
                         {% endif %}

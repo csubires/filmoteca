@@ -212,78 +212,119 @@ def get_urls(raw_html):
 	return clean_films
 
 def get_film(raw_html):
-	# Devolver información de una película
-	title = year = 'n/a'
-	soup = BeautifulSoup(raw_html.content, 'html.parser')
+    # Devolver información de una película
+    title = 'Sin título'
+    year = '0000'
 
-	try:
-		title = soup.select('h2.descargarTitulo')[0].text.strip()
-	except Exception:
-		pass
+    try:
+        soup = BeautifulSoup(raw_html.content, 'html.parser')
 
-	try:
-		year = soup.select('p.m-1')[0].text.strip('Año: ')
-	except Exception:
-		pass
+        # Título con manejo seguro
+        title_elements = soup.select('h2.descargarTitulo')
+        if title_elements:
+            title = title_elements[0].text.strip() or 'Sin título'
 
-	return {
-		'title': title,
-		'year': year,
-		'rating': 0.0,
-		'url_rojo': '',
-		'url_filma': ''
-	}
+        # Año con manejo seguro
+        year_elements = soup.select('p.m-1')
+        if year_elements:
+            year_text = year_elements[0].text.strip()
+            year = year_text.replace('Año: ', '') if year_text else '0000'
+
+    except Exception as e:
+        print(f"Error en get_film: {e}")
+        title = 'Error al obtener título'
+        year = '0000'
+
+    return {
+        'title': title,
+        'year': year,
+        'rating': 0.0,
+        'url_rojo': '',
+        'url_filma': ''
+    }
 
 
 def get_urls_series(raw_html):
-	# Devolver información de una película
-	soup = BeautifulSoup(raw_html.content, 'html.parser')
-	films = soup.select('div.noticiasContent a')
-	clean_films = []
+    # Devolver información de series
+    clean_films = []
 
-	for index, item in enumerate(films):
-		url = item['href'].strip()
-		if '/serie/' in url:
-			clean_films.append(url)
-	return clean_films
+    try:
+        soup = BeautifulSoup(raw_html.content, 'html.parser')
+        films = soup.select('div.noticiasContent a')
+
+        for item in films:
+            href = item.get('href', '')
+            if href and '/serie/' in href:
+                clean_films.append(href.strip())
+
+    except Exception as e:
+        print(f"Error en get_urls_series: {e}")
+
+    return clean_films
 
 
 def get_serie(raw_html):
-	# Devolver información de una película
-	title = chapters = 'n/a'
-	soup = BeautifulSoup(raw_html.content, 'html.parser')
+    # Devolver información de una serie
+    title = 'Sin título'
+    chapters = 'N/A'
 
-	try:
-		title = soup.select('h2.descargarTitulo')[0].text.strip()
-	except Exception:
-		pass
+    try:
+        soup = BeautifulSoup(raw_html.content, 'html.parser')
 
-	try:
-		chapters = soup.select('p.m-1')[1].text.strip('Episodios: ')
-	except Exception:
-		pass
+        # Título con manejo seguro
+        title_elements = soup.select('h2.descargarTitulo')
+        if title_elements:
+            title_text = title_elements[0].text.strip()
+            title = title_text.split('-')[0].strip() if title_text else 'Sin título'
 
-	return {
-		'title': title.split('-')[0].strip(),
-		'chapters': chapters,
-		'url_rojo': '',
-		'url_filma': ''
-	}
+        # Capítulos con manejo seguro
+        chapter_elements = soup.select('p.m-1')
+        if chapter_elements and len(chapter_elements) > 1:
+            chapters_text = chapter_elements[1].text.strip()
+            chapters = chapters_text.replace('Episodios: ', '') if chapters_text else 'N/A'
+
+    except Exception as e:
+        print(f"Error en get_serie: {e}")
+        title = 'Error al obtener título'
+        chapters = 'N/A'
+
+    return {
+        'title': title,
+        'chapters': chapters,
+        'url_rojo': '',
+        'url_filma': ''
+    }
 
 def get_rating(raw_html, film_info):
-	# Obtener la valoración de una película
-	rating = 0
-	url_filma = None
-	soup = BeautifulSoup(raw_html.content, 'html.parser')
+    # Obtener la valoración de una película
+    rating = 0.0
+    url_filma = None
+    soup = BeautifulSoup(raw_html.content, 'html.parser')
 
-	try:
-		rating = soup.select('.avg.mx-0')[0].text.strip()
-		rating = float(rating.replace(",", "."))
-		if len(soup.select('.avg.mx-0')) == 1:
-			url_filma = soup.select('.mc-title > a')[0]['href']
-		else:
-			rating *= -1
-	except Exception:
-		pass
+    try:
+        rating_elements = soup.select('.avg.mx-0')
+        if rating_elements:
+            rating_text = rating_elements[0].text.strip()
+            rating = float(rating_text.replace(",", "."))
 
-	film_info.update({'rating': rating, 'url_filma': url_filma})
+            # Determinar URL de FilmAffinity
+            if len(rating_elements) == 1:
+                mc_title_links = soup.select('.mc-title > a')
+                if mc_title_links:
+                    url_filma = mc_title_links[0].get('href')
+                    # Asegurar que es una URL completa si es relativa
+                    if url_filma and not url_filma.startswith(('http://', 'https://')):
+                        url_filma = f"https://www.filmaffinity.com{url_filma}"
+            else:
+                rating *= -1
+
+    except Exception as e:
+        print(f"Error obteniendo rating: {e}")
+        rating = 0.0
+        url_filma = None
+
+    # Asegurar que todos los valores son strings válidos
+    film_info.update({
+        'rating': rating,
+        'url_filma': url_filma or ''  # Nunca None
+    })

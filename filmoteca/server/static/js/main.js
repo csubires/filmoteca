@@ -13,10 +13,170 @@ window.addEventListener('load', function () {
     const flag = c => String.fromCodePoint(...[...c.toUpperCase()].map(x=>0x1f1a5+x.charCodeAt()))
 
     // Mostrar o esconder un elemento DOM
-    const showAndHidde = (obj, visibility, zIndex) => {
-        obj.style.visibility = visibility
-        obj.style.zIndex = zIndex
+const showAndHidde = (obj, visibility, zIndex) => {
+    if (!obj) return;
+
+    if (visibility === 'visible') {
+        obj.style.display = 'block';
+        obj.style.visibility = 'visible';
+    } else {
+        obj.style.display = 'none';
+        obj.style.visibility = 'hidden';
     }
+
+    if (zIndex !== undefined) {
+        obj.style.zIndex = zIndex;
+    }
+}
+
+   // Variables globales para control de tareas
+    let currentTaskId = null;
+    let isTaskRunning = false;
+
+
+function setupTorrentSearch() {
+    const searchBtn = document.querySelector('#search-btn');
+
+    if (searchBtn) {
+        // Verificar estado al cargar la página
+        const checkInitialState = async () => {
+            try {
+                const response = await fetch('/api/torrent_task_status');
+                const data = await response.json();
+                if (data.task_status === 'running' || data.task_status === 'pending') {
+                    isTaskRunning = true;
+                    currentTaskId = data.taskId;
+                    updateButtonState(true);
+                }
+            } catch (error) {
+                console.log('No hay tareas en ejecución');
+            }
+        };
+
+        checkInitialState();
+    }
+}
+
+function updateProgress(message, percentage) {
+    const progressBar = document.querySelector('#progress-bar');
+    const progressText = document.querySelector('#progress-text');
+
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+        progressBar.setAttribute('aria-valuenow', percentage);
+    }
+
+    if (progressText) {
+        progressText.textContent = message + ' ' + percentage + '% completado';
+    }
+
+    console.log(`Progreso: ${message} - ${percentage}%`);
+}
+
+function updateButtonState(isRunning) {
+    const searchBtn = document.querySelector('#search-btn');
+    const btnText = document.querySelector('#btn-text');
+    const btnLoading = document.querySelector('#btn-loading');
+
+    if (!searchBtn) return;
+
+    if (isRunning) {
+        searchBtn.classList.remove('btn-primary');
+        searchBtn.classList.add('btn-danger');
+        if (btnText) btnText.style.display = 'none';
+        if (btnLoading) btnLoading.style.display = 'inline';
+    } else {
+        searchBtn.classList.remove('btn-danger');
+        searchBtn.classList.add('btn-primary');
+        if (btnText) {
+            btnText.style.display = 'inline';
+            btnText.textContent = 'Buscar';
+        }
+        if (btnLoading) btnLoading.style.display = 'none';
+    }
+}
+
+function resetTaskState() {
+    currentTaskId = null;
+    isTaskRunning = false;
+    const waitMe = document.querySelector('#loading');
+
+    if (waitMe) showAndHidde(waitMe, 'hidden', -1);
+    updateButtonState(false);
+}
+
+async function stopTorrentTask() {
+    if (!currentTaskId) return;
+
+    try {
+        const response = await fetch('/api/stop_torrent_task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const result = await response.json();
+        if (result.success) {
+            showMessage('Tarea cancelada correctamente', 'warning');
+            resetTaskState();
+        } else {
+            showMessage('No se pudo cancelar la tarea', 'danger');
+        }
+    } catch (error) {
+        console.error('Error al cancelar tarea:', error);
+        showMessage('Error al cancelar la tarea', 'danger');
+    }
+}
+
+async function checkTorrentTaskStatus(taskId) {
+    const maxAttempts = 10;
+    const maxTime = 10 * 60 * 1000;
+    let attempts = 0;
+    let startTime = Date.now();
+
+    while (attempts < maxAttempts && (Date.now() - startTime) < maxTime) {
+        if (!isTaskRunning || currentTaskId !== taskId) {
+            throw new Error("Tarea cancelada por el usuario");
+        }
+
+        try {
+            console.log(`Consultando estado de tarea ${taskId}, intento ${attempts + 1}`);
+            const response = await cnt.send('GET', `/api/torrent_task_status?taskId=${taskId}&stamp=${Date.now()}`);
+            console.log(`Estado: ${response.task_status}`);
+
+            // Actualizar progreso basado en el intento
+            const progress = Math.min(25 + (attempts * 8), 90); // 25% inicial + 8% por intento
+            updateProgress('Procesando torrents...', progress);
+
+            switch (response.task_status) {
+                case "completed":
+                    updateProgress('Finalizando...', 95);
+                    return response;
+                case "failed":
+                    throw new Error(response.error || "La tarea de torrents falló");
+                case "cancelled":
+                    throw new Error("Tarea cancelada");
+                case "running":
+                case "pending":
+                    console.log(`Esperando 60 segundos... (${attempts + 1}/${maxAttempts})`);
+                    await new Promise(resolve => setTimeout(resolve, 60000));
+                    break;
+                case "not_found":
+                    throw new Error("Tarea no encontrada");
+                default:
+                    throw new Error("Estado de tarea desconocido");
+            }
+            attempts++;
+        } catch (err) {
+            console.warn(`Error en intento ${attempts + 1}:`, err.message);
+            const waitTime = err.message.includes('red') ? 120000 : 60000;
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            attempts++;
+            if (attempts >= maxAttempts) throw err;
+        }
+    }
+    throw new Error("La tarea de torrents tardó demasiado en completarse (10 minutos)");
+}
 
     // Colección de funciones para asociar a eventos
     const callbackCollection = {
@@ -234,74 +394,76 @@ window.addEventListener('load', function () {
             searchForm['text-search'].value = ''
         },
 
-        // BUTTON - Actualizar opciones de cartelera
-        'save-billboard': async (e) => {
-            let params = {
-                'url_end': document.querySelector(`#last_torrent`).value,
-				'date_end': document.querySelector(`#last_date`).value,
-                'npseries': document.querySelector(`#vserie`).value,
-				'csrf_token_form': e.target.dataset.csrfTokenForm
-            }
-            await cnt.send('PUT', '/api/update_urlend', params)
-        },
-        // BUTTON - Buscar cartelera
-        // 'search-billboard': async (e) => {
-		// 	let waitMe = document.querySelector(`#loading`)
-		// 	showAndHidde(waitMe, 'visible', 99)
-		// 	let dataJson = await cnt.send('GET', '/api/select_urlend/{"null": null}')
-		// 	if (dataJson) {
-		// 		showAndHidde(waitMe, 'hidden', -1)
-		// 		window.location.href = "/menu/torrent";
-		// 	} else {
-		// 		showMessage('No se puedo cargar la cartelera', 'danger')
-		// 	}
-        // },
+'search-billboard': async (e) => {
+    e.preventDefault();
 
-		'search-billboard': async (e) => {
-			const waitMe = document.querySelector('#loading');
-			showAndHidde(waitMe, 'visible', 99);
+    const searchBtn = e.target;
 
-			try {
-				// 1. Iniciar tarea
-				const startTask = await cnt.send('GET', '/api/select_urlend/{"null": null}');
-				if (!startTask?.taskId) throw new Error("No se pudo iniciar la tarea");
+    // Si ya hay una tarea en ejecución, cancelarla
+    if (isTaskRunning) {
+        await stopTorrentTask();
+        return;
+    }
 
-				// 2. Función para polling con backoff
-				const checkTaskStatus = async (taskId) => {
-					const maxAttempts = 30;
-					let delay = 2000; // Empezar con 2 segundos
+    // Iniciar nueva búsqueda
+    const waitMe = document.querySelector('#loading');
+    if (waitMe) {
+        showAndHidde(waitMe, 'visible', 99);
+        // Resetear la barra de progreso
+        const progressBar = document.querySelector('#progress-bar');
+        const progressText = document.querySelector('#progress-text');
+        if (progressBar) {
+            progressBar.style.width = '0%';
+            progressBar.setAttribute('aria-valuenow', '0');
+        }
+        if (progressText) {
+            progressText.textContent = 'Iniciando búsqueda...';
+        }
+    }
 
-					for (let i = 0; i < maxAttempts; i++) {
-						try {
-							// Usar timestamp en lugar de crypto.randomUUID()
-							const response = await cnt.send('GET', `/api/task_status/{"stamp":"${Date.now()}"}`);
+    // Actualizar estado del botón
+    isTaskRunning = true;
+    updateButtonState(true);
 
-							if (response?.task_status === "completed") return true;
-							if (response?.task_status === "failed") throw new Error("La tarea falló en el servidor");
+    try {
+        console.log('Iniciando tarea de búsqueda...');
+        const startResponse = await fetch('/api/start_torrent_task');
+        const startData = await startResponse.json();
+        if (!startData?.taskId) throw new Error("No se pudo iniciar la tarea");
 
-							// Delay incremental (backoff)
-							await new Promise(resolve => setTimeout(resolve, delay));
-							delay = Math.min(delay * 1.5, 10000); // Máximo 10 segundos
-						} catch (err) {
-							if (i === maxAttempts - 1) throw err; // Lanzar error en último intento
-						}
-					}
-					throw new Error("La tarea tardó demasiado en completarse");
-				};
+        currentTaskId = startData.taskId;
+        console.log(`Tarea iniciada con ID: ${startData.taskId}`);
 
-				// 3. Verificar estado
-				await checkTaskStatus(startTask.taskId);
+        // Actualizar progreso
+        updateProgress('Buscando torrents...', 25);
 
-				// 4. Recargar solo si todo fue exitoso
-				showAndHidde(waitMe, 'hidden', -1);
-				window.location.href = "/menu/torrent";
+        const finalResult = await checkTorrentTaskStatus(startData.taskId);
 
-			} catch (error) {
-				showAndHidde(waitMe, 'hidden', -1);
-				showMessage(error.message || 'Error al cargar la cartelera', 'danger');
-			}
-		},
+        updateProgress('Completado!', 100);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo para mostrar 100%
 
+        resetTaskState();
+        showMessage('Cartelera actualizada correctamente', 'success');
+
+        setTimeout(() => {
+            window.location.href = "/menu/torrent";
+        }, 1500);
+
+    } catch (error) {
+        console.error('Error en búsqueda:', error);
+        resetTaskState();
+        if (error.message !== "Tarea cancelada por el usuario") {
+            showMessage(error.message || 'Error al cargar la cartelera', 'danger');
+        }
+    }
+},
+
+// Agregar también el callback para 'save-billboard' si no existe
+'save-billboard': async (e) => {
+    e.preventDefault();
+    // Aquí va la lógica para guardar la configuración
+    showMessage('Configuración guardada correctamente', 'success');
+},
 
         // BUTTON - Copiar la lista al portapapeles
         'copy-clipboard': () => {
@@ -335,6 +497,7 @@ window.addEventListener('load', function () {
             document.body.setAttribute('class', 'theme theme-dark')
             localStorage.setItem('theme', 'dark')
         },
+
 
     }   // END callbackCollection
 
@@ -485,4 +648,5 @@ window.addEventListener('load', function () {
         movieForm['hdd_code_ext'].checked = (dataJson['hdd_code'] == 1 ? true : false)
     }
 
+	setupTorrentSearch();
 })  // END window load

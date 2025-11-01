@@ -1,0 +1,13 @@
+[mysqld]
+user                    = mysql
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+pid-file                = /run/mysqld/mysqld.pid
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+lc-messages             = en_US
+bind-address            = 0.0.0.0
+expire_logs_days        = 10
+character-set-server    = utf8mb4
+collation-server        = utf8mb4_general_ci
+skip-external-locking

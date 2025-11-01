@@ -35,34 +35,45 @@
 {% endmacro %}
 
 {% macro render_menu_torrent() %}
-
-	<div class="edit">
-		<form method="dialog" id="form-login">
-			<header><h3>Configurar cartelera</h3></header>
-			<article class="edit" id="billboard-menu">
-				<div class="row">
-					<label for="last_torrent"><span>Último torrent</span>
-						<input type="text" name="last_torrent" id="last_torrent" placeholder="{{ response[1] }}">
-						<input type="text" name="last_date" id="last_date" maxlength="12" value="{{ response[2] }}">
-					</label>
-					<label for="npseries" class="row"><span>Número de páginas de series</span>
-						<input type="number" class="noborder" id="vserie" placeholder="1" value="{{ response[3] }}" disabled="">
-					</label>
-					<input type="range" id="range" name="npseries" size="2" step="1" value="{{ response[3] }}" min="0" max="10" oninput="vserie.value=value">
-				</div>
-			</article>
-			<footer>
-				<menu>
-					<!-- Animación de carga (inicialmente oculta) -->
-					<div id="loading" style="visibility: hidden;"></div>
-					<button class="btn btn-primary-outline" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="save-billboard">Guardar</button>
-					<button class="btn btn-primary" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="search-billboard">Buscar</button>
-				</menu>
-			</footer>
-		</form>
-	</div>
-	<span><a class="btn btn-danger-link" href="https://rojotorrent.com/descargar-peliculas" target="_blank">Torrents</a></span>
-
+    <div class="edit">
+        <form method="dialog" id="form-login">
+            <header><h3>Configurar cartelera</h3></header>
+            <article class="edit" id="billboard-menu">
+                <div class="row">
+                    <label for="last_torrent"><span>Último torrent</span>
+                        <input type="text" name="last_torrent" id="last_torrent" value="{{ response[1] }}">
+                        <input type="text" name="last_date" id="last_date" maxlength="12" value="{{ response[2] }}">
+                    </label>
+                    <label for="npseries" class="row"><span>Número de páginas de series</span>
+                        <input type="number" class="noborder" id="vserie" placeholder="1" value="{{ response[3] }}" disabled="">
+                    </label>
+                    <input type="range" id="range" name="npseries" size="2" step="1" value="{{ response[3] }}" min="0" max="10" oninput="vserie.value=value">
+                </div>
+            </article>
+<footer>
+    <menu>
+        <div id="loading" style="display: none;">
+            <div class="progress" style="height: 20px;">
+                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <span id="progress-text">0% completado</span>
+                </div>
+            </div>
+            <p>Buscando nueva cartelera, por favor espere...</p>
+        </div>
+        <button class="btn btn-primary-outline" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="save-billboard">Guardar</button>
+        <button class="btn btn-primary" data-csrf-token-form="{{ session['csrf_token_form'] }}" data-action="search-billboard" id="search-btn">
+            <span id="btn-text">Buscar</span>
+            <div id="btn-loading" style="display: none;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cancelar
+            </div>
+        </button>
+    </menu>
+</footer>
+        </form>
+    </div>
+    <span><a class="btn btn-danger-link" href="https://rojotorrent.com/descargar-peliculas" target="_blank">Torrents</a></span>
 {% endmacro %}
 
 {% block content %}
