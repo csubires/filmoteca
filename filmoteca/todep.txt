@@ -1,6 +1,0 @@
-/home/user/Documents/Projects/media/filmoteca/filmoteca/server/service.py
-/home/user/Documents/Projects/media/filmoteca/filmoteca/server/controller.py
-/home/user/Documents/Projects/media/filmoteca/filmoteca/server/templates/torrent.html
-/home/user/Documents/Projects/media/filmoteca/filmoteca/server/static/js/main.js
-/home/user/Documents/Projects/media/filmoteca/filmoteca/modules/tasks.py
-/home/user/Documents/Projects/media/filmoteca/filmoteca/modules/torrent.py

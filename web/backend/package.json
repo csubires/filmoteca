@@ -1,0 +1,25 @@
+{
+  "name": "filmoteca-node-backend",
+  "version": "1.0.0",
+  "description": "Backend Node.js/Fastify para Filmoteca",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test:db": "node test-db.js",
+    "db:backup": "node -e \"require('./src/database/queries').saveQueriesToJson('../../config/queries_database.py', './src/database/queries.backup.json')\""
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/formbody": "^8.0.2",
+    "@fastify/static": "^8.3.0",
+    "dotenv": "^16.3.1",
+    "fastify": "^5.8.2",
+    "fastify-plugin": "^5.1.0",
+    "pino-pretty": "^10.2.3",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

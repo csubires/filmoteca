@@ -36,13 +36,19 @@ venv.bak/
 # Ignorar archivos de logs
 **/debug
 *.log
+**/todep.txt
 
 # Ignorar carpeta Visual Studio Code
 .vscode
+.trash
 
 # Ignorar bancos de imagenes
-filmoteca/server/assets/**/*.png
-filmoteca/server/assets/**/*.jpg
+web/assets/**/*.png
+web/assets/**/*.jpg
+**/*cmp.png
+**/*cmp.jpg
 
 docs/HELP.md
 docs/TODO.md
+
+web/frontend/public/assets/covers/

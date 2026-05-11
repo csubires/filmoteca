@@ -1,0 +1,90 @@
+@use "sass:color";
+@use "sass:map";
+
+@mixin make-container($padding, $margin, $background) {
+	background-color: $background;
+	width: calc(100vw - $margin * 3);
+	max-width: calc(100vw - $margin * 3);
+	margin: $margin;
+	padding: $padding;
+	overflow-y: scroll;
+	gap: $padding;
+	border-radius: 5px;
+}
+
+@mixin make-button($color, $background) {
+	color: $color;
+	background-color: $background;
+	border-color: $background;
+
+	&:hover,
+	&:active {
+		background-color: color.adjust($background, $lightness: -10%);
+		border-color: color.adjust($background, $lightness: -5%);
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+	}
+
+	&-outline {
+		color: $background;
+		border-color: $background;
+
+		&:hover,
+		&:active {
+			color: $color;
+			background-color: $background;
+			border-color: $background;
+		}
+	}
+
+	&-link {
+		color: $background;
+		font-weight: bolder;
+		background-color: transparent;
+		border-color: transparent;
+		box-shadow: none;
+		text-decoration: underline;
+
+		&:hover,
+		&:active {
+			color: color.adjust($background, $lightness: -90%);
+			border-color: transparent;
+		}
+	}
+}
+
+@mixin make-all-button($buttons) {
+	@each $name, $value in $buttons {
+		.btn-#{$name} {
+			@extend .btn;
+			@include make-button(map.get($value, color), map.get($value, bkg));
+		}
+	}
+}
+
+@mixin make-alert($color, $background, $border) {
+	z-index: 999;
+	color: $color;
+	background-color: $background;
+	border-color: $border;
+	border-left: 4px solid;
+
+	.alert-link {
+		color: $color;
+		font-weight: bolder;
+
+		&:hover {
+			color: color.adjust($color, $lightness: 20%);
+		}
+	}
+}
+
+@mixin make-icon($icons) {
+	@each $name in $icons {
+		.icon-#{$name} {
+			background-image: url('icons/#{$name}.svg');
+		}
+	}
+}
