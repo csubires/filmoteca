@@ -1,0 +1,8 @@
+{
+	"name": "monorepo",
+  "private": true,
+  "workspaces": ["microservicioA", "microservicioB"],
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,20 @@
+{
+	"type": "module",
+	"name": "filmoteca-api-gateway",
+	"version": "1.0.0",
+	"description": "API Gateway for Filmoteca - Routes frontend and proxies to microservices",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js"
+	},
+	"dependencies": {
+		"@fastify/cors": "^11.1.0",
+		"@fastify/formbody": "^8.0.2",
+		"@fastify/static": "^8.3.0",
+		"fastify": "^5.8.5"
+	},
+	"devDependencies": {
+		"nodemon": "^3.0.1"
+	}
+}

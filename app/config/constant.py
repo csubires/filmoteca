@@ -1,4 +1,4 @@
-DB_FILE = 'data/movieDB.db'
+DB_FILE = '../data/movieDB.db'
 MOVIE_PATH = ('/mnt/hgfs/movies/', '/mnt/hgfs/ext_movies/')
 MOVIEXT = ('3gp', 'asf', 'avi', 'divx', 'dvd', 'flv', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'qt', 'qtl', 'swf', 'vob', 'webm', 'wmv')
 GENRE_TAG = {'acción': 'AC', 'animación': 'AN', 'aventuras': 'AV', 'bélico': 'BE', 'ciencia ficción': 'C-F', 'cinenegro': 'F-N', 'comedia': 'CO', 'desconocido': 'DESC', 'documental': 'DO', 'drama': 'DR', 'fantástico': 'FAN', 'infantil': 'INF', 'intriga': 'INT', 'musical': 'MU', 'romance': 'RO', 'seriedetv': 'TV_SE', 'terror': 'TE', 'thriller': 'TH', 'western': 'WE'}

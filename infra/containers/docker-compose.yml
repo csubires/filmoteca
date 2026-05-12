@@ -1,0 +1,130 @@
+x-healthchecks:
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  nginx: &nginx-healthcheck
+    test: ["CMD", "nginx", "-t"]
+  vault: &vault-healthcheck
+    test: ["CMD-SHELL", "curl -s curl http://vault:8200/v1/sys/health | grep -q '\"initialized\":true' || exit 1"]
+  gateway: &gateway-healthcheck
+    test: ["CMD", "curl", "-f", "-s", "http://gateway:3000/gateway/health"]
+  database: &database-healthcheck
+    test: ["CMD", "curl", "-f",  "-s", "http://database:3003/database/health"]
+  auth: &auth-healthcheck
+    test: ["CMD", "curl", "-f",  "-s", "http://auth:3001/auth/health"]
+  i18n: &i18n-healthcheck
+    test: ["CMD", "curl", "-f", "http://i18n:3002/i18n/health"]
+
+services:
+
+  gateway:
+    image: gateway
+    build:
+      network: host
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: gateway
+    networks: [transcendence-net]
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: root
+    volumes:
+      - data-volume:/app/data
+    depends_on:
+      vault:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+      i18n:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    healthcheck: *gateway-healthcheck
+    restart: always
+
+  database:
+    image: database
+    build:
+      network: host
+      context: .
+      dockerfile: database/Dockerfile
+    container_name: database
+    networks: [transcendence-net]
+    volumes:
+      - data-volume:/app/data
+      - media-data:/app/media
+    healthcheck: *database-healthcheck
+    restart: always
+
+  auth:
+    image: auth
+    build:
+      network: host
+      context: .
+      dockerfile: auth/Dockerfile
+    container_name: auth
+    networks: [transcendence-net]
+    env_file: .env
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: root
+    volumes:
+      - data-volume:/app/data
+    depends_on:
+      vault:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    healthcheck: *auth-healthcheck
+    restart: always
+
+  i18n:
+    image: i18n
+    build:
+      network: host
+      context: .
+      dockerfile: i18n/Dockerfile
+    container_name: i18n
+    networks: [transcendence-net]
+    healthcheck: *i18n-healthcheck
+    restart: always
+
+  nginx:
+    image: nginx
+    build:
+      network: host
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: nginx
+    ports: ["8443:443"]
+    depends_on:
+      - gateway
+    healthcheck: *nginx-healthcheck
+    networks: [transcendence-net]
+    restart: always
+
+  vault:
+    image: vault
+    container_name: vault
+    build:
+      network: host
+      context: vault
+      dockerfile: Dockerfile
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: root
+    networks: [transcendence-net]
+    healthcheck: *vault-healthcheck
+    restart: always
+
+volumes:
+  data-volume:
+    name: data-volume
+  media-data:
+    name: media-data
+
+networks:
+  transcendence-net:
+    name: transcendence-net
+    driver: bridge
+    enable_ipv6: false

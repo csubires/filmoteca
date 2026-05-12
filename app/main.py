@@ -87,7 +87,7 @@ def main():
         from shutil import copy                         # Para hacer el backup de la base de datos
         from config.constant import DB_FILE      # Nombre de la BD
         backup_date = dt_format('symdthms')
-        copy(DB_FILE, f'../backups/{backup_date}_movieDB.db')
+        copy(DB_FILE, f'../data/backups/{backup_date}_movieDB.db')
         lg_prt('gy', '[✔] Backup created in', f'"backups/{backup_date}_movieDB.db"')
 
     elif arg1 == 'reduce':

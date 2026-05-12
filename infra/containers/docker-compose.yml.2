@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  database:
+    build:
+      context: ./database
+    volumes:
+      - ../shared:/app/shared:ro
+      - ../../app/data:/app/data
+    working_dir: /app
+    command: npm start
+    environment:
+      - DB_PATH=/data/movieDB.db
+    ports:
+      - "3003:3003"
+
+  auth:
+    build:
+      context: ./auth
+    volumes:
+      - ../shared:/app/shared:ro
+    working_dir: /app
+    command: npm start
+    ports:
+      - "3001:3001"
+
+  i18n:
+    build:
+      context: ./i18n
+    volumes:
+      - ../shared:/app/shared:ro
+    working_dir: /app
+    command: npm start
+    ports:
+      - "3002:3002"
+
+  gateway:
+    build:
+      context: ./gateway
+    volumes:
+      - ../shared:/app/shared:ro
+      - ../frontend/public:/app/frontend/public:ro
+    working_dir: /app
+    command: npm start
+    environment:
+      - DATABASE_URL=http://database:3003
+      - AUTH_URL=http://auth:3001
+      - I18N_URL=http://i18n:3002
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+      - auth
+      - i18n

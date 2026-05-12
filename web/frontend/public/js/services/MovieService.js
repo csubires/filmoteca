@@ -8,7 +8,7 @@ export class MovieService extends BaseService {
         return raw?.data ?? null;
     }
     async getLatest(limit = 50) {
-        return this.handleRequest(this.connection.get('/last_movies', { limit }), 'Error al obtener últimas películas');
+        return this.handleRequest(this.connection.get(`/last_movies?limit=${limit}`), 'Error al obtener últimas películas');
     }
     async search(query) {
         return this.handleRequest(this.connection.get(`/search_movies?search=${encodeURIComponent(query)}&year=${query}&limit=10`), 'Error en la búsqueda');

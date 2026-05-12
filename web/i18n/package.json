@@ -1,0 +1,18 @@
+{
+	"type": "module",
+	"name": "filmoteca-i18n-service",
+	"version": "1.0.0",
+	"description": "i18n/Localization service for Filmoteca",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js"
+	},
+	"dependencies": {
+		"@fastify/cors": "^11.1.0",
+		"fastify": "^5.6.2"
+	},
+	"devDependencies": {
+		"nodemon": "^3.0.1"
+	}
+}
