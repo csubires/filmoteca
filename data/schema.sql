@@ -17,6 +17,19 @@ CREATE TABLE "data" (
 , npseries INTEGER DEFAULT (1));
 
 
+-- "torrent_cache" definition - Cachea torrents encontrados por día
+
+CREATE TABLE "torrent_cache" (
+	"id_torrent_cache" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"date_cached" TEXT NOT NULL UNIQUE,
+	"movies_json" TEXT,
+	"series_json" TEXT,
+	"url_end" TEXT,
+	"npseries" INTEGER DEFAULT (1),
+	"created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 -- genre definition
 
 CREATE TABLE "genre" (
@@ -72,13 +85,14 @@ CREATE TABLE "report" (
 
 CREATE TABLE "user" (
 	"id_user"	INTEGER PRIMARY KEY AUTOINCREMENT,
-	"name"	TEXT(4),
-	"password"	TEXT,
+	"name"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
 	"ip"	TEXT,
 	"agent"	TEXT,
-	"date_time"	TEXT,
-	"email"	TEXT,
-	"role"	TEXT DEFAULT ('admin'),
+	"email"	TEXT NOT NULL UNIQUE,
+	"role"	TEXT DEFAULT 'user',
+	"created_at"	TEXT NOT NULL,
+	"last_login"	TEXT,
 	CONSTRAINT "user_UN" UNIQUE("name","email")
 );
 

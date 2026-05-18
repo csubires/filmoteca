@@ -11,63 +11,56 @@ export class ViewView extends BaseView {
     private currentYear: number = new Date().getFullYear();
     private currentPage: number = 0;
     private itemsPerPage: number = 50;
+    private searchQuery: string = '';
 
     constructor() {
         super();
         this.movieService = new MovieService();
     }
 
-    async render(params?: { id?: string }): Promise<string> {
-        const year = params?.id ? parseInt(params.id) : 0;
-        this.currentPage = year === 0 ? 0 : year;
+    async render(params?: { id?: string; search?: string }): Promise<string> {
+        this.searchQuery = params?.search?.trim() || '';
+        const year = !this.searchQuery && params?.id ? parseInt(params.id) : 0;
+        this.currentPage = this.searchQuery ? 0 : (year === 0 ? 0 : year);
+
+        const isSearch = this.searchQuery.length > 0;
+        const headerTitle = isSearch
+            ? 'Resultados de búsqueda'
+            : (year === 0 ? 'Películas Recientes' : `Películas de ${year}`);
+        const headerSubtitle = isSearch
+            ? `Mostrando coincidencias para “${this.searchQuery}”`
+            : '';
 
         return `
             <div class="view-container">
                 <div class="view-header">
-                    <h1>${year === 0 ? 'Películas Recientes' : `Películas de ${year}`}</h1>
+                    <h1>${headerTitle}</h1>
+                    ${headerSubtitle ? `<p class="view-subtitle">${headerSubtitle}</p>` : ''}
 
-                    <div class="view-controls">
-                        <div class="year-nav" id="year-nav"></div>
-
-                        <div class="view-options">
-                            <select id="items-per-page">
-                                <option value="25">25 por página</option>
-                                <option value="50" selected>50 por página</option>
-                                <option value="100">100 por página</option>
-                                <option value="200">200 por página</option>
-                            </select>
-
-                            <button id="toggle-view" class="btn btn-primary-outline">
-                                <span>🔲</span> Cambiar vista
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <div id="movies-container" class="movie-grid item-list"></div>
 
                 <div id="pagination" class="pagination"></div>
 
-                <div id="control" class="control-panel">
-                    🗓
-                    <div class="menu">
-                        <div class="container-bottom">
-                            <a href="#" class="scroll-top">⬆️</a>
-                            <a href="#" class="scroll-bottom">⬇️</a>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         `;
     }
 
-    async afterRender(params?: { id?: string }): Promise<void> {
-        const year = params?.id ? parseInt(params.id) : 0;
+    async afterRender(params?: { id?: string; search?: string }): Promise<void> {
+        const searchQuery = params?.search?.trim() || '';
+        const isSearch = searchQuery.length > 0;
+        const year = !isSearch && params?.id ? parseInt(params.id) : 0;
 
-        await Promise.all([
-            this.loadYearNavigation(year),
-            this.loadMovies(year)
-        ]);
+        if (isSearch) {
+            await this.loadSearchMovies(searchQuery);
+        } else {
+            await Promise.all([
+                this.loadYearNavigation(year),
+                this.loadMovies(year)
+            ]);
+        }
 
         this.setupEventListeners();
     }
@@ -99,6 +92,27 @@ export class ViewView extends BaseView {
         }
     }
 
+    private async loadSearchMovies(query: string): Promise<void> {
+        try {
+            this.showLoader(true);
+
+            const movies = await this.movieService.search(query, this.itemsPerPage);
+
+            if (!movies) return;
+
+            this.renderMovies(movies);
+
+            const pagination = document.getElementById('pagination');
+            if (pagination) {
+                pagination.innerHTML = '';
+            }
+        } catch (error) {
+            this.handleError(error, 'Error al buscar películas');
+        } finally {
+            this.showLoader(false);
+        }
+    }
+
     private renderMovies(movies: MovieCardType[]): void {
         const container = document.getElementById('movies-container');
         if (!container) return;
@@ -112,7 +126,7 @@ export class ViewView extends BaseView {
 
         // Crear nuevas cards
         movies.forEach(movie => {
-const card = new MovieCard({
+            const card = new MovieCard({
                 movieId: movie.id_movie,
                 title: movie.title,
                 year: movie.year,
@@ -120,9 +134,8 @@ const card = new MovieCard({
                 rating: movie.ratings,
                 poster: movie.urlpicture,
                 genreId: (movie as any).id_genre_path,
-                showAdmin: false
+                showAdmin: isAdmin
             });
-
             container.appendChild(card.getElement());
             this.movieCards.push(card);
         });
@@ -131,20 +144,29 @@ const card = new MovieCard({
     private async loadYearNavigation(currentYear: number): Promise<void> {
         try {
             const response = await this.movieService['connection'].get('/years/available');
-            const years = response.data;
+            const years = Array.isArray(response.data) ? response.data : [];
             const nav = document.getElementById('year-nav');
 
             if (!nav || !years) return;
 
+            const normalizedYears = years
+                .map((item: any) => ({
+                    year: Number(item?.year ?? item?.id ?? item),
+                    count: Number(item?.count ?? item?.total ?? item?.movies ?? 0)
+                }))
+                .filter(item => Number.isFinite(item.year))
+                .sort((left, right) => right.year - left.year);
+
             nav.innerHTML = `
-                <a href="/view/0" class="${currentYear === 0 ? 'active' : ''}">
-                    Recientes
-                </a>
-                ${years.map((year: number) => `
-                    <a href="/view/${year}" class="${year === currentYear ? 'active' : ''}">
-                        ${year}
-                    </a>
-                `).join('')}
+                <label class="year-nav-label" for="year-select">Año</label>
+                <select id="year-select" class="year-select">
+                    <option value="0" ${currentYear === 0 ? 'selected' : ''}>Recientes</option>
+                    ${normalizedYears.map(({ year, count }) => `
+                        <option value="${year}" ${year === currentYear ? 'selected' : ''}>
+                            ${year}${count > 0 ? ` (${count})` : ''}
+                        </option>
+                    `).join('')}
+                </select>
             `;
         } catch (error) {
             console.error('Error loading year navigation:', error);
@@ -185,6 +207,11 @@ const card = new MovieCard({
     }
 
     protected setupEventListeners(): void {
+        document.getElementById('year-select')?.addEventListener('change', (e) => {
+            const year = Number((e.target as HTMLSelectElement).value || 0);
+            window.location.href = year === 0 ? '/view/0' : `/view/${year}`;
+        });
+
         // Items por página
         document.getElementById('items-per-page')?.addEventListener('change', (e) => {
             this.itemsPerPage = parseInt((e.target as HTMLSelectElement).value);
@@ -217,8 +244,7 @@ const card = new MovieCard({
         try {
             const movie = await this.movieService.getById(movieId);
             if (movie) {
-                const csrfToken = this.getCsrfToken() || '';
-                this.modalManager.openMovieEditor(movieId, movie, csrfToken);
+                this.modalManager.openMovieEditor(movieId, movie);
             }
         } catch (error) {
             this.handleError(error, 'Error al cargar película para editar');

@@ -5,7 +5,6 @@ import { showMessage } from '../utils.js';
 export interface LoginCredentials {
     email: string;
     password: string;
-    csrf_token_form: string;
 }
 
 export interface SignupCredentials {
@@ -13,7 +12,6 @@ export interface SignupCredentials {
     email: string;
     password: string;
     repeat_password: string;
-    csrf_token_form: string;
 }
 
 export interface AuthResponse {
@@ -26,10 +24,12 @@ export interface AuthResponse {
 export class AuthService {
     private connection: Connection;
     private currentUser: User | null = null;
+    readonly ready: Promise<void>;
 
     constructor(connection: Connection) {
         this.connection = connection;
         this.loadSession();
+        this.ready = this.bootstrap();
     }
 
     private loadSession(): void {
@@ -48,6 +48,41 @@ export class AuthService {
         sessionStorage.setItem('user', JSON.stringify(user));
     }
 
+    private clearSession(): void {
+        this.currentUser = null;
+        sessionStorage.removeItem('user');
+    }
+
+    private async bootstrap(): Promise<void> {
+        if (this.currentUser?.auth) return;
+
+        try {
+            const response = await fetch('/auth/verify', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                this.clearSession();
+                return;
+            }
+
+            const payload = await response.json();
+            const user = payload?.user;
+            if (user?.email) {
+                this.saveSession({
+                    email: user.email,
+                    role: user.role || 'user',
+                    auth: true
+                });
+            } else {
+                this.clearSession();
+            }
+        } catch {
+            this.clearSession();
+        }
+    }
+
     private getRoleFromCookie(): string {
         const cookies = document.cookie.split(';');
         const roleCookie = cookies.find(c => c.trim().startsWith('user_role='));
@@ -56,68 +91,75 @@ export class AuthService {
         }
         return 'user';
     }
-
-    async login(email: string, password: string, csrfToken: string): Promise<boolean> {
-        const formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('csrf_token_form', csrfToken);
-
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.redirected) {
-                // Obtener rol de la cookie
-                const role = this.getRoleFromCookie();
-
-                this.currentUser = {
-                    email: email,
-                    role: role,
-                    auth: true
-                };
-                this.saveSession(this.currentUser);
-                window.location.href = response.url;
-                return true;
-            }
-
-            const html = await response.text();
-            const errorMatch = html.match(/alert alert-(\w+)["']?>(.*?)<\/div>/);
-            if (errorMatch) {
-                showMessage(errorMatch[2], errorMatch[1] as any);
-            }
-            return false;
-        } catch (error) {
-            console.error('Login error:', error);
-            showMessage('Error de conexión', 'danger');
-            return false;
-        }
-    }
-
-    async signup(credentials: SignupCredentials): Promise<boolean> {
-        const formData = new FormData();
-        Object.entries(credentials).forEach(([key, value]) => {
-            formData.append(key, value);
+async login(email: string, password: string): Promise<boolean> {
+    try {
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ email, password })
         });
 
-        try {
-            const response = await fetch('/signup', {
-                method: 'POST',
-                body: formData
+        const contentType = response.headers.get('content-type') || '';
+
+        const payload = contentType.includes('application/json')
+            ? await response.json()
+            : { message: await response.text() };
+
+        if (response.ok) {
+            const user = payload?.user || {};
+            this.saveSession({
+                email: user.email || email,
+                role: user.role || 'user',
+                auth: true
             });
 
-            if (response.redirected) {
-                window.location.href = response.url;
+            showMessage(payload?.message || 'Login exitoso', 'success');
+            window.location.href = '/';
+            return true;
+        }
+
+        showMessage(
+            payload?.error ||
+            payload?.message ||
+            'No se pudo iniciar sesión',
+            'danger'
+        );
+
+        return false;
+
+    } catch (error) {
+        console.error('Login error:', error);
+        showMessage('Error de conexión', 'danger');
+        return false;
+    }
+}
+
+    async signup(credentials: SignupCredentials): Promise<boolean> {
+        try {
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(credentials)
+            });
+
+            const contentType = response.headers.get('content-type') || '';
+            const payload = contentType.includes('application/json')
+                ? await response.json()
+                : { message: await response.text() };
+
+            if (response.ok) {
+                showMessage(payload?.message || 'Usuario registrado exitosamente', 'success');
+                window.location.href = '/login';
                 return true;
             }
 
-            const html = await response.text();
-            const errorMatch = html.match(/alert alert-(\w+)["']?>(.*?)<\/div>/);
-            if (errorMatch) {
-                showMessage(errorMatch[2], errorMatch[1] as any);
-            }
+            showMessage(payload?.error || payload?.message || 'No se pudo registrar el usuario', 'danger');
             return false;
         } catch (error) {
             console.error('Signup error:', error);
@@ -128,9 +170,11 @@ export class AuthService {
 
     async logout(): Promise<void> {
         try {
-            await fetch('/logout');
-            this.currentUser = null;
-            sessionStorage.removeItem('user');
+            await fetch('/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            this.clearSession();
             window.location.href = '/';
         } catch (error) {
             console.error('Logout error:', error);
@@ -145,8 +189,7 @@ export class AuthService {
         return this.currentUser;
     }
 
-    getCsrfToken(): string | null {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
-        return metaTag?.getAttribute('content') || null;
+    getFormToken(): string | null {
+        return null;
     }
 }

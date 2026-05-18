@@ -65,7 +65,7 @@ venv.bak/
 venv/
 web/assets/**/*.jpg
 web/assets/**/*.png
-web/frontend/public/assets/covers/
+data/
 wheels/
 yarn-debug.log*
 yarn-error.log*

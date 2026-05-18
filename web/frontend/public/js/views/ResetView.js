@@ -1,4 +1,3 @@
-import { auth } from '../main.js';
 import { connection } from '../core/connection.js';
 import { showMessage } from '../utils.js';
 export class ResetView {
@@ -29,7 +28,6 @@ export class ResetView {
           <div class="login-footer">
             <p><a href="/login">Volver al inicio de sesión</a></p>
           </div>
-          <input type="hidden" name="csrf_token_form" value="" id="csrf-reset">
         </form>
       </div>
     `;
@@ -39,7 +37,6 @@ export class ResetView {
         if (this.form) {
             this.form.addEventListener('submit', this.handleSubmit.bind(this));
         }
-        this.updateCsrfToken();
     }
     cleanup() {
         if (this.form) {
@@ -52,12 +49,8 @@ export class ResetView {
             return;
         const formData = new FormData(this.form);
         const email = formData.get('email');
-        const csrfToken = document.getElementById('csrf-reset')?.value || '';
         try {
-            const response = await connection.post('/reset', {
-                email,
-                csrf_token_form: csrfToken
-            });
+            const response = await connection.post('/reset', { email });
             if (response?.status === 200) {
                 showMessage('Instrucciones enviadas a tu correo', 'success');
                 setTimeout(() => {
@@ -67,13 +60,6 @@ export class ResetView {
         }
         catch (error) {
             showMessage('Error al procesar la solicitud', 'danger');
-        }
-    }
-    updateCsrfToken() {
-        const token = auth.getCsrfToken();
-        const input = document.getElementById('csrf-reset');
-        if (input && token) {
-            input.value = token;
         }
     }
 }

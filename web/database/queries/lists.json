@@ -1,0 +1,9 @@
+{
+  "movies_by_genre": "SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END AS id_genre_path FROM movies WHERE (id_genre = :id_genre OR id_subgenre = :id_genre) AND censure = 0 ORDER BY year DESC, title ASC LIMIT :limit OFFSET :offset",
+  "movies_by_genre_count": "SELECT COUNT(*) as total FROM movies WHERE (id_genre = :id_genre OR id_subgenre = :id_genre) AND censure = 0",
+  "last_movies": "SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN M.id_subgenre IS NULL THEN M.id_genre ELSE M.id_subgenre END AS id_genre_path, genre.name AS genre_name FROM movies AS M INNER JOIN genre ON genre.id_genre = M.id_genre ORDER BY file_created DESC, year ASC, title LIMIT :limit",
+  "search_movies": "SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END AS id_genre_path FROM movies WHERE title LIKE :search OR realtitle LIKE :search OR year = :year ORDER BY year, title LIMIT :limit",
+  "get_report_info": "SELECT * FROM report WHERE report_date = (SELECT MAX(report_date) FROM report WHERE hdd_code=0) UNION SELECT * FROM report WHERE report_date = (SELECT MAX(report_date) FROM report WHERE hdd_code=1) ORDER BY hdd_code",
+  "get_all_genre": "SELECT * FROM genre",
+  "recommended": "SELECT m.id_movie, m.title, m.year, m.duration_str, m.ratings, m.urlpicture, CASE WHEN m.id_subgenre IS NULL THEN m.id_genre ELSE m.id_subgenre END AS id_genre_path, g.name FROM movies m INNER JOIN genre g ON m.id_genre = g.id_genre WHERE m.ratings > 6.6 ORDER BY RANDOM() LIMIT 10"
+}

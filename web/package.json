@@ -1,8 +1,23 @@
 {
-	"name": "monorepo",
+"scripts": {
+    "tsc": "tsc --watch --project frontend/tsconfig.json"
+},  
+  "name": "filmoteca-web-monorepo",
   "private": true,
-  "workspaces": ["microservicioA", "microservicioB"],
+  "workspaces": [
+    "gateway",
+    "auth",
+    "database",
+    "i18n"
+  ],
   "dependencies": {
-    "express": "^4.18.2"
+    "@fastify/cookie": "^10.0.0",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/formbody": "^8.0.2",
+    "fastify": "^5.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "typescript": "^6.0.3"
   }
 }

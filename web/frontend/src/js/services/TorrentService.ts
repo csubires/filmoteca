@@ -14,14 +14,16 @@ export class TorrentService extends BaseService {
     private pollInterval: number | null = null;
 
     // Iniciar tarea de torrent
-    async startTask(): Promise<string | null> {
+    async startTask(taskName: string = 'torrent', config: any = {}): Promise<string | null> {
         try {
-            const response = await fetch('/api/start_torrent_task', {
+            const payload = { task: taskName, config: config };
+            const response = await fetch('/api/execute_task', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'X-CSRF-Token': this.getCsrfToken() || ''
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json() as TorrentStartResponse;
@@ -34,7 +36,7 @@ export class TorrentService extends BaseService {
             }
             return null;
         } catch (error) {
-            console.error('Error starting torrent task:', error);
+            console.error('Error starting task:', error);
             return null;
         }
     }
@@ -43,9 +45,9 @@ export class TorrentService extends BaseService {
     async getTaskStatus(taskId: string): Promise<TorrentTaskStatus | null> {
         return this.handleRequest(
             this.connection.get<TorrentTaskStatus>(
-                `/torrent_task_status?taskId=${taskId}&stamp=${Date.now()}`
+                `/task_status?taskId=${taskId}&stamp=${Date.now()}`
             ),
-            'Error al obtener estado de tarea torrent'
+            'Error al obtener estado de tarea'
         );
     }
 
@@ -54,13 +56,13 @@ export class TorrentService extends BaseService {
         if (!this.currentTaskId) return false;
 
         try {
-            const response = await fetch('/api/stop_torrent_task', {
+            const response = await fetch('/api/stop_task', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': this.getCsrfToken() || ''
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ taskId: this.currentTaskId })
             });
 
             const result = await response.json() as TorrentStopResponse;
@@ -89,9 +91,7 @@ export class TorrentService extends BaseService {
     // Obtener configuración actual
     async getConfig(): Promise<TorrentConfig | null> {
         return this.handleRequest(
-            this.connection.get<TorrentConfig>(
-                `/get_config/${this.encodeParams({})}`
-            ),
+            this.connection.get<TorrentConfig>('/get_config'),
             'Error al obtener configuración'
         );
     }
@@ -99,9 +99,7 @@ export class TorrentService extends BaseService {
     // Obtener películas disponibles
     async getMovies(): Promise<TorrentMovie[] | null> {
         return this.handleRequest(
-            this.connection.get<TorrentMovie[]>(
-                `/get_torrent_movies/${this.encodeParams({})}`
-            ),
+            this.connection.get<TorrentMovie[]>('/get_torrent_movies'),
             'Error al obtener películas torrent'
         );
     }
@@ -109,9 +107,7 @@ export class TorrentService extends BaseService {
     // Obtener series disponibles
     async getSeries(): Promise<TorrentSerie[] | null> {
         return this.handleRequest(
-            this.connection.get<TorrentSerie[]>(
-                `/get_torrent_series/${this.encodeParams({})}`
-            ),
+            this.connection.get<TorrentSerie[]>('/get_torrent_series'),
             'Error al obtener series torrent'
         );
     }
@@ -164,7 +160,7 @@ export class TorrentService extends BaseService {
     async checkInitialState(): Promise<void> {
         try {
             const response = await this.connection.get<TorrentTaskStatus>(
-                '/torrent_task_status'
+                '/task_status'
             );
 
             if (response?.data) {

@@ -24,21 +24,18 @@ protected async handleRequest<T>(
         }
     }
 
-    protected getCsrfToken(): string | null {
-        const meta = document.querySelector('meta[name="csrf-token"]');
-        return meta?.getAttribute('content') ?? null;
+    protected getFormToken(): string | null {
+        return null;
     }
-protected buildParams(params: Record<string, any>): Record<string, any> {
-    const csrfToken = this.getCsrfToken();
-    if (csrfToken) {
-        params.csrf_token_form = csrfToken;
+
+    protected buildParams(params: Record<string, any>): Record<string, any> {
+        return params;
     }
-    return params;
-}
-protected encodeParams(params: Record<string, any>): string {
-    return new URLSearchParams(
-        Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))
-    ).toString();
-}
+
+    protected encodeParams(params: Record<string, any>): string {
+        return new URLSearchParams(
+            Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))
+        ).toString();
+    }
 
 }

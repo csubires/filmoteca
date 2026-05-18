@@ -32,7 +32,8 @@ TAG_QUERY = {
 
 TAG_QUERY_REPORT = {
 	# Listados
-	'movies_by_genre': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE id_genre = :id_genre OR id_subgenre = :id_genre AND censure = 0 ORDER BY year DESC, title ASC',
+	'movies_by_genre': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE (id_genre = :id_genre OR id_subgenre = :id_genre) AND censure = 0 ORDER BY year DESC, title ASC LIMIT :limit OFFSET :offset',
+	'movies_by_genre_count': 'SELECT COUNT(*) as total FROM movies WHERE (id_genre = :id_genre OR id_subgenre = :id_genre) AND censure = 0',
 	'last_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN M.id_subgenre IS NULL THEN M.id_genre ELSE M.id_subgenre END, genre.name FROM movies AS M INNER JOIN genre ON genre.id_genre = M.id_genre ORDER BY file_created DESC, year ASC, title LIMIT :limit',
 	'search_movies': 'SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE title LIKE :search OR realtitle LIKE :search OR year = :year ORDER BY year, title LIMIT :limit',
 	'get_report_info': 'SELECT * FROM report WHERE report_date = (SELECT MAX(report_date) FROM report WHERE hdd_code=0) UNION SELECT * FROM report WHERE report_date = (SELECT MAX(report_date) FROM report WHERE hdd_code=1) ORDER BY hdd_code',

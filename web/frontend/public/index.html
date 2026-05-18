@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="Gestor de Películas">
     <meta name="description" content="Web para gestionar las películas">
-    <meta name="csrf-token" content="" id="csrf-meta">
     <link rel="shortcut icon" href="/assets/favicon.png">
     <title>Gestor de Películas</title>
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
@@ -21,8 +20,7 @@
                     <div class="container-left" id="nav-menu">
                     </div>
                 </div>
-                <form id="form-search" action="/view" method="POST">
-                    <input type="hidden" name="csrf_token_form" value="" id="csrf-search">
+                <form id="form-search" action="/view" method="GET">
                     <i class="btn" id="clear-search" data-action="clear-search">🅧</i>
                     <input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año" data-action="autocomplete-search">
                     <datalist id="dlSearch"></datalist>
@@ -52,7 +50,6 @@
             <form method="dialog" id="form-editor">
                 <header><h3>Editar película</h3></header>
                 <article class="edit">
-                    <input type="hidden" name="csrf_token_form" value="" id="csrf-edit">
                     <div class="row">
                         <label for="id_movie" class="row"><span>id_movie</span>
                             <input type="number" id="id_movie" class="noborder" name="id_movie" disabled>

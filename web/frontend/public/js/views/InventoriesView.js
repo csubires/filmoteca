@@ -25,15 +25,18 @@ export class InventoriesView extends BaseView {
             { name: 'Series EXTRA', desc: 'Listado de series peor valoradas', file: '20230328_Listado Series EXTRA.html' }
         ];
         return `
-            <div class="menu--clickeable btn btn-primary">
-                <input class="menu-btn" type="checkbox" id="menu-btn" />
-                <label class="menu-icon" for="menu-btn">
-                    <span>Listados disponibles</span>
-                    <span class="navicon"></span>
-                </label>
+            <section class="inventories-panel">
+                <div class="menu--clickeable inventories-toggle">
+
+                    <label class="menu-icon" for="menu-btn">
+                        <span>Listados disponibles</span>
+                        <span class="navicon"></span>
+                    </label>
+                </div>
+
                 <div class="inventories-grid">
                     ${inventories.map(inv => `
-                        <a class="btn btn-primary-outline inventory-card"
+                        <a class="inventory-card"
                            target="_blank"
                            data-descr="${inv.desc}"
                            href="/inventories/${inv.file}">
@@ -42,15 +45,17 @@ export class InventoriesView extends BaseView {
                         </a>
                     `).join('')}
                 </div>
-            </div>
+            </section>
 
-            <div class="head-result-little">
-                <h3>Películas propuestas para descargar</h3>
-            </div>
+            <section class="proposals-section">
+                <div class="head-result-little">
+                    <h3>Películas propuestas para descargar</h3>
+                </div>
 
-            <div class="head-result years" id="years-container"></div>
+                <div class="head-result years" id="years-container"></div>
 
-            <div id="downloads-content"></div>
+                <main id="downloads-content" class="downloads-content"></main>
+            </section>
         `;
     }
     renderYearDetail() {
@@ -85,22 +90,90 @@ export class InventoriesView extends BaseView {
     }
     async loadAvailableYears() {
         try {
-            const response = await this.movieService['connection'].get('/downloads/years');
-            const years = response.data;
+            const response = await this.movieService['connection'].get('/years/available');
+            const years = Array.isArray(response.data) ? response.data : [];
             const container = document.getElementById('years-container');
             if (!container || !years)
                 return;
-            container.innerHTML = years.map((year) => `
+            const normalizedYears = years
+                .map((year) => ({ year: Number(year?.year), count: Number(year?.count || 0) }))
+                .filter((year) => Number.isFinite(year.year))
+                .sort((left, right) => right.year - left.year);
+            container.innerHTML = normalizedYears.map((year) => `
                 <a class="btn btn-primary-outline year-link"
                    data-descr="${year.count}"
                    href="/menu/inventories/${year.year}">
                     <strong>${year.year}</strong>
                 </a>
             `).join('');
+            const defaultYear = normalizedYears[0]?.year;
+            if (defaultYear) {
+                await this.loadRatingProposals(defaultYear);
+            }
+            else {
+                this.renderEmptyProposals('No hay propuestas de descarga disponibles.');
+            }
         }
         catch (error) {
             this.handleError(error, 'Error al cargar años disponibles');
         }
+    }
+    async loadRatingProposals(year) {
+        try {
+            const proposals = await this.movieService.getRatings(year);
+            const container = document.getElementById('downloads-content');
+            if (!container)
+                return;
+            if (!proposals || proposals.length === 0) {
+                this.renderEmptyProposals(`No hay películas propuestas para ${year}.`);
+                return;
+            }
+            container.innerHTML = `
+                <main class="table proposals-table">
+                    <section class="table__header">
+                        <h1>Películas propuestas para descargar ${year}</h1>
+                    </section>
+                    <section class="table__body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Película</th>
+                                    <th>Año</th>
+                                    <th>Rating</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${proposals.map((item) => `
+                                    <tr class="proposal-row ${item.is_present ? 'present' : 'missing'}">
+                                        <td>
+                                            <a target="_blank" href="https://www.filmaffinity.com${item.url}">
+                                                <img class="proposal-thumb" src="https://pics.filmaffinity.com${item.src_img}" alt="${item.title}">
+                                                <span>${item.title}</span>
+                                            </a>
+                                        </td>
+                                        <td>${item.year}</td>
+                                        <td><strong>${Number(item.rating).toFixed(1)}</strong></td>
+                                        <td>${item.is_present ? '✅ Presente' : '⬇️ Propuesta'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </section>
+                </main>
+            `;
+        }
+        catch (error) {
+            this.handleError(error, 'Error al cargar películas propuestas');
+        }
+    }
+    renderEmptyProposals(message) {
+        const container = document.getElementById('downloads-content');
+        if (!container)
+            return;
+        container.innerHTML = `
+            <div class="empty-state proposals-empty">${message}</div>
+        `;
     }
     async loadYearDownloads(year) {
         try {
@@ -110,7 +183,6 @@ export class InventoriesView extends BaseView {
             const tbody = document.getElementById('downloads-table-body');
             if (!tbody || !downloads)
                 return;
-            const csrfToken = this.getCsrfToken();
             tbody.innerHTML = downloads.map((item) => `
                 <tr id="rating-tr-${item.id}" class="${item.present ? 'present' : 'missing'}">
                     <td>
@@ -123,8 +195,7 @@ export class InventoriesView extends BaseView {
                     <td>
                         <button class="btn btn-danger-outline mark-present"
                                 data-id="${item.id}"
-                                data-title="${item.title}"
-                                data-csrf="${csrfToken}">
+                                data-title="${item.title}">
                             Marcar como presente
                         </button>
                         <button class="btn btn-info-outline view-details"
@@ -149,15 +220,13 @@ export class InventoriesView extends BaseView {
                 const target = e.target;
                 const id = target.dataset.id;
                 const title = target.dataset.title;
-                const csrfToken = target.dataset.csrf;
-                if (!id || !title || !csrfToken)
+                if (!id || !title)
                     return;
                 const confirmed = await this.confirm(`¿Marcar "${title}" como presente?`);
                 if (confirmed) {
                     try {
                         await this.movieService['connection'].post('/downloads/mark-present', {
-                            id: parseInt(id),
-                            csrf_token_form: csrfToken
+                            id: parseInt(id)
                         });
                         const row = document.getElementById(`rating-tr-${id}`);
                         if (row) {

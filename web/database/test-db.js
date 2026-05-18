@@ -1,5 +1,5 @@
 import { createHandlerSQL } from './connection.js';
-import { loadQueries } from './queries.js';
+import { loadQueries } from './queries/queries.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,12 +8,12 @@ const __dirname = path.dirname(__filename);
 
 async function test() {
     console.log('🔍 Probando conexión a base de datos...');
-    const dbPath = process.env.DB_PATH || path.join(__dirname, '../../data/movieDB.db');
-    const queriesPath = process.env.QUERIES_PATH || path.join(__dirname, './queries.json');
+    const dbPath = process.env.DB_PATH || path.join(__dirname, '../../data/filmoteca.db');
+    const queriesDirPath = process.env.QUERIES_PATH || path.join(__dirname, './queries');
     console.log('📁 DB:', dbPath);
-    console.log('📁 Queries:', queriesPath);
+    console.log('📁 Queries:', queriesDirPath);
 
-    const queries = await loadQueries(queriesPath);
+    const queries = await loadQueries(queriesDirPath);
     console.log('📚 Queries cargadas:', Object.keys(queries).length);
 
     const db = createHandlerSQL(dbPath, queries);
@@ -21,7 +21,7 @@ async function test() {
         await db.connect();
         console.log('✅ Conexión OK');
 
-        const result = await db.execute('SELECT 1', {});
+        const result = await db.execute('health_check', {});
         console.log('✅ Query de prueba OK');
 
         const genres = await db.execute('get_all_genres', {});

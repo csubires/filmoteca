@@ -1,8 +1,15 @@
 // Componentes
 @use "components";
 
+// Modal styles
+@use "modal";
+
 // Estilos globales
 @use "layout";
+
+// Component partials
+@use "cards";
+@use "genres";
 
 // Estilos del proyecto en particular
 @use "project";

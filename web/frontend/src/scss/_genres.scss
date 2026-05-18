@@ -1,0 +1,58 @@
+// Genre related styles and small badges
+.popup-genre {
+    background-color: var(--color-accent);
+    color: white;
+    border-radius: 3px;
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    opacity: 0.9;
+    padding: 0.15rem 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    max-width: calc(100% - 0.8rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.flag { width: 1.3rem; border-radius: 3px; }
+
+.genre-header { text-align: center; text-transform: capitalize; }
+
+#genre-title,
+.genre-title {
+    text-align: center;
+    color: var(--color-text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-accent);
+
+    &::before { content: "🎬 "; margin-right: 0.5rem; }
+}
+
+.home-container {
+    /* Base container sizing is defined in _project.scss */
+
+    .genre-tag {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 3rem;
+        padding: 0.75rem;
+        border-radius: 0.85rem;
+        background: var(--color-bg-card);
+        color: var(--color-text-primary);
+        text-decoration: none;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .movie-grid .card-film { width: 100%; max-width: none; }
+
+    .genre-cloud { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}

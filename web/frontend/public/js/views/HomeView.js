@@ -1,6 +1,7 @@
 import { BaseView } from './BaseView.js';
 import { MovieService } from '../services/MovieService.js';
 import { MovieCard } from '../components/MovieCard.js';
+import { formatBytes, formatDuration } from '../utils.js';
 export class HomeView extends BaseView {
     constructor() {
         super();
@@ -40,7 +41,13 @@ export class HomeView extends BaseView {
 
                 <div class="recent-section">
                     <h2>Últimas películas añadidas</h2>
-                    <div id="recent-movies" class="movie-grid"></div>
+                    <div class="carousel-container">
+                        <button class="carousel-btn carousel-btn-prev" data-carousel="recent-movies-carousel" aria-label="Anterior">❮</button>
+                        <div id="recent-movies" class="movie-carousel-wrapper">
+                            <div class="movie-carousel"></div>
+                        </div>
+                        <button class="carousel-btn carousel-btn-next" data-carousel="recent-movies-carousel" aria-label="Siguiente">❯</button>
+                    </div>
                 </div>
 
                 <div class="featured-genres">
@@ -62,9 +69,9 @@ export class HomeView extends BaseView {
             const response = await this.movieService['connection'].get('/stats/summary');
             const stats = response.data;
             if (stats) {
-                document.getElementById('total-movies').textContent = stats.total_movies;
-                document.getElementById('total-size').textContent = stats.total_size;
-                document.getElementById('total-duration').textContent = stats.total_duration;
+                document.getElementById('total-movies').textContent = String(stats.total_movies ?? 0);
+                document.getElementById('total-size').textContent = formatBytes(Number(stats.total_size || 0));
+                document.getElementById('total-duration').textContent = formatDuration(Number(stats.total_duration || 0));
                 document.getElementById('total-genres').textContent = stats.total_genres;
             }
         }
@@ -75,7 +82,7 @@ export class HomeView extends BaseView {
     async loadRecentMovies() {
         try {
             const movies = await this.movieService.getLatest(12);
-            const container = document.getElementById('recent-movies');
+            const container = document.querySelector('.movie-carousel');
             if (!container || !movies)
                 return;
             this.movieCards.forEach(card => card.getElement().remove());
@@ -88,13 +95,14 @@ export class HomeView extends BaseView {
                     duration: 0,
                     rating: movie.ratings,
                     poster: movie.urlpicture,
-                    genreId: movie.id_genre,
+                    genreId: movie.id_genre_path,
                     genreName: movie.genre_name,
                     showAdmin: false
                 });
                 container.appendChild(card.getElement());
                 this.movieCards.push(card);
             });
+            this.setupCarouselNavigation();
         }
         catch (error) {
             this.handleError(error, 'Error al cargar películas recientes');
@@ -120,6 +128,34 @@ export class HomeView extends BaseView {
         catch (error) {
             this.handleError(error, 'Error al cargar géneros');
         }
+    }
+    setupCarouselNavigation() {
+        const wrapper = document.querySelector('.movie-carousel-wrapper');
+        const prevBtn = document.querySelector('[data-carousel="recent-movies-carousel"].carousel-btn-prev');
+        const nextBtn = document.querySelector('[data-carousel="recent-movies-carousel"].carousel-btn-next');
+        if (!wrapper || !prevBtn || !nextBtn)
+            return;
+        prevBtn.addEventListener('click', () => {
+            wrapper.scrollBy({
+                left: -320,
+                behavior: 'smooth'
+            });
+        });
+        nextBtn.addEventListener('click', () => {
+            wrapper.scrollBy({
+                left: 320,
+                behavior: 'smooth'
+            });
+        });
+        const updateButtonVisibility = () => {
+            prevBtn.style.opacity = wrapper.scrollLeft <= 0 ? '0.3' : '1';
+            prevBtn.style.pointerEvents = wrapper.scrollLeft <= 0 ? 'none' : 'auto';
+            const scrollableWidth = wrapper.scrollWidth - wrapper.clientWidth;
+            nextBtn.style.opacity = wrapper.scrollLeft >= scrollableWidth - 10 ? '0.3' : '1';
+            nextBtn.style.pointerEvents = wrapper.scrollLeft >= scrollableWidth - 10 ? 'none' : 'auto';
+        };
+        wrapper.addEventListener('scroll', updateButtonVisibility);
+        updateButtonVisibility();
     }
     cleanup() {
         this.movieCards.forEach(card => card.getElement().remove());

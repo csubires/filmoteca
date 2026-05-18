@@ -4,7 +4,7 @@ export const showMessage = (message: string, type: 'success' | 'danger' | 'warni
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="alert alert-${type}" role="alert">
-            <button type="button" class="btn-close" aria-label="Close"></button>
+            <button type="button" class="btn-close" aria-label="Close">×</button>
             <svg class="bi" role="img" aria-label="${type}:">
                 <use href="#${type}-icon" />
             </svg>
@@ -47,13 +47,28 @@ export const showAndHide = (
 
 // Líneas 37-40: Añadir validación
 export const flagEmoji = (code: string): string => {
-    if (!code || typeof code !== 'string') return '🏳️';
-    return String.fromCodePoint(
-        ...[...code.toUpperCase()].map(x => 0x1f1a5 + x.charCodeAt(0))
-    );
+    if (!code || typeof code !== 'string') return '🇪🇸';
+
+    const normalized = code.toLowerCase();
+    const flags: Record<string, string> = {
+        es: '🇪🇸',
+        en: '🇺🇸',
+        gb: '🇬🇧'
+    };
+
+    if (flags[normalized]) {
+        return flags[normalized];
+    }
+
+    const letters = [...normalized.toUpperCase()].slice(0, 2);
+    if (letters.length < 2 || letters.some(letter => letter < 'A' || letter > 'Z')) {
+        return '🏳️';
+    }
+
+    return String.fromCodePoint(...letters.map(letter => 0x1f1e6 + letter.charCodeAt(0) - 65));
 };
 
-export const getCsrfToken = (form: HTMLFormElement, tokenName: string = 'csrf_token_form'): string | null => {
+export const getFormToken = (form: HTMLFormElement, tokenName: string = 'token'): string | null => {
     const input = form.querySelector(`input[name="${tokenName}"]`) as HTMLInputElement;
     return input?.value || null;
 };

@@ -1,5 +1,7 @@
 export interface TorrentTaskStatus {
     task_status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | 'not_found';
+    progress?: number;
+    message?: string;
     type?: string;
     data?: any;
     error?: string;

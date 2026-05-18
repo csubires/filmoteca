@@ -2,7 +2,7 @@ export const showMessage = (message, type) => {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <div class="alert alert-${type}" role="alert">
-            <button type="button" class="btn-close" aria-label="Close"></button>
+            <button type="button" class="btn-close" aria-label="Close">×</button>
             <svg class="bi" role="img" aria-label="${type}:">
                 <use href="#${type}-icon" />
             </svg>
@@ -36,10 +36,23 @@ export const showAndHide = (obj, visibility, zIndex) => {
 };
 export const flagEmoji = (code) => {
     if (!code || typeof code !== 'string')
+        return '🇪🇸';
+    const normalized = code.toLowerCase();
+    const flags = {
+        es: '🇪🇸',
+        en: '🇺🇸',
+        gb: '🇬🇧'
+    };
+    if (flags[normalized]) {
+        return flags[normalized];
+    }
+    const letters = [...normalized.toUpperCase()].slice(0, 2);
+    if (letters.length < 2 || letters.some(letter => letter < 'A' || letter > 'Z')) {
         return '🏳️';
-    return String.fromCodePoint(...[...code.toUpperCase()].map(x => 0x1f1a5 + x.charCodeAt(0)));
+    }
+    return String.fromCodePoint(...letters.map(letter => 0x1f1e6 + letter.charCodeAt(0) - 65));
 };
-export const getCsrfToken = (form, tokenName = 'csrf_token_form') => {
+export const getFormToken = (form, tokenName = 'token') => {
     const input = form.querySelector(`input[name="${tokenName}"]`);
     return input?.value || null;
 };

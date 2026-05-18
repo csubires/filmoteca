@@ -1,0 +1,4 @@
+{
+  "select_urlend": "SELECT url_end, date_end, npseries FROM data WHERE id_data = 0",
+  "update_urlend": "UPDATE data SET url_end = :url_end, date_end = :date_end, npseries = :npseries WHERE id_data = 0"
+}

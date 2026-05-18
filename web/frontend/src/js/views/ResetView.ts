@@ -30,7 +30,6 @@ export class ResetView implements View {
           <div class="login-footer">
             <p><a href="/login">Volver al inicio de sesión</a></p>
           </div>
-          <input type="hidden" name="csrf_token_form" value="" id="csrf-reset">
         </form>
       </div>
     `;
@@ -41,7 +40,6 @@ export class ResetView implements View {
     if (this.form) {
       this.form.addEventListener('submit', this.handleSubmit.bind(this));
     }
-    this.updateCsrfToken();
   }
 
   cleanup(): void {
@@ -56,13 +54,9 @@ export class ResetView implements View {
 
     const formData = new FormData(this.form);
     const email = formData.get('email') as string;
-    const csrfToken = (document.getElementById('csrf-reset') as HTMLInputElement)?.value || '';
 
     try {
-      const response = await connection.post('/reset', {
-        email,
-        csrf_token_form: csrfToken
-      });
+      const response = await connection.post('/reset', { email });
 
       if (response?.status === 200) {
         showMessage('Instrucciones enviadas a tu correo', 'success');
@@ -72,14 +66,6 @@ export class ResetView implements View {
       }
     } catch (error) {
       showMessage('Error al procesar la solicitud', 'danger');
-    }
-  }
-
-  private updateCsrfToken(): void {
-    const token = auth.getCsrfToken();
-    const input = document.getElementById('csrf-reset') as HTMLInputElement;
-    if (input && token) {
-      input.value = token;
     }
   }
 }

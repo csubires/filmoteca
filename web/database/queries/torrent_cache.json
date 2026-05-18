@@ -1,0 +1,5 @@
+{
+  "select_torrent_cache_by_date": "SELECT * FROM torrent_cache WHERE date_cached = :date_cached",
+  "insert_torrent_cache": "INSERT INTO torrent_cache (date_cached, movies_json, series_json, url_end, npseries) VALUES (:date_cached, :movies_json, :series_json, :url_end, :npseries)",
+  "update_torrent_cache": "UPDATE torrent_cache SET movies_json = :movies_json, series_json = :series_json, url_end = :url_end, npseries = :npseries WHERE date_cached = :date_cached"
+}

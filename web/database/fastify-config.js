@@ -41,6 +41,7 @@ export default async function createFastifyApp(options = {}) {
 		await fastify.register(fastifyFormbody.default);
 	}
 
+
 if (enableSessions) {
   const fastifySecureSession = await import('@fastify/secure-session');
 

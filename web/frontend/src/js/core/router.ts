@@ -31,8 +31,8 @@ export class Router {
         this.routes = Object.entries(routes).map(([path, component]) => ({
             path,
             component,
-protected: path.startsWith('/maintenance') || path.startsWith('/menu2222/'),
-admin: path.startsWith('/maintenance')
+            protected: path.startsWith('/maintenance') || path.startsWith('/menu/search') || path.startsWith('/auth/search') || path.startsWith('/menu2222/'),
+            admin: false
         }));
         this.renderer = Renderer.getInstance();
         this.setupEventListeners();
@@ -63,8 +63,10 @@ admin: path.startsWith('/maintenance')
     }
 
 async handleRoute(): Promise<void> {
-    const path = window.location.pathname;
+    const url = new URL(window.location.href);
+    const path = url.pathname;
     const route = this.matchRoute(path);
+    const queryParams = Object.fromEntries(url.searchParams.entries());
 
     if (route?.protected && !auth.isAuthenticated()) {
         this.navigate('/login');
@@ -78,9 +80,12 @@ async handleRoute(): Promise<void> {
 
     this.renderer.showLoading(true);
 
+    // Limpiar todos los modales abiertos antes de navegar
+    this.cleanupModals();
+
     try {
         if (route) {
-            await this.loadView(route);
+            await this.loadView(route, queryParams);
         } else {
             await this.show404();
         }
@@ -94,9 +99,24 @@ async handleRoute(): Promise<void> {
     }
 }
 
+private cleanupModals(): void {
+    // Cerrar todos los paneles de información de películas
+    document.querySelectorAll('.card-info-film.visible').forEach(panel => {
+        panel.classList.remove('visible');
+        panel.setAttribute('aria-hidden', 'true');
+    });
+    document.body.classList.remove('movie-overlay-open');
+
+    // Cerrar modal si existe
+    const container = document.getElementById('modal-container');
+    const modalContent = document.getElementById('modal-content');
+    if (container) container.classList.remove('active');
+    if (modalContent) modalContent.classList.remove('visible');
+}
 
 
-    private async loadView(route: RouteWithParams): Promise<void> {
+
+    private async loadView(route: RouteWithParams, queryParams: Record<string, string> = {}): Promise<void> {
         if (this.currentView?.cleanup) {
             this.currentView.cleanup();
         }
@@ -112,14 +132,15 @@ async handleRoute(): Promise<void> {
 
             const view = new ViewClass();
             this.currentView = view;
+            const params = { ...route.params, ...queryParams };
 
-            const content = await view.render(route.params);
+            const content = await view.render(params);
             this.renderer.renderPage({
-                title: this.getPageTitle(route.params),
+                title: this.getPageTitle(params),
                 content
             });
 
-            view.afterRender?.(route.params);
+            view.afterRender?.(params);
         } catch (error) {
             console.error('Error loading view:', error);
             throw error;
@@ -177,7 +198,18 @@ async handleRoute(): Promise<void> {
     private getPageTitle(params: Record<string, string>): string {
         const path = window.location.pathname;
         if (path === '/') return 'Inicio - Gestor de Películas';
-        if (path.startsWith('/view')) return `Películas - ${params.id === '0' ? 'Recientes' : `Género ${params.id}`}`;
+        if (path.startsWith('/view')) {
+            if (params.search) return `Búsqueda - ${params.search}`;
+            if (params.id && params.id !== '0') return `Películas - ${params.id}`;
+            return 'Películas Recientes';
+        }
+        if (path.startsWith('/menu/inventories')) {
+            if (params.year) return `Inventarios - ${params.year}`;
+            return 'Inventarios';
+        }
+        if (path.startsWith('/menu/search') || path.startsWith('/auth/search')) {
+            return 'Búsqueda Avanzada';
+        }
         if (path.startsWith('/login')) return 'Iniciar Sesión';
         if (path.startsWith('/signup')) return 'Registro';
         return 'Gestor de Películas';

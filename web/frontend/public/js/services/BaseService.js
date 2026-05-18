@@ -15,15 +15,10 @@ export class BaseService {
             return null;
         }
     }
-    getCsrfToken() {
-        const meta = document.querySelector('meta[name="csrf-token"]');
-        return meta?.getAttribute('content') ?? null;
+    getFormToken() {
+        return null;
     }
     buildParams(params) {
-        const csrfToken = this.getCsrfToken();
-        if (csrfToken) {
-            params.csrf_token_form = csrfToken;
-        }
         return params;
     }
     encodeParams(params) {

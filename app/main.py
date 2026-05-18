@@ -82,13 +82,46 @@ def main():
         oSRVC.purge_duplicate_img()
         del oSRVC
 
+    elif arg1 == 'torrent':
+        lg_prt('t', 'BUSCAR NUEVOS TORRENTS ')
+        oSRVC = HandlerService()
+        from modules.torrent import get_torrents
+
+        # Obtener configuración actual
+        result = oSRVC.oDTB.execute('select_urlend')
+        url_end, date_end, npseries = None, None, 1
+        if result:
+            url_end = result[0].get('url_end')
+            date_end = result[0].get('date_end')
+            npseries = result[0].get('npseries', 1)
+
+        current_date = dt_format('symd')
+
+        # Buscar si es diferente al día actual
+        if not date_end or str(date_end) != str(current_date):
+            lg_prt('gy', '[▪] Buscando torrents...')
+            data = get_torrents(oSRVC.oCNT, url_end, npseries)
+
+            if data and len(data) > 2:
+                # Actualizar base de datos
+                oSRVC.oDTB.execute('update_urlend', {
+                    'url_end': data[2],
+                    'date_end': current_date,
+                    'npseries': data[3] if len(data) > 3 else npseries
+                })
+                lg_prt('gy', f'[✔] Se encontraron {len(data[0])} películas')
+        else:
+            lg_prt('gy', '[✔] Usando datos en caché (fecha actual)')
+
+        del oSRVC
+
     elif arg1 == 'backup':
         lg_prt('t', 'CREAR UNA COPIA DE LA BASE DE DATOS ')
         from shutil import copy                         # Para hacer el backup de la base de datos
         from config.constant import DB_FILE      # Nombre de la BD
         backup_date = dt_format('symdthms')
-        copy(DB_FILE, f'../data/backups/{backup_date}_movieDB.db')
-        lg_prt('gy', '[✔] Backup created in', f'"backups/{backup_date}_movieDB.db"')
+        copy(DB_FILE, f'../data/backups/{backup_date}_filmoteca.db')
+        lg_prt('gy', '[✔] Backup created in', f'"backups/{backup_date}_filmoteca.db"')
 
     elif arg1 == 'reduce':
         lg_prt('t', 'REDUCIR EL TAMAÑO DE LAS IMÁGENES ')

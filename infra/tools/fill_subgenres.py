@@ -24,7 +24,7 @@ from modules.utils import lg_prt						# Mostrar y Colorear texto en consola
 from modules.security import seconds_to_time, bytes_to_human
 
 
-oDTB = HandlerSQL('data/movieDB.db', TAG_QUERY)
+oDTB = HandlerSQL('data/filmoteca.db', TAG_QUERY)
 
 # Actualizar STR de géneros
 rows = oDTB.execute('get_all_genre')

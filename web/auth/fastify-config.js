@@ -8,6 +8,7 @@ export default async function createFastifyApp(options = {}) {
 		enableSessions = false,
 		corsOrigin = false,
 		getSessionSecret = null,
+		enableJWT = false,
 	} = options;
 
 
@@ -36,9 +37,27 @@ export default async function createFastifyApp(options = {}) {
 		});
 	}
 
+	// Register cookie plugin first (needed before JWT)
+	if (enableJWT || serviceName === 'auth-service') {
+		const fastifyCookie = await import('@fastify/cookie');
+		await fastify.register(fastifyCookie.default);
+	}
+
 	if (serviceName === 'api-gateway' || serviceName === 'auth-service') {
 		const fastifyFormbody = await import('@fastify/formbody');
 		await fastify.register(fastifyFormbody.default);
+	}
+
+	if (enableJWT) {
+		const fastifyJwt = await import('@fastify/jwt');
+		const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+		await fastify.register(fastifyJwt.default, {
+			secret: jwtSecret,
+			cookie: {
+				cookieName: 'auth_token',
+				signed: false
+			}
+		});
 	}
 
 if (enableSessions) {

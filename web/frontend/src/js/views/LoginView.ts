@@ -1,6 +1,6 @@
 import { View } from '../core/router.js';
 import { auth } from '../main.js';
-import { showMessage } from '../utils.js';
+// import { showMessage } from '../utils.js';
 
 export class LoginView implements View {
   private form: HTMLFormElement | null = null;
@@ -49,7 +49,6 @@ export class LoginView implements View {
               <a href="/signup">Regístrate aquí</a>
             </p>
           </div>
-          <input type="hidden" name="csrf_token_form" value="" id="csrf-login">
         </form>
       </div>
     `;
@@ -60,7 +59,6 @@ export class LoginView implements View {
     if (this.form) {
       this.form.addEventListener('submit', this.handleSubmit.bind(this));
     }
-    this.updateCsrfToken();
   }
 
   cleanup(): void {
@@ -76,17 +74,8 @@ export class LoginView implements View {
     const formData = new FormData(this.form);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    const csrfToken = (document.getElementById('csrf-login') as HTMLInputElement)?.value || '';
 
-    await auth.login(email, password, csrfToken);
-  }
-
-  private updateCsrfToken(): void {
-    const token = auth.getCsrfToken();
-    const input = document.getElementById('csrf-login') as HTMLInputElement;
-    if (input && token) {
-      input.value = token;
-    }
+    await auth.login(email, password);
   }
 }
 

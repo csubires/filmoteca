@@ -1,6 +1,8 @@
 @use "sass:color";
 @use "sass:map";
+@use "constants" as c;
 
+// CONTAINER - Flexbox container with customizable padding/margin/background
 @mixin make-container($padding, $margin, $background) {
 	background-color: $background;
 	width: calc(100vw - $margin * 3);
@@ -12,10 +14,12 @@
 	border-radius: 5px;
 }
 
+// BUTTON - Generate themed button variants (primary, danger, success, etc.)
 @mixin make-button($color, $background) {
 	color: $color;
 	background-color: $background;
 	border-color: $background;
+	transition: background-color c.$transition-fast, border-color c.$transition-fast, box-shadow c.$transition-fast;
 
 	&:hover,
 	&:active {
@@ -24,7 +28,7 @@
 	}
 
 	&:focus {
-		box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+		box-shadow: c.$shadow-focus;
 	}
 
 	&-outline {
@@ -55,6 +59,7 @@
 	}
 }
 
+// BUTTON GROUP - Generate all button variants from map
 @mixin make-all-button($buttons) {
 	@each $name, $value in $buttons {
 		.btn-#{$name} {
@@ -64,8 +69,9 @@
 	}
 }
 
+// ALERT - Generate themed alerts
 @mixin make-alert($color, $background, $border) {
-	z-index: 999;
+	z-index: c.$z-modal-backdrop;
 	color: $color;
 	background-color: $background;
 	border-color: $border;
@@ -81,10 +87,60 @@
 	}
 }
 
+// ICON - Generate icon backgrounds from SVG list
 @mixin make-icon($icons) {
 	@each $name in $icons {
 		.icon-#{$name} {
 			background-image: url('icons/#{$name}.svg');
 		}
+	}
+}
+
+// HOVER EFFECT - Combine scale and shadow for interactive elements
+@mixin hover-lift($scale: 1.07, $shadow: c.$shadow-lg) {
+	transition: transform c.$transition-slow, box-shadow c.$transition-slow;
+
+	&:hover {
+		transform: scale($scale);
+		box-shadow: $shadow;
+	}
+}
+
+// OVERLAY/MODAL - Common overlay positioning and animation
+@mixin modal-overlay($initial-visibility: hidden) {
+	position: fixed;
+	visibility: $initial-visibility;
+	opacity: if($initial-visibility == hidden, 0, 1);
+	transition: opacity c.$transition-base, visibility c.$transition-base;
+	pointer-events: if($initial-visibility == hidden, none, auto);
+
+	&.visible {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+
+// TRUNCATE - Single line text truncation
+@mixin truncate {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+// RESPOND-TO - Mobile-first responsive breakpoints
+@mixin respond-to($breakpoint) {
+	@if $breakpoint == "xs" {
+		@media (min-width: c.$breakpoint-xs) { @content; }
+	} @else if $breakpoint == "sm" {
+		@media (min-width: c.$breakpoint-sm) { @content; }
+	} @else if $breakpoint == "md" {
+		@media (min-width: c.$breakpoint-md) { @content; }
+	} @else if $breakpoint == "lg" {
+		@media (min-width: c.$breakpoint-lg) { @content; }
+	} @else if $breakpoint == "xl" {
+		@media (min-width: c.$breakpoint-xl) { @content; }
+	} @else if $breakpoint == "2xl" {
+		@media (min-width: c.$breakpoint-2xl) { @content; }
 	}
 }

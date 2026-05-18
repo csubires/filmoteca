@@ -105,11 +105,9 @@ export abstract class BaseView {
         this.navigate(window.location.pathname);
     }
 
-// Error similar al de connection.ts
-protected getCsrfToken(): string | null {
-    const meta = document.querySelector('meta[name="csrf-token"]');
-    return meta?.getAttribute('content') || null; // Asegurar que no sea undefined
-}
+    protected getAuthToken(): string | null {
+        return null;
+    }
 
     // Formatear fecha
     protected formatDate(date: string | Date): string {
@@ -131,9 +129,10 @@ protected getCsrfToken(): string | null {
 
     // Confirmar acción
     protected confirm(message: string): Promise<boolean> {
-        return new Promise((resolve) => {
-            const result = window.confirm(message);
-            resolve(result);
+        return this.modalManager.confirm(message, {
+            title: 'Confirmación',
+            confirmText: 'Aceptar',
+            cancelText: 'Cancelar'
         });
     }
 

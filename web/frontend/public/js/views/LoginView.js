@@ -47,7 +47,6 @@ export class LoginView {
               <a href="/signup">Regístrate aquí</a>
             </p>
           </div>
-          <input type="hidden" name="csrf_token_form" value="" id="csrf-login">
         </form>
       </div>
     `;
@@ -57,7 +56,6 @@ export class LoginView {
         if (this.form) {
             this.form.addEventListener('submit', this.handleSubmit.bind(this));
         }
-        this.updateCsrfToken();
     }
     cleanup() {
         if (this.form) {
@@ -71,15 +69,7 @@ export class LoginView {
         const formData = new FormData(this.form);
         const email = formData.get('email');
         const password = formData.get('password');
-        const csrfToken = document.getElementById('csrf-login')?.value || '';
-        await auth.login(email, password, csrfToken);
-    }
-    updateCsrfToken() {
-        const token = auth.getCsrfToken();
-        const input = document.getElementById('csrf-login');
-        if (input && token) {
-            input.value = token;
-        }
+        await auth.login(email, password);
     }
 }
 export default LoginView;

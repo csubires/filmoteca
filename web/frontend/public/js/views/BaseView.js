@@ -61,9 +61,8 @@ export class BaseView {
     reload() {
         this.navigate(window.location.pathname);
     }
-    getCsrfToken() {
-        const meta = document.querySelector('meta[name="csrf-token"]');
-        return meta?.getAttribute('content') || null;
+    getAuthToken() {
+        return null;
     }
     formatDate(date) {
         const d = typeof date === 'string' ? new Date(date) : date;
@@ -80,9 +79,10 @@ export class BaseView {
         this.alertManager.error(message);
     }
     confirm(message) {
-        return new Promise((resolve) => {
-            const result = window.confirm(message);
-            resolve(result);
+        return this.modalManager.confirm(message, {
+            title: 'Confirmación',
+            confirmText: 'Aceptar',
+            cancelText: 'Cancelar'
         });
     }
     debounce(func, wait) {

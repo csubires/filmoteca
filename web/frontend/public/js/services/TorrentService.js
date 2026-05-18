@@ -6,14 +6,16 @@ export class TorrentService extends BaseService {
         this.isTaskRunning = false;
         this.pollInterval = null;
     }
-    async startTask() {
+    async startTask(taskName = 'torrent', config = {}) {
         try {
-            const response = await fetch('/api/start_torrent_task', {
+            const payload = { task: taskName, config: config };
+            const response = await fetch('/api/execute_task', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'X-CSRF-Token': this.getCsrfToken() || ''
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
             const data = await response.json();
             if (data?.taskId) {
@@ -25,24 +27,24 @@ export class TorrentService extends BaseService {
             return null;
         }
         catch (error) {
-            console.error('Error starting torrent task:', error);
+            console.error('Error starting task:', error);
             return null;
         }
     }
     async getTaskStatus(taskId) {
-        return this.handleRequest(this.connection.get(`/torrent_task_status?taskId=${taskId}&stamp=${Date.now()}`), 'Error al obtener estado de tarea torrent');
+        return this.handleRequest(this.connection.get(`/task_status?taskId=${taskId}&stamp=${Date.now()}`), 'Error al obtener estado de tarea');
     }
     async stopTask() {
         if (!this.currentTaskId)
             return false;
         try {
-            const response = await fetch('/api/stop_torrent_task', {
+            const response = await fetch('/api/stop_task', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': this.getCsrfToken() || ''
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ taskId: this.currentTaskId })
             });
             const result = await response.json();
             if (result.success) {
@@ -62,13 +64,13 @@ export class TorrentService extends BaseService {
         return !!response;
     }
     async getConfig() {
-        return this.handleRequest(this.connection.get(`/get_config/${this.encodeParams({})}`), 'Error al obtener configuración');
+        return this.handleRequest(this.connection.get('/get_config'), 'Error al obtener configuración');
     }
     async getMovies() {
-        return this.handleRequest(this.connection.get(`/get_torrent_movies/${this.encodeParams({})}`), 'Error al obtener películas torrent');
+        return this.handleRequest(this.connection.get('/get_torrent_movies'), 'Error al obtener películas torrent');
     }
     async getSeries() {
-        return this.handleRequest(this.connection.get(`/get_torrent_series/${this.encodeParams({})}`), 'Error al obtener series torrent');
+        return this.handleRequest(this.connection.get('/get_torrent_series'), 'Error al obtener series torrent');
     }
     startPolling() {
         if (this.pollInterval)
@@ -106,7 +108,7 @@ export class TorrentService extends BaseService {
     }
     async checkInitialState() {
         try {
-            const response = await this.connection.get('/torrent_task_status');
+            const response = await this.connection.get('/task_status');
             if (response?.data) {
                 const status = response.data.task_status;
                 if (status === 'running' || status === 'pending') {

@@ -44,10 +44,21 @@ class HandlerSQL {
 		if (!sql) {
 			throw new Error(`Query tag "${tagSQL}" not found`);
 		}
+		// Log query execution
+		console.log(`\n[DB] Query: ${tagSQL}`);
+		console.log(`[DB] SQL: ${sql}`);
+		console.log(`[DB] Params:`, params);
+		const startTime = Date.now();
 		return new Promise((resolve, reject) => {
 			const isSelect = sql.trim().toUpperCase().startsWith('SELECT');
 			if (isSelect) {
 				this.db.all(sql, params, (err, rows) => {
+					const duration = Date.now() - startTime;
+					if (err) {
+						console.error(`[DB] ❌ Query failed (${duration}ms):`, err.message);
+					} else {
+						console.log(`[DB] ✅ Query success (${duration}ms) - ${rows?.length || 0} rows`);
+					}
 					if (err) reject(err);
 					else {
 						this.lastAffected = rows ? rows.length : 0;
@@ -56,9 +67,12 @@ class HandlerSQL {
 				});
 			} else {
 				this.db.run(sql, params, (err) => {
+					const duration = Date.now() - startTime;
 					if (err) {
+						console.error(`[DB] ❌ Query failed (${duration}ms):`, err.message);
 						reject(err);
 					} else {
+						console.log(`[DB] ✅ Query success (${duration}ms) - ${this.db.changes} rows affected`);
 						this.lastAffected = this.db.changes;
 						resolve({
 							changes: this.db.changes,

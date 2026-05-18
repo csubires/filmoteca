@@ -11,7 +11,7 @@ La aplicación web de Filmoteca ha sido refactorizada de un monolito (`web/backe
 - **Descripción**: Punto de entrada único para la aplicación
 - **Responsabilidades**:
   - Servir archivos estáticos del frontend (`web/frontend/public`)
-  - Servir imágenes de portadas (`/covers/*`)
+  - Servir imágenes de portadas (`/posters/*`)
   - Enrutar peticiones API a los microservicios correspondientes
   - CORS y configuración de cabeceras
 - **Variables de entorno**:
@@ -37,7 +37,7 @@ La aplicación web de Filmoteca ha sido refactorizada de un monolito (`web/backe
   - `DELETE /database/api/delete_movie` - Eliminar película
   - `GET /database/api/stats/summary` - Estadísticas generales
 - **Variables de entorno**:
-  - `DB_PATH`: Ruta de la base de datos SQLite (default: `../../data/movieDB.db`)
+  - `DB_PATH`: Ruta de la base de datos SQLite (default: `../../data/filmoteca.db`)
   - `QUERIES_PATH`: Ruta al archivo de queries en JSON (default: `./queries.json`)
 
 ### 3. **Auth Service** (`web/auth`)
@@ -132,7 +132,7 @@ Los archivos de traducción están en `web/i18n/locales/`:
 
 El frontend se sirve desde el Gateway (puerto 3000):
 - Archivos estáticos: `web/frontend/public/*`
-- Imágenes de portadas: `web/frontend/public/assets/covers/*`
+- Imágenes de portadas: `web/frontend/public/assets/posters/*`
 
 Las peticiones a `/api/*` se enrutan automáticamente a los microservicios.
 

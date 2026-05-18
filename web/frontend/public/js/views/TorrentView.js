@@ -18,7 +18,38 @@ export class TorrentView extends BaseView {
                     </a>
                 </div>
 
-                <div class="torrent-config card" id="torrent-config"></div>
+                <div class="torrent-config card" id="torrent-config">
+                    <div class="form-group">
+                        <label>Tarea</label>
+                        <select id="task-select">
+                            <option value="torrent">Buscar Torrents</option>
+                            <option value="local">Escaneo Local</option>
+                            <option value="inet">Actualizar Internet</option>
+                            <option value="ranking">Ranking</option>
+                            <option value="covers">Comprobar Portadas</option>
+                            <option value="backup">Backup</option>
+                            <option value="reduce">Reducir Imágenes</option>
+                        </select>
+                    </div>
+                    <div id="task-config-area"></div>
+                    <div class="form-actions">
+                        <button id="save-config" class="btn btn-primary" style="display:none;">Guardar configuración</button>
+                        <button id="search-torrents" class="btn btn-success">Ejecutar tarea</button>
+                    </div>
+                </div>
+
+                <div id="torrent-progress" class="progress-section" style="display: none;">
+                    <h3>Estado de la búsqueda</h3>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar-container">
+                            <div id="progress-bar" class="progress-bar" style="width: 0%; background: linear-gradient(90deg, #3498db, #2ecc71); height: 30px; border-radius: 4px;"></div>
+                        </div>
+                        <span id="progress-percent" class="progress-percent">0%</span>
+                    </div>
+                    <p id="progress-message" class="progress-message">Iniciando búsqueda...</p>
+                    <textarea id="torrent-logs" class="torrent-logs" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; font-family: monospace; font-size: 12px; margin-top: 10px;"></textarea>
+                    <button id="cancel-task" class="btn btn-danger" style="margin-top: 10px;">Cancelar búsqueda</button>
+                </div>
 
                 <div class="torrent-tabs">
                     <button class="tab-btn active" data-tab="movies">Películas</button>
@@ -26,14 +57,6 @@ export class TorrentView extends BaseView {
                 </div>
 
                 <div id="torrent-content" class="torrent-content"></div>
-
-                <div id="torrent-progress" class="progress-container" style="display: none;">
-                    <div class="progress">
-                        <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
-                    </div>
-                    <p id="progress-message">Iniciando búsqueda...</p>
-                    <button id="cancel-task" class="btn btn-danger">Cancelar</button>
-                </div>
             </div>
         `;
     }
@@ -45,6 +68,46 @@ export class TorrentView extends BaseView {
         ]);
         this.setupEventListeners();
         await this.torrentService.checkInitialState();
+        this.setupTaskSelector();
+    }
+    setupTaskSelector() {
+        const taskSelect = document.getElementById('task-select');
+        const configArea = document.getElementById('task-config-area');
+        if (!taskSelect || !configArea)
+            return;
+        const renderConfigFor = (task) => {
+            if (task === 'torrent') {
+                configArea.innerHTML = `
+                    <div class="form-group">
+                        <label>Último torrent</label>
+                        <input type="text" id="last-torrent" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Páginas de series</label>
+                        <input type="range" id="np-series" min="0" max="10" step="1" value="1">
+                    </div>
+                `;
+            }
+            else if (task === 'local') {
+                configArea.innerHTML = `
+                    <div class="form-group">
+                        <label>HDD</label>
+                        <input type="number" id="hdd" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Actualizar estadísticas</label>
+                        <input type="checkbox" id="stats" checked>
+                    </div>
+                `;
+            }
+            else {
+                configArea.innerHTML = `<p>No hay opciones de configuración para esta tarea.</p>`;
+            }
+        };
+        taskSelect.addEventListener('change', (e) => {
+            renderConfigFor(e.target.value);
+        });
+        renderConfigFor(taskSelect.value);
     }
     async loadConfig() {
         try {
@@ -52,33 +115,15 @@ export class TorrentView extends BaseView {
             const container = document.getElementById('torrent-config');
             if (!container)
                 return;
-            const csrfToken = this.getCsrfToken();
-            container.innerHTML = `
-                <h3>Configuración</h3>
-                <div class="config-form">
-                    <div class="form-group">
-                        <label>Último torrent</label>
-                        <input type="text" id="last-torrent" value="${config?.url_end || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha</label>
-                        <input type="text" id="last-date" value="${config?.date_end || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Páginas de series (${config?.npseries || 0})</label>
-                        <input type="range" id="np-series" min="0" max="10" step="1"
-                               value="${config?.npseries || 0}">
-                    </div>
-                    <div class="form-actions">
-                        <button id="save-config" class="btn btn-primary" data-csrf="${csrfToken}">
-                            Guardar configuración
-                        </button>
-                        <button id="search-torrents" class="btn btn-success">
-                            Buscar nuevos torrents
-                        </button>
-                    </div>
-                </div>
-            `;
+            const lastTorrent = document.getElementById('last-torrent');
+            if (lastTorrent)
+                lastTorrent.value = config?.url_end || '';
+            const lastDate = document.getElementById('last-date');
+            if (lastDate)
+                lastDate.value = config?.date_end || '';
+            const npSeries = document.getElementById('np-series');
+            if (npSeries)
+                npSeries.value = String(config?.npseries || 0);
         }
         catch (error) {
             this.handleError(error, 'Error al cargar configuración');
@@ -210,15 +255,54 @@ export class TorrentView extends BaseView {
     async startTorrentSearch() {
         try {
             this.showProgress();
-            const taskId = await this.torrentService.startTask();
+            this.clearLogs();
+            this.addLog('Iniciando búsqueda de torrents...');
+            const taskSelect = document.getElementById('task-select');
+            const selectedTask = taskSelect ? taskSelect.value : 'torrent';
+            let config = {};
+            if (selectedTask === 'torrent') {
+                config = {
+                    url_end: document.getElementById('last-torrent')?.value || null,
+                    npseries: parseInt(document.getElementById('np-series')?.value || '1')
+                };
+            }
+            else if (selectedTask === 'local') {
+                config = {
+                    hdd: parseInt(document.getElementById('hdd')?.value || '0'),
+                    stats: !!document.getElementById('stats')?.checked
+                };
+            }
+            const taskId = await this.torrentService.startTask(selectedTask, config);
             if (!taskId) {
                 throw new Error('No se pudo iniciar la tarea');
             }
-            let progress = 0;
-            this.pollingInterval = window.setInterval(() => {
-                progress = Math.min(progress + 5, 90);
-                this.updateProgress(progress, 'Buscando torrents...');
-            }, 1000);
+            this.addLog(`Tarea iniciada: ${taskId} (${selectedTask})`);
+            const pollInterval = window.setInterval(async () => {
+                try {
+                    const status = await this.torrentService.getTaskStatus(taskId);
+                    if (status?.task_status === 'completed' || status?.task_status === 'failed') {
+                        clearInterval(pollInterval);
+                        this.updateProgress(100, status?.task_status === 'completed' ? 'Búsqueda completada' : 'Error en búsqueda');
+                        this.hideProgress();
+                        if (status?.task_status === 'completed') {
+                            this.alertManager.success('Búsqueda completada');
+                            setTimeout(() => {
+                                this.loadMovies();
+                                this.loadSeries();
+                            }, 1000);
+                        }
+                        else {
+                            this.alertManager.error(status?.error || 'Error en la búsqueda');
+                        }
+                    }
+                    else {
+                        this.updateProgress(status?.progress || 0, status?.message || 'Buscando...');
+                    }
+                }
+                catch (error) {
+                    this.addLog(`Error en polling: ${error}`);
+                }
+            }, 2000);
         }
         catch (error) {
             this.hideProgress();
@@ -244,12 +328,30 @@ export class TorrentView extends BaseView {
     }
     updateProgress(percent, message) {
         const bar = document.getElementById('progress-bar');
-        const text = document.getElementById('progress-message');
+        const percentEl = document.getElementById('progress-percent');
+        const msgEl = document.getElementById('progress-message');
         if (bar) {
             bar.style.width = `${percent}%`;
         }
-        if (text) {
-            text.textContent = message;
+        if (percentEl) {
+            percentEl.textContent = `${percent}%`;
+        }
+        if (msgEl) {
+            msgEl.textContent = message;
+        }
+    }
+    addLog(message) {
+        const logsArea = document.getElementById('torrent-logs');
+        if (logsArea) {
+            const timestamp = new Date().toLocaleTimeString();
+            logsArea.value += `[${timestamp}] ${message}\n`;
+            logsArea.scrollTop = logsArea.scrollHeight;
+        }
+    }
+    clearLogs() {
+        const logsArea = document.getElementById('torrent-logs');
+        if (logsArea) {
+            logsArea.value = '';
         }
     }
     getRatingClass(rating) {

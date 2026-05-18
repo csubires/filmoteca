@@ -14,8 +14,8 @@ from filmoteca.modules.database import HandlerSQL					# Manejador de la base de 
 from filmoteca.config.queries_database import TAG_QUERY
 from filmoteca.modules.utils import lg_prt						# Mostrar y Colorear texto en consola
 
-GENRE_PATH = 'filmoteca/server/assets/genres/'
-COVER_PATH = 'filmoteca/server/assets/covers/'
+GENRE_PATH = 'filmoteca/web/assets/genres/'
+COVER_PATH = 'filmoteca/data/posters/'
 
 
 def gen_image(id_genre, new_file):
@@ -61,7 +61,7 @@ def gen_image(id_genre, new_file):
 
 
 # 1 - Obtener lista de géneros y subgéneros
-oDTB = HandlerSQL('filmoteca/data/movieDB.db', TAG_QUERY)
+oDTB = HandlerSQL('filmoteca/data/filmoteca.db', TAG_QUERY)
 
 rows = oDTB.execute('get_all_genre')
 for row in rows:

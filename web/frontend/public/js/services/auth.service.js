@@ -4,6 +4,7 @@ export class AuthService {
         this.currentUser = null;
         this.connection = connection;
         this.loadSession();
+        this.ready = this.bootstrap();
     }
     loadSession() {
         const sessionStr = sessionStorage.getItem('user');
@@ -20,6 +21,39 @@ export class AuthService {
         this.currentUser = user;
         sessionStorage.setItem('user', JSON.stringify(user));
     }
+    clearSession() {
+        this.currentUser = null;
+        sessionStorage.removeItem('user');
+    }
+    async bootstrap() {
+        if (this.currentUser?.auth)
+            return;
+        try {
+            const response = await fetch('/auth/verify', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                this.clearSession();
+                return;
+            }
+            const payload = await response.json();
+            const user = payload?.user;
+            if (user?.email) {
+                this.saveSession({
+                    email: user.email,
+                    role: user.role || 'user',
+                    auth: true
+                });
+            }
+            else {
+                this.clearSession();
+            }
+        }
+        catch {
+            this.clearSession();
+        }
+    }
     getRoleFromCookie() {
         const cookies = document.cookie.split(';');
         const roleCookie = cookies.find(c => c.trim().startsWith('user_role='));
@@ -28,32 +62,34 @@ export class AuthService {
         }
         return 'user';
     }
-    async login(email, password, csrfToken) {
-        const formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('csrf_token_form', csrfToken);
+    async login(email, password) {
         try {
-            const response = await fetch('/login', {
+            const response = await fetch('/auth/login', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
             });
-            if (response.redirected) {
-                const role = this.getRoleFromCookie();
-                this.currentUser = {
-                    email: email,
-                    role: role,
+            const contentType = response.headers.get('content-type') || '';
+            const payload = contentType.includes('application/json')
+                ? await response.json()
+                : { message: await response.text() };
+            if (response.ok) {
+                const user = payload?.user || {};
+                this.saveSession({
+                    email: user.email || email,
+                    role: user.role || 'user',
                     auth: true
-                };
-                this.saveSession(this.currentUser);
-                window.location.href = response.url;
+                });
+                showMessage(payload?.message || 'Login exitoso', 'success');
+                window.location.href = '/';
                 return true;
             }
-            const html = await response.text();
-            const errorMatch = html.match(/alert alert-(\w+)["']?>(.*?)<\/div>/);
-            if (errorMatch) {
-                showMessage(errorMatch[2], errorMatch[1]);
-            }
+            showMessage(payload?.error ||
+                payload?.message ||
+                'No se pudo iniciar sesión', 'danger');
             return false;
         }
         catch (error) {
@@ -63,24 +99,25 @@ export class AuthService {
         }
     }
     async signup(credentials) {
-        const formData = new FormData();
-        Object.entries(credentials).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
         try {
-            const response = await fetch('/signup', {
+            const response = await fetch('/auth/register', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(credentials)
             });
-            if (response.redirected) {
-                window.location.href = response.url;
+            const contentType = response.headers.get('content-type') || '';
+            const payload = contentType.includes('application/json')
+                ? await response.json()
+                : { message: await response.text() };
+            if (response.ok) {
+                showMessage(payload?.message || 'Usuario registrado exitosamente', 'success');
+                window.location.href = '/login';
                 return true;
             }
-            const html = await response.text();
-            const errorMatch = html.match(/alert alert-(\w+)["']?>(.*?)<\/div>/);
-            if (errorMatch) {
-                showMessage(errorMatch[2], errorMatch[1]);
-            }
+            showMessage(payload?.error || payload?.message || 'No se pudo registrar el usuario', 'danger');
             return false;
         }
         catch (error) {
@@ -91,9 +128,11 @@ export class AuthService {
     }
     async logout() {
         try {
-            await fetch('/logout');
-            this.currentUser = null;
-            sessionStorage.removeItem('user');
+            await fetch('/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            this.clearSession();
             window.location.href = '/';
         }
         catch (error) {
@@ -106,8 +145,7 @@ export class AuthService {
     getUser() {
         return this.currentUser;
     }
-    getCsrfToken() {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
-        return metaTag?.getAttribute('content') || null;
+    getFormToken() {
+        return null;
     }
 }

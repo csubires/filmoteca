@@ -1,10 +1,14 @@
-DB_FILE = '../data/movieDB.db'
+import os
+
+# Get the project root directory (filmoteca folder)
+_project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_FILE = os.path.join(_project_root, 'data', 'filmoteca.db')
 MOVIE_PATH = ('/mnt/hgfs/movies/', '/mnt/hgfs/ext_movies/')
 MOVIEXT = ('3gp', 'asf', 'avi', 'divx', 'dvd', 'flv', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'qt', 'qtl', 'swf', 'vob', 'webm', 'wmv')
 GENRE_TAG = {'acción': 'AC', 'animación': 'AN', 'aventuras': 'AV', 'bélico': 'BE', 'ciencia ficción': 'C-F', 'cinenegro': 'F-N', 'comedia': 'CO', 'desconocido': 'DESC', 'documental': 'DO', 'drama': 'DR', 'fantástico': 'FAN', 'infantil': 'INF', 'intriga': 'INT', 'musical': 'MU', 'romance': 'RO', 'seriedetv': 'TV_SE', 'terror': 'TE', 'thriller': 'TH', 'western': 'WE'}
 URL_BASE = 'https://www.filmaffinity.com'
 URL_PICT = 'https://pics.filmaffinity.com'
-PATH_COVERS = '../web/frontend/public/assets/covers/%s'
+PATH_COVERS = os.path.join(_project_root, 'data', 'posters', '%s')
 YEAR_INIT_RATING = 2025
 NUM_LAST_MOV = 50								# Número de últimas películas añadidas a mostrar
 NUMMOV_X_SEARCH = 10							# Número máximo de películas obtenidas por busqueda

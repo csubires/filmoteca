@@ -31,7 +31,7 @@ help:
 # Sass watch
 sass:
 	@echo "Para producción ejecutar \"sass --watch example.scss:example.css --style compressed\""
-	sass --watch --update ./web/frontend/src/scss/index.scss:frontend/public/css/styles.css
+	sass --watch --update ./web/frontend/src/scss/index.scss:./web/frontend/public/css/styles.css
 
 # Node.js scripts
 start:
@@ -48,7 +48,7 @@ db-backup:
 
 # TypeScript watch
 tsc:
-	tsc --watch --project web/frontend/tsconfig.json
+	npm --prefix web run tsc
 
 # Modo desarrollo completo: Sass + TypeScript + Nodemon
 all:

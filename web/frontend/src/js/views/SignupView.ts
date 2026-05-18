@@ -29,7 +29,6 @@ export class SignupView implements View {
                    class="form-control"
                    id="email"
                    name="email"
-                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                    placeholder=" "
                    required>
             <label for="email">Correo electrónico</label>
@@ -68,7 +67,6 @@ export class SignupView implements View {
               <a href="/login">Inicia sesión aquí</a>
             </p>
           </div>
-          <input type="hidden" name="csrf_token_form" value="" id="csrf-signup">
         </form>
       </div>
     `;
@@ -79,7 +77,6 @@ export class SignupView implements View {
     if (this.form) {
       this.form.addEventListener('submit', this.handleSubmit.bind(this));
     }
-    this.updateCsrfToken();
   }
 
   cleanup(): void {
@@ -105,19 +102,10 @@ export class SignupView implements View {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       password: password,
-      repeat_password: repeatPassword,
-      csrf_token_form: (document.getElementById('csrf-signup') as HTMLInputElement)?.value || ''
+      repeat_password: repeatPassword
     };
 
     await auth.signup(credentials);
-  }
-
-  private updateCsrfToken(): void {
-    const token = auth.getCsrfToken();
-    const input = document.getElementById('csrf-signup') as HTMLInputElement;
-    if (input && token) {
-      input.value = token;
-    }
   }
 }
 

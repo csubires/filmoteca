@@ -8,7 +8,7 @@
 
 .maintenance-list {
     @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: c.$shadow-lg;
 
     summary {
         text-transform: uppercase;
@@ -26,7 +26,7 @@
         a {
             color: c.$bs-gray-900;
             background-color: white;
-            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.2);
+            box-shadow: c.$shadow-md;
             width: 20rem;
 
             p {
@@ -57,7 +57,7 @@
             list-style-type: none;
             position: absolute;
             background-color: c.$bs-gray-100;
-            z-index: 3;
+            z-index: c.$z-modal-backdrop;
             width: calc(100% - 5.9rem);
             left: 2rem;
             padding: 1rem;
@@ -74,7 +74,7 @@
 
 .container-advance-search {
     @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: c.$shadow-lg;
 
     summary {
         text-transform: uppercase;
@@ -84,14 +84,14 @@
     #form-advance-search {
         display: flex;
         flex-direction: row;
-        z-index: 999;
+        z-index: c.$z-modal-overlay;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1rem;
         padding: 1rem;
 
         >div {
-            width: 49%;
+            //width: 49%;
             border: 1px solid c.$bs-gray-200;
             border-radius: 5px;
 
@@ -106,7 +106,6 @@
             input,
             select {
                 text-align: center;
-                text-transform: capitalize;
             }
 
             input[type=number] {
@@ -137,7 +136,7 @@
 .container-global-data {
     @include mixins.make-container(1rem, 2rem, transparent);
 	display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     text-transform: uppercase;
 
@@ -165,7 +164,10 @@
 
     table {
         outline: 1px solid c.$bs-gray-500;
+
     }
+
+
 
     b {
         opacity: .4;
@@ -190,12 +192,12 @@
         border: 1px solid c.$bs-gray-400;
         width: min-content;
         padding: 1rem;
-        transition: transform .5s ease-in-out;
+        transition: transform c.$transition-medium ease-in-out;
 
         &:hover {
             filter: saturate(150%);
             transform: scale(1.05);
-            box-shadow: 5px 5px 20px 0 black;
+            box-shadow: c.$shadow-xl;
             text-decoration: underline;
             cursor: pointer;
         }

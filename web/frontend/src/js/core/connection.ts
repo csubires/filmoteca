@@ -31,13 +31,6 @@ export class Connection {
         return Connection.instance;
     }
 
-// En js/core/connection.ts, línea 37
-private getCsrfToken(): string | null {
-    const meta = document.querySelector('meta[name="csrf-token"]');
-    return meta?.getAttribute('content') ?? null; // Cambiado: usar ?? en lugar de solo ?
-}
-
-
 private async request<T>(
     method: string,
     endpoint: string,
@@ -61,9 +54,6 @@ private async request<T>(
             'Pragma': 'no-cache',
             'Expires': '0'
         };
-
-        const csrfToken = this.getCsrfToken();
-        if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
 
         const config: RequestInit = {
             method,

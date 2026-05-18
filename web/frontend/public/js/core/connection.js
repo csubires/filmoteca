@@ -19,10 +19,6 @@ export class Connection {
         }
         return Connection.instance;
     }
-    getCsrfToken() {
-        const meta = document.querySelector('meta[name="csrf-token"]');
-        return meta?.getAttribute('content') ?? null;
-    }
     async request(method, endpoint, data, options = {}) {
         const { showAlerts = true, timeout = 30000 } = options;
         const url = endpoint.startsWith('http') ? endpoint : this.baseUrl + endpoint;
@@ -36,9 +32,6 @@ export class Connection {
                 'Pragma': 'no-cache',
                 'Expires': '0'
             };
-            const csrfToken = this.getCsrfToken();
-            if (csrfToken)
-                headers['X-CSRF-Token'] = csrfToken;
             const config = {
                 method,
                 headers,

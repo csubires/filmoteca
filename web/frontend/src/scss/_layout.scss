@@ -2,13 +2,16 @@
 @use "constants" as c;
 @use "mixins";
 
+// Expose a small set of CSS custom properties while keeping canonical values
+// in the Sass constants file. This lets JS theme toggles switch the CSS vars
+// while SCSS stays the single source of truth for colours.
 :root {
-    --color-bg-primary: #141414;
-    --color-bg-secondary: #1f1f1f;
+    --color-bg-primary: #{c.$bs-gray-900};
+    --color-bg-secondary: #{c.$bs-gray-dark};
     --color-bg-card: #1a1a1a;
     --color-bg-nav: rgba(20, 20, 20, 0.97);
-    --color-text-primary: #e5e5e5;
-    --color-text-secondary: #a3a3a3;
+    --color-text-primary: #{c.$bs-white};
+    --color-text-secondary: #{c.$bs-gray};
     --color-text-muted: #6b6b6b;
     --color-accent: #e50914;
     --color-accent-hover: #f40612;
@@ -55,7 +58,7 @@ body {
     line-height: c.$bs-body-line-height;
     margin: 0;
     padding: 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color c.$transition-slow, color c.$transition-slow;
 }
 
 .noscript-warning {
@@ -70,7 +73,7 @@ header {
     background-color: transparent;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: c.$z-sticky-top;
     nav {
         width: 100%;
         padding: 0 2rem;
@@ -94,13 +97,13 @@ header {
             border-radius: 4px;
             gap: 0.5rem;
             width: 280px;
-            transition: width 0.3s ease, box-shadow 0.3s ease;
+            transition: width c.$transition-slow, box-shadow c.$transition-slow;
             border: 1px solid var(--color-border);
             &:hover {
                 border-color: var(--color-border-hover);
             }
             &:focus-within {
-                width: 340px;
+                width: 50%;
                 border-color: var(--color-accent);
                 box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
             }
@@ -123,7 +126,7 @@ header {
                 border-radius: 4px;
                 padding: 4px 8px;
                 background: transparent;
-                transition: color 0.2s ease;
+                transition: color c.$transition-base;
                 cursor: pointer;
                 color: var(--color-text-muted);
                 &:hover {
@@ -142,16 +145,17 @@ header {
                 padding: 4px;
                 background: transparent;
                 color: var(--color-text-muted);
-                transition: color 0.2s ease;
+                transition: color c.$transition-base;
                 &:hover {
                     color: var(--color-text-primary);
                 }
             }
         }
         .menu {
+			text-transform: capitalize;
             position: relative;
             text-align: center;
-            z-index: 100;
+            z-index: c.$z-fixed-nav;
             i {
                 font-style: normal;
                 font-weight: 600;
@@ -160,7 +164,7 @@ header {
                 background-color: transparent;
                 cursor: pointer;
                 border-radius: 4px;
-                transition: background-color 0.2s ease;
+                transition: background-color c.$transition-base;
                 display: block;
                 color: var(--color-text-primary);
                 &:hover {
@@ -171,18 +175,18 @@ header {
             .container-right {
                 background-color: var(--color-bg-secondary);
                 border: 1px solid var(--color-border);
-                box-shadow: 0 8px 32px var(--color-shadow);
+                box-shadow: c.$shadow-lg;
                 visibility: hidden;
                 opacity: 0;
                 pointer-events: none;
                 position: absolute;
                 width: 240px;
-                z-index: 110;
+                z-index: c.$z-fixed-nav;
                 top: 100%;
                 margin-top: 0.25rem;
                 border-radius: 4px;
                 transform: translateY(-8px);
-                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+                transition: opacity c.$transition-base, transform c.$transition-base, visibility 0s linear c.$transition-base;
                 .mark-opt {
                     @include mixins.make-alert(#084298, rgba(207, 226, 255, 0.15), rgba(182, 212, 254, 0.2));
                     margin: 0.5rem;
@@ -190,12 +194,16 @@ header {
                     border-left: 3px solid #e50914;
                     font-size: 0.8rem;
                 }
+				.genre-home {
+					background-color: red;
+					color: var(--color-bg-secondary);
+				}
                 a {
                     color: var(--color-text-secondary);
                     padding: 0.7rem 1.2rem;
                     text-decoration: none;
                     display: block;
-                    transition: all 0.15s ease;
+                    transition: all c.$transition-fast;
                     font-size: 0.95rem;
                     font-weight: 500;
                     border-bottom: 1px solid var(--color-border);
@@ -208,6 +216,7 @@ header {
                         border-left: 3px solid var(--color-accent);
                         padding-left: calc(1.2rem - 3px);
                     }
+
                     i {
                         background-size: 1rem;
                         padding: 0 0.5rem 0 0;
@@ -226,26 +235,36 @@ header {
                     margin: 0;
                 }
                 .theme-toggle {
+					justify-content: space-around;
                     display: flex;
                     flex-direction: row !important;
                     padding: 0.5rem 1rem;
-                    gap: 0.5rem;
+                    gap: 0.75rem;
                     border-top: 1px solid var(--color-border);
                     .btn-theme {
-                        flex: 1;
-                        padding: 0.4rem;
+                        flex: 0 0 2.5rem;
+                        width: 2.5rem;
+                        height: 2.5rem;
+                        padding: 0;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
                         border: 1px solid var(--color-border);
-                        border-radius: 4px;
+                        border-radius: 999px;
                         background: transparent;
                         color: var(--color-text-secondary);
                         cursor: pointer;
-                        font-size: 1rem;
-                        transition: all 0.2s ease;
+                        font-size: 1.05rem;
+                        transition: all c.$transition-base;
                         &:hover {
                             background-color: var(--color-accent);
                             color: white;
                             border-color: var(--color-accent);
                         }
+                    }
+
+                    .btn-language {
+                        font-size: 1rem;
                     }
                 }
             }
@@ -275,7 +294,7 @@ header {
                 opacity: 1;
                 pointer-events: auto;
                 transform: translateY(0);
-                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+                transition: opacity c.$transition-base, transform c.$transition-base, visibility 0s linear 0s;
             }
         }
     }
@@ -383,6 +402,10 @@ header {
             }
         }
     }
+}
+
+#movie-filter {
+	text-align: center;
 }
 
 @media screen and (max-width: 800px) {
@@ -553,34 +576,7 @@ header {
     }
 }
 
-.btn-login {
-    font-family: c.$bs-font-sans-serif;
-    padding: 0.875rem 2rem;
-    line-height: 1.5;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    text-decoration: none;
-    background-color: var(--color-accent);
-    border: 1px solid var(--color-accent);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    font-size: 1rem;
-    font-weight: 700;
-    width: 100%;
-    margin-top: 0.5rem;
-    letter-spacing: 0.02em;
-    &:hover {
-        background-color: var(--color-accent-hover);
-        border-color: var(--color-accent-hover);
-        color: white;
-    }
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.3);
-    }
-}
+/* .btn-login now defined in _components.scss to avoid duplication */
 
 .login-footer {
     text-align: center;
@@ -602,14 +598,7 @@ header {
     }
 }
 
-.alert-danger {
-    background-color: rgba(229, 9, 20, 0.1);
-    border: 1px solid rgba(229, 9, 20, 0.3);
-    color: #ff6b6b;
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
+/* Alerts are defined in _components.scss using mixins; keep layout minimal. */
 
 @media screen and (max-width: 800px) {
     .login-container {

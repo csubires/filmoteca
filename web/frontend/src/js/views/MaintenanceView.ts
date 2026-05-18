@@ -9,20 +9,6 @@ interface MaintenanceOption {
     description: string;
 }
 
-interface Country {
-    id: number;
-    name: string;
-    code: string;
-    flag?: string;
-}
-
-interface Genre {
-    id: number;
-    name: string;
-    path: string;
-    is_subgenre: number;
-}
-
 export class MaintenanceView extends BaseView {
     private movieService: MovieService;
     private currentMenu: string = 'general';
@@ -33,30 +19,28 @@ export class MaintenanceView extends BaseView {
     }
 
     async render(params?: { menu?: string }): Promise<string> {
-        this.currentMenu = params?.menu || 'general';
+        this.currentMenu = params?.menu || (params as any)?.section || 'general';
 
         const options: MaintenanceOption[] = [
-            { key: 'countries', name: 'Países', description: 'Gestionar códigos de países' },
-            { key: 'genres', name: 'Géneros', description: 'Verificar géneros incompletos' },
-            { key: 'duplicates', name: 'Duplicados', description: 'Buscar películas duplicadas' },
-            { key: 'missing', name: 'Faltantes', description: 'Películas sin información' },
-            { key: 'cleanup', name: 'Limpieza', description: 'Limpiar archivos temporales' },
-            { key: 'backup', name: 'Backup', description: 'Crear copia de seguridad' }
+            { key: 'repeated', name: 'Duplicados', description: 'Películas potencialmente duplicadas' },
+            { key: 'uncoded-countries', name: 'Países', description: 'Películas de países sin código' },
+            { key: 'incomplete-genres', name: 'Géneros', description: 'Películas con géneros incompletos' },
+            { key: 'incomplete', name: 'Incompletas', description: 'Películas sin información completa' },
+            { key: 'censored', name: 'Censuradas', description: 'Películas marcadas como censuradas' },
+            { key: 'bad-movies', name: 'Deficientes', description: 'Películas de baja calidad' }
         ];
 
         return `
             <div class="maintenance-container">
                 <h1>Mantenimiento</h1>
 
-                <div class="menu--clickeable btn btn-primary">
-                    <input class="menu-btn" type="checkbox" id="menu-btn" />
-                    <label class="menu-icon" for="menu-btn">
-                        <span>Opciones de mantenimiento</span>
-                        <span class="navicon"></span>
-                    </label>
-                    <div id="maintenance-options" class="maintenance-grid">
+                <section class="inventories-panel maintenance-panel">
+                    <div class="head-result-little">
+                        <h3>Opciones de mantenimiento</h3>
+                    </div>
+                    <div id="maintenance-options" class="inventories-grid maintenance-grid">
                         ${options.map(opt => `
-                            <a class="btn btn-primary-outline maintenance-option ${this.currentMenu === opt.key ? 'active' : ''}"
+                            <a class="inventory-card maintenance-option ${this.currentMenu === opt.key ? 'active' : ''}"
                                data-descr="${opt.description}"
                                href="/maintenance/${opt.key}">
                                 <strong>${opt.name}</strong>
@@ -64,7 +48,7 @@ export class MaintenanceView extends BaseView {
                             </a>
                         `).join('')}
                     </div>
-                </div>
+                </section>
 
                 <div id="maintenance-content" class="maintenance-content">
                     ${this.renderCurrentMenu()}
@@ -75,45 +59,67 @@ export class MaintenanceView extends BaseView {
 
     private renderCurrentMenu(): string {
         switch (this.currentMenu) {
-            case 'countries':
+            case 'repeated':
+                return this.renderRepeatedMenu();
+            case 'uncoded-countries':
                 return this.renderCountriesMenu();
-            case 'genres':
+            case 'incomplete-genres':
                 return this.renderGenresMenu();
-            case 'duplicates':
-                return this.renderDuplicatesMenu();
-            case 'missing':
-                return this.renderMissingMenu();
-            case 'cleanup':
-                return this.renderCleanupMenu();
-            case 'backup':
-                return this.renderBackupMenu();
+            case 'incomplete':
+                return this.renderIncompleteMenu();
+            case 'censored':
+                return this.renderCensoredMenu();
+            case 'bad-movies':
+                return this.renderBadMoviesMenu();
             default:
                 return '<p>Selecciona una opción de mantenimiento</p>';
         }
     }
 
-    private renderCountriesMenu(): string {
+    private renderRepeatedMenu(): string {
         return `
             <div class="head-result">
-                <h3>Países <span id="countries-count">0</span></h3>
-                <a class="btn btn-primary-outline" target="_blank"
-                   href="https://country-code.cl/es/">
-                    Listado de códigos
-                </a>
+                <h3>Películas duplicadas <span id="duplicates-count">0</span></h3>
             </div>
             <main class="table">
                 <section class="table__header">
-                    <h1>Gestionar códigos de países</h1>
+                    <h1>Películas potencialmente duplicadas</h1>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID 1</th>
+                                <th>Película 1</th>
+                                <th>ID 2</th>
+                                <th>Película 2</th>
+                                <th>Año</th>
+                            </tr>
+                        </thead>
+                        <tbody id="duplicates-table-body"></tbody>
+                    </table>
+                </section>
+            </main>
+        `;
+    }
+
+    private renderCountriesMenu(): string {
+        return `
+            <div class="head-result">
+                <h3>Películas de países sin código <span id="countries-count">0</span></h3>
+            </div>
+            <main class="table">
+                <section class="table__header">
+                    <h1>Películas de países sin código de identificación</h1>
                 </section>
                 <section class="table__body">
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Bandera</th>
-                                <th>Nombre</th>
-                                <th>Código</th>
-                                <th>Acciones</th>
+                                <th>Película</th>
+                                <th>País</th>
+                                <th>Año</th>
                             </tr>
                         </thead>
                         <tbody id="countries-table-body"></tbody>
@@ -130,17 +136,15 @@ export class MaintenanceView extends BaseView {
             </div>
             <main class="table">
                 <section class="table__header">
-                    <h1>Verificar géneros</h1>
+                    <h1>Películas con géneros incompletos</h1>
                 </section>
                 <section class="table__body">
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Ruta</th>
-                                <th>Sub-Género</th>
-                                <th>Estado</th>
+                                <th>Género ID</th>
+                                <th>Género</th>
+                                <th>Películas</th>
                             </tr>
                         </thead>
                         <tbody id="genres-table-body"></tbody>
@@ -150,182 +154,167 @@ export class MaintenanceView extends BaseView {
         `;
     }
 
-    private renderDuplicatesMenu(): string {
+    private renderIncompleteMenu(): string {
         return `
-            <div class="duplicates-container">
-                <h3>Buscar películas duplicadas</h3>
-                <button id="scan-duplicates" class="btn btn-primary">
-                    Escanear duplicados
-                </button>
-                <div id="duplicates-results" class="results-container"></div>
+            <div class="head-result">
+                <h3>Películas incompletas <span id="incomplete-count">0</span></h3>
             </div>
+            <main class="table">
+                <section class="table__header">
+                    <h1>Películas sin información completa</h1>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Año</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incomplete-table-body"></tbody>
+                    </table>
+                </section>
+            </main>
         `;
     }
 
-    private renderMissingMenu(): string {
+    private renderCensoredMenu(): string {
         return `
-            <div class="missing-container">
-                <h3>Películas con información incompleta</h3>
-                <div class="missing-filters">
-                    <label>
-                        <input type="checkbox" id="missing-rating" checked> Sin rating
-                    </label>
-                    <label>
-                        <input type="checkbox" id="missing-poster" checked> Sin póster
-                    </label>
-                    <label>
-                        <input type="checkbox" id="missing-description" checked> Sin descripción
-                    </label>
-                </div>
-                <button id="scan-missing" class="btn btn-primary">
-                    Buscar
-                </button>
-                <div id="missing-results" class="results-container"></div>
+            <div class="head-result">
+                <h3>Películas censuradas <span id="censored-count">0</span></h3>
             </div>
+            <main class="table">
+                <section class="table__header">
+                    <h1>Películas marcadas como censuradas</h1>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Año</th>
+                            </tr>
+                        </thead>
+                        <tbody id="censored-table-body"></tbody>
+                    </table>
+                </section>
+            </main>
         `;
     }
 
-    private renderCleanupMenu(): string {
+    private renderBadMoviesMenu(): string {
         return `
-            <div class="cleanup-container">
-                <h3>Limpiar archivos temporales</h3>
-                <div class="cleanup-options">
-                    <label>
-                        <input type="checkbox" id="clean-cache"> Cache de imágenes
-                    </label>
-                    <label>
-                        <input type="checkbox" id="clean-logs"> Logs antiguos
-                    </label>
-                    <label>
-                        <input type="checkbox" id="clean-temp"> Archivos temporales
-                    </label>
-                </div>
-                <button id="run-cleanup" class="btn btn-danger">
-                    Ejecutar limpieza
-                </button>
-                <div id="cleanup-results" class="results-container"></div>
+            <div class="head-result">
+                <h3>Películas deficientes <span id="bad-count">0</span></h3>
             </div>
-        `;
-    }
-
-    private renderBackupMenu(): string {
-        return `
-            <div class="backup-container">
-                <h3>Copia de seguridad</h3>
-                <div class="backup-info">
-                    <p>Crear una copia de seguridad de la base de datos y archivos de configuración.</p>
-                    <p><strong>Último backup:</strong> <span id="last-backup">Nunca</span></p>
-                </div>
-                <button id="create-backup" class="btn btn-success">
-                    Crear backup ahora
-                </button>
-                <div id="backup-results" class="results-container"></div>
-            </div>
+            <main class="table">
+                <section class="table__header">
+                    <h1>Películas de baja calidad o deficientes</h1>
+                </section>
+                <section class="table__body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Año</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bad-table-body"></tbody>
+                    </table>
+                </section>
+            </main>
         `;
     }
 
     async afterRender(params?: { menu?: string }): Promise<void> {
-        this.currentMenu = params?.menu || 'general';
+        this.currentMenu = params?.menu || (params as any)?.section || 'general';
 
         switch (this.currentMenu) {
-            case 'countries':
+            case 'repeated':
+                await this.loadRepeated();
+                break;
+            case 'uncoded-countries':
                 await this.loadCountries();
                 break;
-            case 'genres':
+            case 'incomplete-genres':
                 await this.loadGenres();
                 break;
-            case 'duplicates':
-                this.setupDuplicatesEvents();
+            case 'incomplete':
+                await this.loadIncomplete();
                 break;
-            case 'missing':
-                this.setupMissingEvents();
+            case 'censored':
+                await this.loadCensored();
                 break;
-            case 'cleanup':
-                this.setupCleanupEvents();
+            case 'bad-movies':
+                await this.loadBadMovies();
                 break;
-            case 'backup':
-                await this.loadBackupInfo();
-                this.setupBackupEvents();
-                break;
+        }
+    }
+
+    private async loadRepeated(): Promise<void> {
+        try {
+            const response = await this.movieService['connection'].get('/maintenance/repeated');
+            const movies = response.data || [];
+
+            const tbody = document.getElementById('duplicates-table-body');
+            const countSpan = document.getElementById('duplicates-count');
+
+            if (!tbody || !movies) return;
+
+            if (countSpan) {
+                countSpan.textContent = movies.length.toString();
+            }
+
+            tbody.innerHTML = movies.map((movie: any) => `
+                <tr>
+                    <td>${movie.id_movie}</td>
+                    <td>${movie.title}</td>
+                    <td>${movie.id_movie2}</td>
+                    <td>${movie.title2}</td>
+                    <td>${movie.year}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            this.handleError(error, 'Error al cargar duplicados');
         }
     }
 
     private async loadCountries(): Promise<void> {
         try {
-            const response = await this.movieService['connection'].get('/maintenance/countries');
-            const countries: Country[] = response.data;
+            const response = await this.movieService['connection'].get('/maintenance/uncoded-countries');
+            const movies = response.data || [];
 
             const tbody = document.getElementById('countries-table-body');
             const countSpan = document.getElementById('countries-count');
 
-            if (!tbody || !countries) return;
+            if (!tbody || !movies) return;
 
             if (countSpan) {
-                countSpan.textContent = countries.length.toString();
+                countSpan.textContent = movies.length.toString();
             }
 
-            const csrfToken = this.getCsrfToken();
-
-            tbody.innerHTML = countries.map(country => `
+            tbody.innerHTML = movies.map((movie: any) => `
                 <tr>
-                    <td>${country.id}</td>
-                    <td>${flagEmoji(country.code || '')}</td>
-                    <td>${country.name}</td>
-                    <td>
-                        <input type="text"
-                               id="input-country-${country.id}"
-                               value="${country.code || ''}"
-                               maxlength="3"
-                               placeholder="Código">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary save-country"
-                                data-id="${country.id}"
-                                data-csrf="${csrfToken}">
-                            GUARDAR
-                        </button>
-                    </td>
+                    <td>${movie.id_movie}</td>
+                    <td>${movie.title}</td>
+                    <td>${movie.name || 'N/A'}</td>
+                    <td>${movie.year}</td>
                 </tr>
             `).join('');
-
-            // Eventos para guardar países
-            document.querySelectorAll('.save-country').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const target = e.target as HTMLElement;
-                    const id = target.dataset.id;
-                    const csrfToken = target.dataset.csrf;
-                    const input = document.getElementById(`input-country-${id}`) as HTMLInputElement;
-
-                    if (!id || !input || !csrfToken) return;
-
-                    try {
-                        await this.movieService['connection'].post('/maintenance/update-country', {
-                            id: parseInt(id),
-                            code: input.value.toUpperCase(),
-                            csrf_token_form: csrfToken
-                        });
-
-                        this.alertManager.success('Código actualizado');
-
-                        // Actualizar bandera
-                        const flagCell = target.closest('tr')?.querySelector('td:nth-child(2)');
-                        if (flagCell) {
-                            flagCell.innerHTML = flagEmoji(input.value.toUpperCase());
-                        }
-                    } catch (error) {
-                        this.handleError(error, 'Error al actualizar código');
-                    }
-                });
-            });
         } catch (error) {
-            this.handleError(error, 'Error al cargar países');
+            this.handleError(error, 'Error al cargar películas de países');
         }
     }
 
     private async loadGenres(): Promise<void> {
         try {
-            const response = await this.movieService['connection'].get('/maintenance/genres');
-            const genres: Genre[] = response.data;
+            const response = await this.movieService['connection'].get('/maintenance/incomplete-genres');
+            const genres = response.data || [];
 
             const tbody = document.getElementById('genres-table-body');
             const countSpan = document.getElementById('genres-count');
@@ -336,18 +325,11 @@ export class MaintenanceView extends BaseView {
                 countSpan.textContent = genres.length.toString();
             }
 
-            tbody.innerHTML = genres.map(genre => `
+            tbody.innerHTML = genres.map((genre: any) => `
                 <tr>
-                    <td>${genre.id}</td>
+                    <td>${genre.id_genre}</td>
                     <td>${genre.name}</td>
-                    <td>${genre.path || '❌ Sin ruta'}</td>
-                    <td>${genre.is_subgenre ? '✅ Sí' : '❌ No'}</td>
-                    <td>
-                        ${!genre.path ?
-                            '<span class="badge warning">Falta ruta</span>' :
-                            '<span class="badge success">OK</span>'
-                        }
-                    </td>
+                    <td>${genre.count || 0}</td>
                 </tr>
             `).join('');
         } catch (error) {
@@ -355,250 +337,84 @@ export class MaintenanceView extends BaseView {
         }
     }
 
-    private setupDuplicatesEvents(): void {
-        document.getElementById('scan-duplicates')?.addEventListener('click', async () => {
-            const resultsDiv = document.getElementById('duplicates-results');
-            if (!resultsDiv) return;
-
-            try {
-                this.showLoader(true);
-                resultsDiv.innerHTML = '<p class="loading">Escaneando...</p>';
-
-                const response = await this.movieService['connection'].get('/maintenance/duplicates');
-                const duplicates = response.data;
-
-                if (duplicates.length === 0) {
-                    resultsDiv.innerHTML = '<p class="success">No se encontraron duplicados</p>';
-                    return;
-                }
-
-                resultsDiv.innerHTML = `
-                    <h4>Se encontraron ${duplicates.length} posibles duplicados</h4>
-                    <div class="duplicates-list">
-                        ${duplicates.map((dup: any) => `
-                            <div class="duplicate-item">
-                                <div class="movie1">
-                                    <strong>${dup.movie1.title}</strong> (${dup.movie1.year})
-                                    <br><small>ID: ${dup.movie1.id}</small>
-                                </div>
-                                <div class="vs">VS</div>
-                                <div class="movie2">
-                                    <strong>${dup.movie2.title}</strong> (${dup.movie2.year})
-                                    <br><small>ID: ${dup.movie2.id}</small>
-                                </div>
-                                <div class="actions">
-                                    <button class="btn btn-danger-outline merge-duplicate"
-                                            data-id1="${dup.movie1.id}"
-                                            data-id2="${dup.movie2.id}">
-                                        Fusionar
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-
-                // Eventos para fusionar
-                document.querySelectorAll('.merge-duplicate').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const target = e.target as HTMLElement;
-                        const id1 = target.dataset.id1;
-                        const id2 = target.dataset.id2;
-
-                        const confirmed = await this.confirm('¿Fusionar estas películas?');
-
-                        if (confirmed) {
-                            try {
-                                await this.movieService['connection'].post('/maintenance/merge', {
-                                    id1: parseInt(id1!),
-                                    id2: parseInt(id2!)
-                                });
-                                this.alertManager.success('Películas fusionadas');
-                                target.closest('.duplicate-item')?.remove();
-                            } catch (error) {
-                                this.handleError(error, 'Error al fusionar');
-                            }
-                        }
-                    });
-                });
-
-            } catch (error) {
-                this.handleError(error, 'Error al escanear duplicados');
-                resultsDiv.innerHTML = '<p class="error">Error al escanear</p>';
-            } finally {
-                this.showLoader(false);
-            }
-        });
-    }
-
-    private setupMissingEvents(): void {
-        document.getElementById('scan-missing')?.addEventListener('click', async () => {
-            const resultsDiv = document.getElementById('missing-results');
-            if (!resultsDiv) return;
-
-            const filters = {
-                rating: (document.getElementById('missing-rating') as HTMLInputElement)?.checked,
-                poster: (document.getElementById('missing-poster') as HTMLInputElement)?.checked,
-                description: (document.getElementById('missing-description') as HTMLInputElement)?.checked
-            };
-
-            try {
-                this.showLoader(true);
-                resultsDiv.innerHTML = '<p class="loading">Buscando...</p>';
-
-                const response = await this.movieService['connection'].post('/maintenance/missing', filters);
-                const movies = response.data;
-
-                if (movies.length === 0) {
-                    resultsDiv.innerHTML = '<p class="success">No se encontraron películas incompletas</p>';
-                    return;
-                }
-
-                resultsDiv.innerHTML = `
-                    <h4>${movies.length} películas con información incompleta</h4>
-                    <table class="missing-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Título</th>
-                                <th>Faltante</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${movies.map((movie: any) => `
-                                <tr>
-                                    <td>${movie.id}</td>
-                                    <td>${movie.title}</td>
-                                    <td>${movie.missing.join(', ')}</td>
-                                    <td>
-                                        <button class="btn btn-primary fix-movie" data-id="${movie.id}">
-                                            Corregir
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
-
-                // Eventos para corregir
-                document.querySelectorAll('.fix-movie').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const target = e.target as HTMLElement;
-                        const id = target.dataset.id;
-
-                        try {
-                            await this.movieService.updateFromInternet(parseInt(id!));
-                            this.alertManager.success('Película actualizada');
-                            target.closest('tr')?.remove();
-                        } catch (error) {
-                            this.handleError(error, 'Error al actualizar');
-                        }
-                    });
-                });
-
-            } catch (error) {
-                this.handleError(error, 'Error al buscar películas incompletas');
-                resultsDiv.innerHTML = '<p class="error">Error al buscar</p>';
-            } finally {
-                this.showLoader(false);
-            }
-        });
-    }
-
-    private setupCleanupEvents(): void {
-        document.getElementById('run-cleanup')?.addEventListener('click', async () => {
-            const resultsDiv = document.getElementById('cleanup-results');
-            if (!resultsDiv) return;
-
-            const options = {
-                cache: (document.getElementById('clean-cache') as HTMLInputElement)?.checked,
-                logs: (document.getElementById('clean-logs') as HTMLInputElement)?.checked,
-                temp: (document.getElementById('clean-temp') as HTMLInputElement)?.checked
-            };
-
-            try {
-                this.showLoader(true);
-                resultsDiv.innerHTML = '<p class="loading">Limpiando...</p>';
-
-                const response = await this.movieService['connection'].post('/maintenance/cleanup', options);
-                const result = response.data;
-
-                resultsDiv.innerHTML = `
-                    <div class="cleanup-result success">
-                        <h4>Limpieza completada</h4>
-                        <ul>
-                            ${Object.entries(result).map(([key, value]) =>
-                                `<li>${key}: ${value} archivos eliminados</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                `;
-
-                this.alertManager.success('Limpieza completada');
-
-            } catch (error) {
-                this.handleError(error, 'Error durante la limpieza');
-                resultsDiv.innerHTML = '<p class="error">Error durante la limpieza</p>';
-            } finally {
-                this.showLoader(false);
-            }
-        });
-    }
-
-    private async loadBackupInfo(): Promise<void> {
+    private async loadIncomplete(): Promise<void> {
         try {
-            const response = await this.movieService['connection'].get('/maintenance/last-backup');
-            const lastBackup = response.data;
+            const response = await this.movieService['connection'].get('/maintenance/incomplete');
+            const movies = response.data || [];
 
-            const span = document.getElementById('last-backup');
-            if (span) {
-                span.textContent = lastBackup ? this.formatDate(lastBackup) : 'Nunca';
+            const tbody = document.getElementById('incomplete-table-body');
+            const countSpan = document.getElementById('incomplete-count');
+
+            if (!tbody || !movies) return;
+
+            if (countSpan) {
+                countSpan.textContent = movies.length.toString();
             }
+
+            tbody.innerHTML = movies.map((movie: any) => `
+                <tr>
+                    <td>${movie.id_movie}</td>
+                    <td>${movie.title}</td>
+                    <td>${movie.year}</td>
+                    <td>${movie.rating || 'N/A'}</td>
+                </tr>
+            `).join('');
         } catch (error) {
-            console.error('Error loading backup info:', error);
+            this.handleError(error, 'Error al cargar películas incompletas');
         }
     }
 
-    private setupBackupEvents(): void {
-        document.getElementById('create-backup')?.addEventListener('click', async () => {
-            const resultsDiv = document.getElementById('backup-results');
-            if (!resultsDiv) return;
+    private async loadCensored(): Promise<void> {
+        try {
+            const response = await this.movieService['connection'].get('/maintenance/censored');
+            const movies = response.data || [];
 
-            const confirmed = await this.confirm('¿Crear copia de seguridad ahora?');
+            const tbody = document.getElementById('censored-table-body');
+            const countSpan = document.getElementById('censored-count');
 
-            if (!confirmed) return;
+            if (!tbody || !movies) return;
 
-            try {
-                this.showLoader(true);
-                resultsDiv.innerHTML = '<p class="loading">Creando backup...</p>';
-
-                const response = await this.movieService['connection'].post('/maintenance/backup', {});
-                const result = response.data;
-
-                resultsDiv.innerHTML = `
-                    <div class="backup-result success">
-                        <h4>Backup creado exitosamente</h4>
-                        <p><strong>Archivo:</strong> ${result.filename}</p>
-                        <p><strong>Tamaño:</strong> ${result.size}</p>
-                        <p><strong>Fecha:</strong> ${this.formatDate(result.date)}</p>
-                        <a href="${result.download_url}" class="btn btn-success" download>
-                            Descargar backup
-                        </a>
-                    </div>
-                `;
-
-                this.alertManager.success('Backup creado');
-                this.loadBackupInfo();
-
-            } catch (error) {
-                this.handleError(error, 'Error al crear backup');
-                resultsDiv.innerHTML = '<p class="error">Error al crear backup</p>';
-            } finally {
-                this.showLoader(false);
+            if (countSpan) {
+                countSpan.textContent = movies.length.toString();
             }
-        });
+
+            tbody.innerHTML = movies.map((movie: any) => `
+                <tr>
+                    <td>${movie.id_movie}</td>
+                    <td>${movie.title}</td>
+                    <td>${movie.year}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            this.handleError(error, 'Error al cargar películas censuradas');
+        }
+    }
+
+    private async loadBadMovies(): Promise<void> {
+        try {
+            const response = await this.movieService['connection'].get('/maintenance/bad-movies');
+            const movies = response.data || [];
+
+            const tbody = document.getElementById('bad-table-body');
+            const countSpan = document.getElementById('bad-count');
+
+            if (!tbody || !movies) return;
+
+            if (countSpan) {
+                countSpan.textContent = movies.length.toString();
+            }
+
+            tbody.innerHTML = movies.map((movie: any) => `
+                <tr>
+                    <td>${movie.id_movie}</td>
+                    <td>${movie.title}</td>
+                    <td>${movie.year}</td>
+                    <td>${movie.rating || 'N/A'}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            this.handleError(error, 'Error al cargar películas deficientes');
+        }
     }
 
     cleanup(): void {
