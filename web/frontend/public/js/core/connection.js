@@ -74,8 +74,9 @@ export class Connection {
     }
     async get(endpoint, params, options) {
         const allParams = { ...(params || {}), _t: Date.now() };
-        const queryString = '?' + new URLSearchParams(Object.fromEntries(Object.entries(allParams).map(([k, v]) => [k, String(v)]))).toString();
-        return this.request('GET', endpoint + queryString, undefined, options);
+        const queryString = new URLSearchParams(Object.fromEntries(Object.entries(allParams).map(([k, v]) => [k, String(v)]))).toString();
+        const separator = endpoint.includes('?') ? '&' : '?';
+        return this.request('GET', `${endpoint}${separator}${queryString}`, undefined, options);
     }
     async post(endpoint, data, options) {
         return this.request('POST', endpoint, data, options);

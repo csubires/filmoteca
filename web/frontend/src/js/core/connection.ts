@@ -107,10 +107,11 @@ private async request<T>(
 
  async get<T = any>(endpoint: string, params?: Record<string, any>, options?: any): Promise<ApiResponse<T>> {
         const allParams = { ...(params || {}), _t: Date.now() };
-        const queryString = '?' + new URLSearchParams(
+        const queryString = new URLSearchParams(
             Object.fromEntries(Object.entries(allParams).map(([k, v]) => [k, String(v)]))
         ).toString();
-        return this.request<T>('GET', endpoint + queryString, undefined, options);
+        const separator = endpoint.includes('?') ? '&' : '?';
+        return this.request<T>('GET', `${endpoint}${separator}${queryString}`, undefined, options);
     }
     async post<T = any>(endpoint: string, data?: any, options?: any): Promise<ApiResponse<T>> {
         return this.request<T>('POST', endpoint, data, options);

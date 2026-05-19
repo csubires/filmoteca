@@ -18,22 +18,22 @@ export class HomeView extends BaseView {
 
                 <div class="quick-stats">
                     <div class="stat-card">
-                        <span class="stat-icon">🎬</span>
+                        <span class="stat-icon" aria-hidden="true">▶</span>
                         <span class="stat-value" id="total-movies">-</span>
                         <span class="stat-label">Películas</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-icon">📀</span>
+                        <span class="stat-icon" aria-hidden="true">◧</span>
                         <span class="stat-value" id="total-size">-</span>
                         <span class="stat-label">Tamaño total</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-icon">⏱️</span>
+                        <span class="stat-icon" aria-hidden="true">◔</span>
                         <span class="stat-value" id="total-duration">-</span>
                         <span class="stat-label">Duración total</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-icon">🎭</span>
+                        <span class="stat-icon" aria-hidden="true">◈</span>
                         <span class="stat-value" id="total-genres">-</span>
                         <span class="stat-label">Géneros</span>
                     </div>
@@ -41,12 +41,12 @@ export class HomeView extends BaseView {
 
                 <div class="recent-section">
                     <h2>Últimas películas añadidas</h2>
-                    <div class="carousel-container">
-                        <button class="carousel-btn carousel-btn-prev" data-carousel="recent-movies-carousel" aria-label="Anterior">❮</button>
+                    <div class="carousel-container item-list">
+                        <button class="carousel-btn carousel-btn-prev" data-carousel="recent-movies-carousel" aria-label="Anterior">‹</button>
                         <div id="recent-movies" class="movie-carousel-wrapper">
                             <div class="movie-carousel"></div>
                         </div>
-                        <button class="carousel-btn carousel-btn-next" data-carousel="recent-movies-carousel" aria-label="Siguiente">❯</button>
+                        <button class="carousel-btn carousel-btn-next" data-carousel="recent-movies-carousel" aria-label="Siguiente">›</button>
                     </div>
                 </div>
 
@@ -119,8 +119,10 @@ export class HomeView extends BaseView {
                 .map((genre) => `
                     <a href="/menu/genres/${genre.id}"
                        class="genre-tag"
-                       style="font-size: ${Math.max(0.8, Math.min(2.5, genre.count / 10))}rem">
-                        ${genre.name} (${genre.count})
+                       style="--genre-scale: ${Math.max(0.92, Math.min(1.18, genre.count / 10))}; font-size: ${Math.max(0.85, Math.min(1.12, genre.count / 16))}rem">
+                        <span class="genre-tag__icon" aria-hidden="true">◉</span>
+                        <span class="genre-tag__text">${genre.name}</span>
+                        <span class="genre-tag__count">${genre.count}</span>
                     </a>
                 `)
                 .join('');

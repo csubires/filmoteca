@@ -170,7 +170,8 @@ export class MovieService extends BaseService {
     async updateFromInternet(movieId: number): Promise<Movie | null> {
         const response = await this.handleRequest(
             this.connection.get<Movie[]>(
-                `/update_inet_movie?id_movie=${movieId}`
+                '/update_inet_movie',
+                { id_movie: movieId }
             ),
             'Error al actualizar desde internet'
         );

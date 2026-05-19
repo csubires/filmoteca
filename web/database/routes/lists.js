@@ -95,6 +95,17 @@ export default async function listRoutes(fastify) {
 		}
 	});
 
+	fastify.get('/update_inet_movie', async (request, reply) => {
+		try {
+			const id_movie = parseInt(request.query.id_movie);
+			if (!id_movie) return reply.code(400).send({ message: 'id_movie required', status: 400 });
+			const result = await db.execute('update_inet_movie', { ':id_movie': id_movie });
+			return { data: result, status: 200 };
+		} catch (error) {
+			return reply.code(500).send({ error: error.message });
+		}
+	});
+
 	fastify.get('/downloads/rating/:year', async (request, reply) => {
 		try {
 			const year = parseInt(request.params.year);

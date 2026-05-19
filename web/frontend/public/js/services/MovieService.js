@@ -78,7 +78,7 @@ export class MovieService extends BaseService {
         return response?.status === 200;
     }
     async updateFromInternet(movieId) {
-        const response = await this.handleRequest(this.connection.get(`/update_inet_movie?id_movie=${movieId}`), 'Error al actualizar desde internet');
+        const response = await this.handleRequest(this.connection.get('/update_inet_movie', { id_movie: movieId }), 'Error al actualizar desde internet');
         return response?.[0] || null;
     }
     async getQualities() {

@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import crypto from 'crypto';
+import SonicBoom from 'sonic-boom';
 
 export default async function createFastifyApp(options = {}) {
 
@@ -14,6 +15,27 @@ export default async function createFastifyApp(options = {}) {
 	const loggerConfig = {
 		level: 'warn'
 	};
+
+	// Monkey-patch SonicBoom to ignore benign EINTR write errors emitted
+	// by the underlying stream, which would otherwise crash the process.
+	try {
+		const proto = SonicBoom.prototype;
+		const origEmit = proto.emit;
+		proto.emit = function (event, ...args) {
+			if (event === 'error') {
+				const err = args[0];
+				if (err && err.code === 'EINTR') {
+					// Ignore interrupted system call errors coming from writes
+					// to the logger stream.
+					console.warn('SonicBoom: ignored EINTR error on write');
+					return false;
+				}
+			}
+			return origEmit.call(this, event, ...args);
+		};
+	} catch (e) {
+		// If sonic-boom isn't available or patch fails, fall back silently.
+	}
 
 	const fastify = Fastify({
 		logger: loggerConfig,

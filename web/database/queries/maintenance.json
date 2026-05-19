@@ -22,5 +22,5 @@
   "insert_country": "INSERT OR IGNORE INTO country (name) VALUES (:name)",
   "set_present": "UPDATE rating SET is_present=1 WHERE id_rating = :id_rating",
   "get_rating": "SELECT id_rating, src_img, url, title, year, rating, is_present FROM rating WHERE is_present = 0 AND year is :year ORDER BY rating DESC",
-  "get_years": "SELECT DISTINCT year, COUNT(*) FROM rating WHERE is_present=0 GROUP BY year ORDER BY year DESC"
+  "get_years": "SELECT DISTINCT year, COUNT(*) AS count FROM rating WHERE is_present=0 GROUP BY year ORDER BY year DESC"
 }

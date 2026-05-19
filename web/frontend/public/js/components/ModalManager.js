@@ -96,12 +96,15 @@ export class ModalManager {
                 { text: 'Cancelar', type: 'secondary', action: 'close-modal' }
             ],
             onOpen: async () => {
+                const modalContent = document.getElementById('modal-content');
+                const saveBtn = modalContent?.querySelector('[data-action="save-film"]');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        await this.handleSaveMovie(movieId, saveBtn, onSaved);
+                    });
+                }
                 await this.populateFormSelects(movieData);
-                const saveBtn = document.querySelector('[data-action="save-film"]');
-                saveBtn?.addEventListener('click', async (event) => {
-                    event.preventDefault();
-                    await this.handleSaveMovie(movieId, saveBtn, onSaved);
-                });
             }
         });
     }
@@ -202,7 +205,7 @@ export class ModalManager {
         return modalContent.querySelector('#form-editor');
     }
     async handleSaveMovie(movieId, saveBtn, onSaved) {
-        const form = document.getElementById('form-editor');
+        const form = this.getEditorRoot();
         if (!form)
             return;
         const formData = new FormData(form);

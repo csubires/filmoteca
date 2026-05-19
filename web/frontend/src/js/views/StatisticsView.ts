@@ -148,7 +148,7 @@ export class StatisticsView extends BaseView {
 
             this.renderSummary(summary, reports || []);
             this.renderReports(reports || []);
-            this.renderCharts({
+            await this.renderCharts({
                 years: years || [],
                 countries: countries || [],
                 genres: genres || [],
@@ -174,13 +174,16 @@ export class StatisticsView extends BaseView {
         const external = latestReports.get(1);
 
         container.innerHTML = `
-            <div>
+            <div class="summary-panel summary-panel--internal">
+                <span class="summary-panel__title">Repositorio interno</span>
                 ${this.renderSummaryBlock('Interno (0)', internal)}
             </div>
-            <div>
+            <div class="summary-panel summary-panel--external">
+                <span class="summary-panel__title">Repositorio externo</span>
                 ${this.renderSummaryBlock('Externo (1)', external)}
             </div>
-            <div>
+            <div class="summary-panel summary-panel--global">
+                <span class="summary-panel__title">Resumen global</span>
                 ${this.renderGlobalSummary(summary)}
             </div>
         `;
@@ -285,7 +288,7 @@ export class StatisticsView extends BaseView {
         }).join('');
     }
 
-    private renderCharts(charts: {
+    private async renderCharts(charts: {
         years: ReportRow[];
         countries: ReportRow[];
         genres: ReportRow[];
@@ -294,7 +297,7 @@ export class StatisticsView extends BaseView {
         ratingsExternal: ReportRow[];
         worldMap: ReportRow[];
         hddDistribution: ReportRow[];
-    }): void {
+    }): Promise<void> {
         const container = document.getElementById('charts-container');
         if (!container) return;
 
@@ -302,20 +305,22 @@ export class StatisticsView extends BaseView {
 
         container.innerHTML = [
             this.renderChartFigure('Progresión del número de películas por año', this.normalizeChartData(charts.years), false),
-            this.renderChartFigure('Número de películas por país', this.normalizeChartData(charts.countries, 12), true),
+            this.renderChartFigure('Número de películas por país', this.normalizeChartData(charts.countries, 12), false),
             this.renderChartFigure('Número de películas por género', this.normalizeChartData(charts.genres, 12), false),
             this.renderChartFigure('Número de películas por extensión', this.normalizeChartData(charts.extensions, 12), false),
-            this.renderChartFigure('Valoración del repositorio interno', this.normalizeChartData(charts.ratingsInternal, 12), false),
-            this.renderChartFigure('Valoración del repositorio externo', this.normalizeChartData(charts.ratingsExternal, 12), false),
+            this.renderChartFigure('Valoración del repositorio interno', this.normalizeRatingsChartData(charts.ratingsInternal, 12), false),
+            this.renderChartFigure('Valoración del repositorio externo', this.normalizeRatingsChartData(charts.ratingsExternal, 12), false),
             this.renderChartFigure('Distribución HDD', this.normalizeChartData(charts.hddDistribution, 12), false),
-            this.renderWorldMapSummary(this.normalizeChartData(charts.worldMap, 16))
+            this.renderWorldMapSummary(charts.worldMap || [])
         ].join('');
+
+        await this.loadWorldMap(charts.worldMap || []);
     }
 
     private renderChartFigure(title: string, data: ChartDatum[], large: boolean): string {
         if (!data.length) {
             return `
-                <figure class="${large ? 'large' : ''}">
+                <figure class="stats-figure ${large ? 'large' : ''}">
                     <figcaption>${title}</figcaption>
                     <p>No hay datos para mostrar</p>
                 </figure>
@@ -323,8 +328,8 @@ export class StatisticsView extends BaseView {
         }
 
         const maxValue = Math.max(...data.map(item => item.value), 1);
-        const width = large ? 820 : 520;
-        const height = large ? 320 : 260;
+        const width = 640;
+        const height = 300;
         const padding = 28;
         const plotWidth = width - padding * 2;
         const plotHeight = height - padding * 2;
@@ -348,7 +353,7 @@ export class StatisticsView extends BaseView {
         }).join('');
 
         return `
-            <figure class="${large ? 'large' : ''}">
+            <figure class="stats-figure ${large ? 'large' : ''}">
                 <figcaption>${title}</figcaption>
                 <svg class="stats-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${this.escapeHtml(title)}">
                     <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}"></line>
@@ -359,60 +364,157 @@ export class StatisticsView extends BaseView {
         `;
     }
 
-    private renderWorldMapSummary(data: ChartDatum[]): string {
+    private renderWorldMapSummary(data: ReportRow[]): string {
         if (!data.length) {
             return `
                 <div class="head-result">
                     <h3>Mapa mundial con número de películas y porcentaje por países</h3>
                 </div>
-                <figure class="large">
+                <figure class="stats-figure large world-map-summary">
                     <figcaption>No hay datos para el mapa mundial</figcaption>
+                    <div class="world-map-empty">
+                        <div id="world-map"></div>
+                        <div id="show-count">No hay datos para mostrar</div>
+                    </div>
                 </figure>
             `;
         }
-
-        const topCountries = data.slice(0, 16);
-        const maxValue = Math.max(...topCountries.map(item => item.value), 1);
 
         return `
             <div class="head-result">
                 <h3>Mapa mundial con número de películas y porcentaje por países</h3>
             </div>
-            <figure class="large world-map-summary">
+            <figure class="stats-figure large world-map-summary">
                 <figcaption>Distribución por país</figcaption>
-                <div class="world-map-list">
-                    ${topCountries.map(item => {
-                        const percentage = Math.round((item.value / maxValue) * 100);
-                        const code = item.hint || item.label;
-                        const emoji = code && code.length === 2 ? flagEmoji(code) : '';
-                        return `
-                            <div class="world-map-row">
-                                <span class="world-map-country">${emoji} ${this.escapeHtml(item.label)}</span>
-                                <span class="world-map-value">${item.value}</span>
-                                <span class="world-map-bar"><span style="width: ${percentage}%"></span></span>
-                            </div>
-                        `;
-                    }).join('')}
+                <div class="world-map-empty">
+                    <div id="world-map"></div>
+                    <div id="show-count">Pasa el cursor sobre un país para ver sus datos</div>
                 </div>
             </figure>
         `;
     }
 
+    private async loadWorldMap(rows: ReportRow[]): Promise<void> {
+        const container = document.getElementById('world-map');
+        if (!container) return;
+
+        try {
+            const response = await fetch('/assets/world_map.svg');
+            if (!response.ok) {
+                throw new Error(`No se pudo cargar el mapa mundial (${response.status})`);
+            }
+
+            container.innerHTML = await response.text();
+            this.applyWorldMapData(rows);
+        } catch (error) {
+            container.innerHTML = '<p>No se pudo cargar el mapa mundial</p>';
+            console.error('World map load error:', error);
+        }
+    }
+
+    private applyWorldMapData(rows: ReportRow[]): void {
+        const mapContainer = document.getElementById('world-map');
+        const showCount = document.getElementById('show-count');
+        if (!mapContainer || !showCount) return;
+
+        const countries = this.normalizeWorldMapData(rows);
+        const totalMovies = countries.reduce((sum, item) => sum + item.value, 0) || 1;
+        const maxMovies = Math.max(...countries.map(item => item.value), 1);
+        const countryMap = new Map(countries.map(item => [item.code, item]));
+
+        mapContainer.querySelectorAll('path[id]').forEach(path => {
+            const element = path as SVGPathElement;
+            const code = (element.getAttribute('id') || '').toUpperCase();
+            const country = countryMap.get(code);
+
+            if (!country) {
+                element.style.fill = 'rgba(148, 163, 184, 0.18)';
+                element.setAttribute('data-count', '0');
+                element.setAttribute('data-percent', '0');
+                return;
+            }
+
+            const percentage = (country.value * 100) / totalMovies;
+            const normalized = maxMovies > 0 ? Math.pow(country.value / maxMovies, 0.72) : 0;
+            const hue = Math.round(120 - (120 * normalized));
+            const saturation = 84;
+            const lightness = Math.round(42 + normalized * 10);
+            element.style.fill = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            element.style.stroke = 'rgba(15, 23, 42, 0.25)';
+            element.style.strokeWidth = '0.5';
+            element.style.cursor = 'pointer';
+            element.setAttribute('data-country', country.name);
+            element.setAttribute('data-count', String(country.value));
+            element.setAttribute('data-percent', percentage.toFixed(2));
+
+            const updatePanel = () => {
+                showCount.innerHTML = `<b>${this.escapeHtml(country.name)} (${code})</b><span>${country.value} películas (${percentage.toFixed(2)}%)</span>`;
+            };
+
+            element.addEventListener('mouseover', updatePanel);
+            element.addEventListener('focus', updatePanel);
+            element.addEventListener('mouseenter', updatePanel);
+        });
+
+        const topCountry = countries[0];
+        if (topCountry) {
+            const topPercent = ((topCountry.value * 100) / totalMovies).toFixed(2);
+            showCount.innerHTML = `<b>${this.escapeHtml(topCountry.name)} (${topCountry.code})</b><span>${topCountry.value} películas (${topPercent}%)</span>`;
+        } else {
+            showCount.textContent = 'Pasa el cursor sobre un país para ver sus datos';
+        }
+    }
+
+    private normalizeWorldMapData(rows: ReportRow[]): Array<{ code: string; name: string; value: number }> {
+        return rows
+            .map(row => {
+                const code = String(this.pick(row, ['code', 'country_code', 'id_country', '0'], 0) || '').trim().toUpperCase();
+                const name = String(this.pick(row, ['country', 'name', 'label', '1'], 1) || '').trim();
+                const value = Number(this.extractNumeric(row, this.pick(row, ['num_movies', 'count', 'total', 'value', '2'], 2)));
+
+                return {
+                    code,
+                    name: name || code,
+                    value: Number.isFinite(value) ? value : 0
+                };
+            })
+            .filter(item => item.code.length > 0 && item.value > 0)
+            .sort((left, right) => right.value - left.value);
+    }
+
+    private normalizeRatingsChartData(rows: ReportRow[], limit: number = 10): ChartDatum[] {
+        return rows
+            .map(row => {
+                const rating = this.pick(row, ['ratings', 'rating', 'score', 'label', '0'], 0);
+                const value = this.pick(row, ['num_movies', 'count', 'total', 'value', '1'], 1);
+                const numericRating = Number(this.extractNumeric(row, rating));
+
+                return {
+                    label: String(rating ?? '').trim() || '-',
+                    value: Number.isFinite(Number(this.extractNumeric(row, value))) ? Number(this.extractNumeric(row, value)) : 0,
+                    hint: Number.isFinite(numericRating) ? String(numericRating) : undefined
+                };
+            })
+            .filter(item => item.label !== '-')
+            .sort((left, right) => Number(left.label) - Number(right.label))
+            .slice(0, limit);
+    }
+
     private normalizeChartData(rows: ReportRow[], limit: number = 10): ChartDatum[] {
         return rows
             .map(row => {
-                const label = this.pick(row, ['name', 'country', 'label', 'year', 'extension', '0', '1'], 0);
-                const fallbackValue = this.pick(row, ['num_movies', 'count', 'total', 'value', '1'], 1);
+                const label = this.pick(row, ['name', 'country', 'label', 'year', 'extension', 'ratings', 'hdd_label', 'code', 'country_code', 'NAM', '0', '1'], 0);
+                const fallbackValue = this.pick(row, ['num_movies', 'count', 'total', 'value', 'D', 'CON', '1'], 1);
                 const value = Number(this.extractNumeric(row, fallbackValue));
-                const hint = this.pick(row, ['code', 'country_code', 'flag', 'id_country', 'id_genre', '0'], 0);
+                const hint = this.pick(row, ['code', 'country_code', 'flag', 'id_country', 'id_genre', 'COD', '0'], 0);
 
                 return {
-                    label: String(label ?? '').trim() || '- ',
+                    label: String(label ?? '').trim() || '-',
                     value: Number.isFinite(value) ? value : 0,
                     hint: hint ? String(hint) : undefined
                 };
             })
-            .filter(item => item.label !== '- ')
+            .filter(item => item.label !== '-')
             .sort((left, right) => right.value - left.value)
             .slice(0, limit);
     }

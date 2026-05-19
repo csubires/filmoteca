@@ -131,12 +131,17 @@ export class InventoriesView extends BaseView {
                 .sort((left: { year: number }, right: { year: number }) => right.year - left.year);
 
             container.innerHTML = normalizedYears.map((year: any) => `
-                <a class="btn btn-primary-outline year-link"
-                   data-descr="${year.count}"
-                   href="/menu/inventories/${year.year}">
-                    <strong>${year.year}</strong>
-                </a>
+                <button type="button"
+                        class="year-link"
+                        data-year="${year.year}"
+                        data-count="${year.count}"
+                        title="${year.count} propuestas">
+                    <span class="year-link__year">${year.year}</span>
+                    <span class="year-link__count">${year.count} propuestas</span>
+                </button>
             `).join('');
+
+            this.setupYearEvents();
 
             const defaultYear = normalizedYears[0]?.year;
             if (defaultYear) {
@@ -211,15 +216,16 @@ export class InventoriesView extends BaseView {
 
     private async loadYearDownloads(year: number): Promise<void> {
         try {
+            this.currentYear = year;
             this.showLoader(true);
 
-            const response = await this.movieService['connection'].get(`/downloads/year/${year}`);
-            const downloads = response.data;
+            const downloads = await this.movieService.getRatings(year);
 
             const tbody = document.getElementById('downloads-table-body');
-            if (!tbody || !downloads) return;
+            const container = document.getElementById('downloads-content');
+            if (!downloads) return;
 
-            tbody.innerHTML = downloads.map((item: any) => `
+            const rows = downloads.map((item: any) => `
                 <tr id="rating-tr-${item.id}" class="${item.present ? 'present' : 'missing'}">
                     <td>
                         <a target="_blank" href="https://www.filmaffinity.com${item.url}">
@@ -241,6 +247,34 @@ export class InventoriesView extends BaseView {
                     </td>
                 </tr>
             `).join('');
+
+            if (tbody) {
+                tbody.innerHTML = rows;
+            } else if (container) {
+                container.innerHTML = `
+                    <main class="table proposals-table">
+                        <section class="table__header">
+                            <h1>Películas propuestas para descargar ${year}</h1>
+                        </section>
+                        <section class="table__body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Película</th>
+                                        <th>Año</th>
+                                        <th>Rating</th>
+                                        <th>Estado</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rows}
+                                </tbody>
+                            </table>
+                        </section>
+                    </main>
+                `;
+            }
 
             this.setupDownloadEvents();
         } catch (error) {
@@ -291,6 +325,21 @@ export class InventoriesView extends BaseView {
 
                 // Aquí podrías abrir un modal con más detalles
                 console.log('View details for:', id);
+            });
+        });
+    }
+
+    private setupYearEvents(): void {
+        document.querySelectorAll('.year-link').forEach(btn => {
+            btn.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                const target = event.currentTarget as HTMLButtonElement | null;
+                const year = Number(target?.dataset.year || 0);
+
+                if (!Number.isFinite(year) || year <= 0) return;
+
+                await this.loadYearDownloads(year);
             });
         });
     }

@@ -117,8 +117,7 @@ export class MovieCard {
             ? `/posters/${genrePath}${movie.urlpicture}`
             : (this.config.poster ? `/posters/${genrePath}${this.config.poster}` : '/assets/default_poster.jpg');
         const countryName = String(movie.country || movie.name || '').trim() || 'Desconocido';
-        const countryCode = String(movie?.id_country || '').trim();
-        const flagCode = (movie?.flag || countryCode || '').trim();
+        const flagIcon = this.resolveCountryFlag(movie);
         const movieTitle = movie?.realtitle || this.config.title;
         const hddLabel = Number(movie?.hdd_code ?? 0) === 0 ? 'Interno' : 'Externo';
         const sizeText = movie?.size_str || (movie?.size !== undefined && movie?.size !== null ? formatBytes(Number(movie.size)) : 'N/A');
@@ -140,7 +139,7 @@ export class MovieCard {
                         </div>
                         <a class="movie-info-link" target="_blank" rel="noopener noreferrer" href="${detailsUrl}">Abrir ficha externa</a>
                         <div class="country">
-                            <i>${flagEmoji(flagCode)}</i>
+                            <i>${flagIcon}</i>
                             <span>${countryName}</span>
                         </div>
                         ${showAdmin ? `
@@ -245,6 +244,17 @@ export class MovieCard {
             ...(movie || {}),
             country: String(movie?.country || movie?.name || '').trim()
         };
+    }
+    resolveCountryFlag(movie) {
+        const rawFlag = String(movie?.flag || '').trim();
+        if (rawFlag && !/^[a-z]{2}$/i.test(rawFlag)) {
+            return rawFlag;
+        }
+        const code = String(movie?.code || rawFlag || '').trim().toLowerCase();
+        if (code) {
+            return flagEmoji(code);
+        }
+        return '🏳️';
     }
     update(config) {
         Object.assign(this.config, config);
