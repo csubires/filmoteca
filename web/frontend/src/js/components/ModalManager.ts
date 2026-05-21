@@ -94,6 +94,7 @@ export class ModalManager {
 
         // Callback
         config.onOpen?.();
+        window.dispatchEvent(new CustomEvent('i18n-content-changed'));
     }
 
     private setupModalEvents(config: ModalConfig): void {

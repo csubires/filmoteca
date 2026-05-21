@@ -59,6 +59,7 @@ export class ModalManager {
         this.activeModal = content;
         this.setupModalEvents(config);
         config.onOpen?.();
+        window.dispatchEvent(new CustomEvent('i18n-content-changed'));
     }
     setupModalEvents(config) {
         const closeBtn = document.querySelector('[data-action="close-modal"]');

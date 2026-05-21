@@ -197,41 +197,6 @@ export class MaintenanceView extends BaseView {
                 </section>
             </main>
         `;
-        private async loadGenres(): Promise<void> {
-            try {
-                const response = await this.movieService['connection'].get('/maintenance/incomplete-genres');
-                const genres = response.data || [];
-
-                const tbody = document.getElementById('genres-table-body');
-                const countSpan = document.getElementById('genres-count');
-
-                if (!tbody || !genres) return;
-
-                if (countSpan) {
-                    countSpan.textContent = genres.length.toString();
-                }
-
-                // handled above in corrected insertion
-
-                tbody.querySelectorAll('.delete-genre').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const id = Number((btn as HTMLElement).dataset.id);
-                        if (!Number.isInteger(id) || id <= 0) return;
-                        const confirmed = await this.modalManager.confirm('¿Eliminar este género? Esta acción es irreversible.', { title: 'Confirmación', confirmText: 'Eliminar', cancelText: 'Cancelar' });
-                        if (!confirmed) return;
-                        try {
-                            const res = await this.movieService['connection'].delete('/delete_genre', { id_genre: id }, { showAlerts: false });
-                            if (res?.status === 200) {
-                                this.alertManager.success('Género eliminado');
-                                await this.loadGenres();
-                            } else {
-                                this.alertManager.error('No se pudo eliminar el género');
-                            }
-                        } catch (e) {
-                            this.handleError(e, 'Error al eliminar género');
-                        }
-                    });
-                });
     }
 
     private renderIncompleteMenu(): string {

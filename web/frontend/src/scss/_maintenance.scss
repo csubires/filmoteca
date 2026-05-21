@@ -73,59 +73,121 @@
 //  -----------------
 
 .container-advance-search {
-    @include mixins.make-container(1rem, 2rem, c.$bs-gray-100);
-    box-shadow: c.$shadow-lg;
+    // Use site tokens for consistent card appearance
+    @include mixins.make-container(1rem, 2rem, transparent);
+    background: linear-gradient(180deg, var(--color-bg-card), rgba(255,255,255,0.02));
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 0;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    width: auto;
+    margin: 2rem;
+    overflow: hidden;
 
     summary {
         text-transform: uppercase;
         width: calc(100% - 1.5rem);
     }
 
+    .search-summary {
+        background: var(--color-accent);
+        color: var(--color-on-accent, #fff);
+        padding: 1rem 1.2rem;
+        cursor: pointer;
+        list-style: none;
+        border-radius: 1rem;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        transition: all 0.28s ease;
+        user-select: none;
+    }
+
     #form-advance-search {
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 1fr;
         z-index: c.$z-modal-overlay;
-        flex-wrap: wrap;
+        padding: 1.1rem;
+        gap: 1.25rem;
+    }
+
+    .search-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .search-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-field.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .field-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        opacity: 0.9;
+    }
+
+    .search-field label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-field input,
+    .search-field select {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background-color: var(--color-surface, #ffffff);
+        color: var(--color-text-primary);
+    }
+
+    .search-field input:focus,
+    .search-field select:focus {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 4px rgba(16,137,205,0.06);
+        outline: none;
+    }
+
+    .search-actions {
+        grid-column: 1 / -1;
+        display: flex;
         justify-content: center;
         gap: 1rem;
-        padding: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0,0,0,0.04);
+    }
 
-        >div {
-            //width: 49%;
-            border: 1px solid c.$bs-gray-200;
-            border-radius: 5px;
+    .search-actions .btn-primary {
+        padding: 0.75rem 1.75rem;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        background: var(--color-accent);
+        color: var(--color-on-accent, #fff);
+        border-radius: 0.75rem;
+        border: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
 
-            label .row,
-            &.row {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+    .search-actions .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
 
-            input,
-            select {
-                text-align: center;
-            }
-
-            input[type=number] {
-                appearance: textfield;
-            }
-
-            &:last-child {
-                justify-content: end;
-                order: 1;
-                flex-grow: 1;
-                display: flex;
-                width: 99%;
-                gap: 1rem;
-                border: none;
-            }
-        }
-
-        span {
-            opacity: 0.5;
-        }
+    span {
+        opacity: 0.66;
     }
 }
 

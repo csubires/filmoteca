@@ -37,7 +37,7 @@ export class SearchView extends BaseView {
         return `
             <div class="container-advance-search">
                 <details ${hasResults ? 'open' : ''}>
-                    <summary class="btn btn-primary">Busqueda Avanzada</summary>
+                    <summary class="btn btn-primary">Búsqueda Avanzada</summary>
 
                     <form id="form-advance-search" method="GET">
                         <div>
@@ -49,7 +49,7 @@ export class SearchView extends BaseView {
                         <div>
                             <label for="quality"><span>Por calidad</span>
                                 <select id="quality" name="quality">
-                                    <option value="">n/a</option>
+                                    <option value="">N/A</option>
                                 </select>
                             </label>
                         </div>
@@ -57,7 +57,7 @@ export class SearchView extends BaseView {
                         <div>
                             <label for="extension"><span>Por Extensión</span>
                                 <select id="extension" name="extension">
-                                    <option value="">n/a</option>
+                                    <option value="">N/A</option>
                                 </select>
                             </label>
                         </div>
@@ -65,7 +65,7 @@ export class SearchView extends BaseView {
                         <div>
                             <label for="resolution"><span>Por Resolución</span>
                                 <select id="resolution" name="resolution">
-                                    <option value="">n/a</option>
+                                    <option value="">N/A</option>
                                 </select>
                             </label>
                         </div>
@@ -73,7 +73,7 @@ export class SearchView extends BaseView {
                         <div>
                             <label for="fps"><span>Por FPS</span>
                                 <select id="fps" name="fps">
-                                    <option value="">n/a</option>
+                                    <option value="">N/A</option>
                                 </select>
                             </label>
                         </div>
@@ -81,7 +81,7 @@ export class SearchView extends BaseView {
                         <div>
                             <label for="id_country"><span>Por País</span>
                                 <select id="id_country" name="id_country">
-                                    <option value="">n/a</option>
+                                    <option value="">N/A</option>
                                 </select>
                             </label>
                         </div>
@@ -162,7 +162,7 @@ export class SearchView extends BaseView {
         if (!select) return;
 
         select.innerHTML = [
-            '<option value="">n/a</option>',
+            '<option value="">N/A</option>',
             ...options.map(option => {
                 const value = option.value || option.name || String(option.id);
                 return `<option value="${this.escapeHtml(value)}">${this.escapeHtml(String(value))}</option>`;
@@ -175,7 +175,7 @@ export class SearchView extends BaseView {
         if (!select) return;
 
         select.innerHTML = [
-            '<option value="">n/a</option>',
+            '<option value="">N/A</option>',
             ...options.map(option => {
                 const code = String(option.value || option.name || '').trim();
                 const label = `${flagEmoji(code)} ${option.name || code}`.trim();

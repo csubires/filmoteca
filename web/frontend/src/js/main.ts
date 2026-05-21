@@ -31,6 +31,7 @@ let themeLanguageListenersReady = false;
 let cardInfoListenerReady = false;
 let availableLanguages: Array<{ code: string; name: string }> = [];
 let translationCatalog: Record<string, Record<string, string>> = {};
+let translationLookup: Record<string, string> = {};
 let translationCatalogLoaded = false;
 let translationCatalogPromise: Promise<void> | null = null;
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,16 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setupGlobalSearch();
     setupThemeLanguageToggles();
 });
-window.addEventListener('navigation-complete', () => {
-    loadNavigation();
+window.addEventListener('navigation-complete', async () => {
+    await loadNavigation();
     if (!genresLoaded) {
-        loadGenres();
+        await loadGenres();
     }
-        const currentLanguage = getCurrentLanguage();
-        void syncLanguageToggle(currentLanguage);
-        void applyTranslations(currentLanguage);
+    const currentLanguage = getCurrentLanguage();
+    await syncLanguageToggle(currentLanguage);
+    await applyTranslations(currentLanguage);
     syncThemeToggle();
     setupCardInfoPositioning();
+});
+
+window.addEventListener('i18n-content-changed', () => {
+    void applyTranslations(getCurrentLanguage());
 });
 function setupMenuClickToggle(): void {
     document.addEventListener('click', (e) => {
@@ -129,7 +134,10 @@ async function changeLanguage(language: string): Promise<void> {
 
         localStorage.setItem('language', language);
         document.documentElement.lang = language;
-            await router.handleRoute();
+        await router.handleRoute();
+        await loadNavigation();
+        await syncLanguageToggle(language);
+        await applyTranslations(language);
     } catch (error) {
         console.error('Error changing language:', error);
     }
@@ -158,6 +166,7 @@ async function loadTranslationCatalog(): Promise<void> {
             es: flattenTranslations(esCatalog),
             en: flattenTranslations(enCatalog)
         };
+        buildTranslationLookup();
         translationCatalogLoaded = true;
     })();
 
@@ -185,6 +194,110 @@ function flattenTranslations(payload: Record<string, unknown>, prefix = ''): Rec
     });
 
     return result;
+}
+
+function buildTranslationLookup(): void {
+    const lookup: Record<string, string> = {};
+    const spanishCatalog = translationCatalog.es || {};
+
+    Object.entries(spanishCatalog).forEach(([key, value]) => {
+        const normalized = normalizeTranslationText(value);
+        if (normalized && !lookup[normalized]) {
+            lookup[normalized] = key;
+        }
+    });
+
+    translationLookup = lookup;
+}
+
+function normalizeTranslationText(value: string): string {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function parseI18nAttrMappings(rawValue: string): Array<{ attr: string; key: string }> {
+    return rawValue
+        .split(/[;,]/)
+        .map(item => item.trim())
+        .filter(Boolean)
+        .map(item => {
+            const [attr, key] = item.split(':').map(part => part.trim());
+            return attr && key ? { attr, key } : null;
+        })
+        .filter((item): item is { attr: string; key: string } => Boolean(item));
+}
+
+function mergeI18nAttrMappings(currentValue: string, additions: Array<{ attr: string; key: string }>): string {
+    const existing = parseI18nAttrMappings(currentValue);
+    const map = new Map<string, string>();
+
+    existing.forEach(item => map.set(item.attr, item.key));
+    additions.forEach(item => map.set(item.attr, item.key));
+
+    return Array.from(map.entries()).map(([attr, key]) => `${attr}:${key}`).join(';');
+}
+
+function annotateI18n(root: ParentNode): void {
+    if (!translationCatalogLoaded) return;
+
+    const elements: HTMLElement[] = [];
+    if (root instanceof Element) {
+        elements.push(root as HTMLElement);
+    }
+    root.querySelectorAll<HTMLElement>('*').forEach(element => elements.push(element));
+
+    elements.forEach(element => {
+        if (!element.dataset.i18n) {
+            const text = normalizeTranslationText(element.textContent || '');
+            if (text && element.children.length === 0) {
+                const key = translationLookup[text];
+                if (key) {
+                    element.dataset.i18n = key;
+                }
+            }
+        }
+
+        const mappedAttrs: Array<{ attr: string; key: string }> = [];
+        ['title', 'aria-label', 'placeholder', 'value'].forEach(attr => {
+            const current = element.getAttribute(attr);
+            if (!current) return;
+            const key = translationLookup[normalizeTranslationText(current)];
+            if (key) {
+                mappedAttrs.push({ attr, key });
+            }
+        });
+
+        if (mappedAttrs.length > 0) {
+            element.dataset.i18nAttr = mergeI18nAttrMappings(element.dataset.i18nAttr || '', mappedAttrs);
+        }
+    });
+}
+
+function translateAnnotatedElement(element: HTMLElement, language: string): void {
+    const normalizedLanguage = language === 'en' ? 'en' : 'es';
+    const translatedText = element.dataset.i18n ? translationCatalog[normalizedLanguage]?.[element.dataset.i18n] : undefined;
+
+    if (translatedText) {
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+            const inputType = element instanceof HTMLInputElement ? element.type : '';
+            if (inputType === 'button' || inputType === 'submit' || inputType === 'reset') {
+                element.value = translatedText;
+            } else if (element.hasAttribute('placeholder')) {
+                element.placeholder = translatedText;
+            } else {
+                element.value = translatedText;
+            }
+        } else {
+            element.textContent = translatedText;
+        }
+    }
+
+    const mappings = parseI18nAttrMappings(element.dataset.i18nAttr || '');
+    mappings.forEach(({ attr, key }) => {
+        const attrTranslation = translationCatalog[normalizedLanguage]?.[key];
+        if (attrTranslation) {
+            element.setAttribute(attr, attrTranslation);
+        }
+    });
 }
 
 function getTranslationMaps(language?: string): { source: Record<string, string>; target: Record<string, string> } {
@@ -250,6 +363,11 @@ async function applyTranslations(language?: string): Promise<void> {
     if (!translationCatalogLoaded) return;
 
     const normalizedLanguage = language === 'en' ? 'en' : 'es';
+    annotateI18n(document.body);
+    document.querySelectorAll<HTMLElement>('[data-i18n], [data-i18n-attr]').forEach(element => {
+        translateAnnotatedElement(element, normalizedLanguage);
+    });
+
     const { source, target } = getTranslationMaps(normalizedLanguage);
 
     translateDomText(document.body, source, target);
@@ -282,9 +400,16 @@ function syncThemeToggle(theme: string = (document.documentElement.getAttribute(
     if (!button) return;
 
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    const currentLanguage = getCurrentLanguage() === 'en' ? 'en' : 'es';
+    const titleKey = nextTheme === 'light' ? 'theme.toggle_to_light' : 'theme.toggle_to_dark';
+    const title = translationCatalog[currentLanguage]?.[titleKey] || (nextTheme === 'light' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
     button.textContent = theme === 'dark' ? '☀' : '☾';
-    button.title = nextTheme === 'light' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+    button.title = title;
     button.setAttribute('aria-label', button.title);
+    button.dataset.i18nAttr = mergeI18nAttrMappings(button.dataset.i18nAttr || '', [
+        { attr: 'title', key: titleKey },
+        { attr: 'aria-label', key: titleKey }
+    ]);
 }
 
 async function syncLanguageToggle(language?: string): Promise<void> {
@@ -327,9 +452,17 @@ function updateLanguageToggleUI(normalizedLanguage: string, languages: Array<{ c
     if (button) {
         const nextLanguage = normalizedLanguage === 'es' ? 'en' : 'es';
         const languageMeta = languages.find(item => item.code === nextLanguage) || languages.find(item => item.code === normalizedLanguage);
+        const titleKey = nextLanguage === 'es' ? 'language.toggle_to_es' : 'language.toggle_to_en';
+        const title = translationCatalog[normalizedLanguage]?.[titleKey] || `Cambiar a ${nextLanguage === 'es' ? 'Español' : 'English'}`;
         button.textContent = flagEmoji(nextLanguage);
-        button.title = languageMeta?.name ? `Cambiar a ${languageMeta.name}` : `Cambiar a ${nextLanguage === 'es' ? 'Español' : 'English'}`;
+        button.title = languageMeta?.name && !translationCatalog[normalizedLanguage]?.[titleKey]
+            ? `Cambiar a ${languageMeta.name}`
+            : title;
         button.setAttribute('aria-label', button.title);
+        button.dataset.i18nAttr = mergeI18nAttrMappings(button.dataset.i18nAttr || '', [
+            { attr: 'title', key: titleKey },
+            { attr: 'aria-label', key: titleKey }
+        ]);
     }
 }
 
