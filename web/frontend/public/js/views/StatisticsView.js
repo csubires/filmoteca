@@ -262,7 +262,7 @@ export class StatisticsView extends BaseView {
         const figureClasses = (large) => large ? 'large' : '';
         container.innerHTML = [
             this.renderChartFigure('Progresión del número de películas por año', this.normalizeChartData(charts.years), false),
-                this.renderChartFigure('Número de películas por país', this.normalizeChartData(charts.countries, 12), false),
+            this.renderChartFigure('Número de películas por país', this.normalizeChartData(charts.countries, 12), false),
             this.renderChartFigure('Número de películas por género', this.normalizeChartData(charts.genres, 12), false),
             this.renderChartFigure('Número de películas por extensión', this.normalizeChartData(charts.extensions, 12), false),
             this.renderChartFigure('Valoración del repositorio interno', this.normalizeRatingsChartData(charts.ratingsInternal, 12), false),
@@ -282,8 +282,8 @@ export class StatisticsView extends BaseView {
             `;
         }
         const maxValue = Math.max(...data.map(item => item.value), 1);
-            const width = 640;
-            const height = 300;
+        const width = 640;
+        const height = 300;
         const padding = 28;
         const plotWidth = width - padding * 2;
         const plotHeight = height - padding * 2;
@@ -381,10 +381,10 @@ export class StatisticsView extends BaseView {
             }
             const percentage = (country.value * 100) / totalMovies;
             const normalized = maxMovies > 0 ? Math.pow(country.value / maxMovies, 0.72) : 0;
-                const hue = Math.round(120 - (120 * normalized));
-                const saturation = 84;
-                const lightness = Math.round(42 + normalized * 10);
-                element.style.fill = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            const hue = Math.round(120 - (120 * normalized));
+            const saturation = 84;
+            const lightness = Math.round(42 + normalized * 10);
+            element.style.fill = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
             element.style.stroke = 'rgba(15, 23, 42, 0.25)';
             element.style.strokeWidth = '0.5';
             element.style.cursor = 'pointer';

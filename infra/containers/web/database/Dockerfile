@@ -1,7 +1,8 @@
-FROM base:latest
-WORKDIR /app
-COPY database/package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm install
-COPY database ./database
-COPY shared ./shared
+ARG BASE_IMAGE=filmoteca-web-base:latest
+FROM ${BASE_IMAGE}
+
+WORKDIR /app/web/database
+
+COPY web/database ./
+
 CMD ["npm", "start"]

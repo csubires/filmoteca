@@ -1,130 +1,103 @@
-x-healthchecks:
-  interval: 30s
-  timeout: 10s
-  retries: 3
-  nginx: &nginx-healthcheck
-    test: ["CMD", "nginx", "-t"]
-  vault: &vault-healthcheck
-    test: ["CMD-SHELL", "curl -s curl http://vault:8200/v1/sys/health | grep -q '\"initialized\":true' || exit 1"]
-  gateway: &gateway-healthcheck
-    test: ["CMD", "curl", "-f", "-s", "http://gateway:3000/gateway/health"]
-  database: &database-healthcheck
-    test: ["CMD", "curl", "-f",  "-s", "http://database:3003/database/health"]
-  auth: &auth-healthcheck
-    test: ["CMD", "curl", "-f",  "-s", "http://auth:3001/auth/health"]
-  i18n: &i18n-healthcheck
-    test: ["CMD", "curl", "-f", "http://i18n:3002/i18n/health"]
+name: filmoteca
 
 services:
+  database:
+    image: filmoteca-database:latest
+    build:
+      context: ../..
+      dockerfile: infra/containers/web/database/Dockerfile
+    environment:
+      NODE_ENV: production
+      DB_PATH: /app/data/filmoteca.db
+      QUERIES_PATH: /app/web/database/queries
+    volumes:
+      - ../../data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/database/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  auth:
+    image: filmoteca-auth:latest
+    build:
+      context: ../..
+      dockerfile: infra/containers/web/auth/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: http://database:3003
+    volumes:
+      - ../../data:/app/data
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/auth/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  i18n:
+    image: filmoteca-i18n:latest
+    build:
+      context: ../..
+      dockerfile: infra/containers/web/i18n/Dockerfile
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/i18n/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
 
   gateway:
-    image: gateway
+    image: filmoteca-gateway:latest
     build:
-      network: host
-      context: .
-      dockerfile: gateway/Dockerfile
-    container_name: gateway
-    networks: [transcendence-net]
+      context: ../..
+      dockerfile: infra/containers/web/gateway/Dockerfile
     environment:
-      VAULT_ADDR: http://vault:8200
-      VAULT_TOKEN: root
+      NODE_ENV: production
+      DATABASE_URL: http://database:3003
+      AUTH_URL: http://auth:3001
+      I18N_URL: http://i18n:3002
     volumes:
-      - data-volume:/app/data
+      - ../../data:/app/data:ro
     depends_on:
-      vault:
+      database:
         condition: service_healthy
       auth:
         condition: service_healthy
       i18n:
         condition: service_healthy
-      database:
-        condition: service_healthy
-    healthcheck: *gateway-healthcheck
-    restart: always
-
-  database:
-    image: database
-    build:
-      network: host
-      context: .
-      dockerfile: database/Dockerfile
-    container_name: database
-    networks: [transcendence-net]
-    volumes:
-      - data-volume:/app/data
-      - media-data:/app/media
-    healthcheck: *database-healthcheck
-    restart: always
-
-  auth:
-    image: auth
-    build:
-      network: host
-      context: .
-      dockerfile: auth/Dockerfile
-    container_name: auth
-    networks: [transcendence-net]
-    env_file: .env
-    environment:
-      VAULT_ADDR: http://vault:8200
-      VAULT_TOKEN: root
-    volumes:
-      - data-volume:/app/data
-    depends_on:
-      vault:
-        condition: service_healthy
-      database:
-        condition: service_healthy
-    healthcheck: *auth-healthcheck
-    restart: always
-
-  i18n:
-    image: i18n
-    build:
-      network: host
-      context: .
-      dockerfile: i18n/Dockerfile
-    container_name: i18n
-    networks: [transcendence-net]
-    healthcheck: *i18n-healthcheck
-    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/gateway/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
 
   nginx:
-    image: nginx
+    image: filmoteca-nginx:latest
     build:
-      network: host
-      context: .
-      dockerfile: nginx/Dockerfile
-    container_name: nginx
-    ports: ["8443:443"]
+      context: ../..
+      dockerfile: infra/containers/web/nginx/Dockerfile
+    ports:
+      - "8443:443"
+    volumes:
+      - ../../data/logs/nginx:/var/log/nginx
     depends_on:
-      - gateway
-    healthcheck: *nginx-healthcheck
-    networks: [transcendence-net]
-    restart: always
-
-  vault:
-    image: vault
-    container_name: vault
-    build:
-      network: host
-      context: vault
-      dockerfile: Dockerfile
-    environment:
-      VAULT_ADDR: http://vault:8200
-      VAULT_TOKEN: root
-    networks: [transcendence-net]
-    healthcheck: *vault-healthcheck
-    restart: always
-
-volumes:
-  data-volume:
-    name: data-volume
-  media-data:
-    name: media-data
+      gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "https://localhost/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
 
 networks:
-  transcendence-net:
-    name: transcendence-net
-    driver: bridge
-    enable_ipv6: false
+  default:
+    name: filmoteca-net

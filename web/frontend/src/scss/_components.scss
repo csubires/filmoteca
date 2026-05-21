@@ -59,7 +59,7 @@ select {
 	outline-style: none;
 	border: 1px solid c.$bs-gray-400;
 	border-radius: 5px;
-	padding: 0.7rem;
+	padding: 1.5rem 0.6rem 0.3rem 0.6rem;
 	transition: border-color c.$transition-medium;
 	opacity: 1;
 
@@ -110,7 +110,7 @@ input[type=checkbox] {
 }
 
 input[type=range] {
-	padding: 0;
+	padding: 1.5rem 0.6rem 0.3rem 0.6rem;
 	margin: 0.7rem 0.5rem;
 }
 

@@ -1,10 +1,9 @@
-FROM base:latest
-WORKDIR /app
-COPY gateway/package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm install
-COPY gateway ./gateway
-COPY shared ./shared
-CMD ["npm", "start"]
+ARG BASE_IMAGE=filmoteca-web-base:latest
+FROM ${BASE_IMAGE}
 
-# /etc/docker/daemon.json
-# { "features": { "buildkit": true } }
+WORKDIR /app/web/gateway
+
+COPY web/gateway ./
+COPY web/frontend/public ../frontend/public
+
+CMD ["npm", "start"]

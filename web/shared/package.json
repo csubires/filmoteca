@@ -1,0 +1,7 @@
+{
+	"type": "module",
+	"name": "filmoteca-shared",
+	"version": "1.0.0",
+	"description": "Shared utilities for Filmoteca services",
+	"main": "fastify-config.js"
+}

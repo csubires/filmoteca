@@ -1,5 +1,6 @@
 import createFastifyApp from './fastify-config.js';
 import filmotecaRoutes from './routes/filmoteca.js';
+import internalAuthRoutes from './routes/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createHandlerSQL } from './connection.js';
@@ -95,6 +96,7 @@ async function startDatabaseService() {
 	}
 
 	await fastify.register(filmotecaRoutes, { prefix: '/database' });
+	await fastify.register(internalAuthRoutes, { prefix: '/database' });
 
 	await fastify.listen({ host: '0.0.0.0', port: 3003 });
 	console.log('\n' + '='.repeat(50));

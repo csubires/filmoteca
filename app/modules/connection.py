@@ -239,10 +239,20 @@ class Handler_connection:
         page, _ = self.send('GET', url_page)
         if page is None:
             return (None, None)
-        if page.history:
+
+        # Si hay historial de redirecciones, intentar obtener la Location
+        # del último response; si no existe, devolver la URL final del page
+        if getattr(page, 'history', None):
             last = page.history[-1]
-            return (last.headers.get('Location'), last.status_code)
-        return (None, None)
+            loc = last.headers.get('Location') or getattr(page, 'url', None)
+            status = getattr(last, 'status_code', None) or getattr(page, 'status_code', None)
+            return (loc, status)
+
+        # Si no hubo history pero el servidor devolvió un 3xx sin Location,
+        # devolver la URL final y el código (seguido por requests normalmente).
+        final_url = getattr(page, 'url', None)
+        final_status = getattr(page, 'status_code', None)
+        return (None if not page.history and final_url == url_page else final_url, final_status)
 
     # ── Headers ──────────────────────────────────────────────────────────────
 

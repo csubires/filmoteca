@@ -5,6 +5,8 @@ import { TorrentConfig, TorrentMovie, TorrentSerie } from '../types/torrent.type
 export class TorrentView extends BaseView {
     private torrentService: TorrentService;
     private pollingInterval: number | null = null;
+    private lastTaskOutputLength: number = 0;
+    private taskCompleteListener?: EventListener;
 
     constructor() {
         super();
@@ -15,17 +17,12 @@ export class TorrentView extends BaseView {
         return `
             <div class="torrent-container">
                 <div class="torrent-header">
-                    <h1>Gestor de Torrents</h1>
-                    <a href="https://rojotorrent.com/descargar-peliculas"
-                       target="_blank"
-                       class="btn btn-danger-link">
-                        Ir a RojoTorrent
-                    </a>
+                    <h1>Gestor de Tareas</h1>
                 </div>
 
-                <div class="torrent-config card" id="torrent-config">
+                <div class="torrent-config card" id="run-task">
                     <div class="form-group">
-                        <label>Tarea</label>
+                        <label>Tareas</label>
                         <select id="task-select">
                             <option value="torrent">Buscar Torrents</option>
                             <option value="local">Escaneo Local</option>
@@ -68,14 +65,14 @@ export class TorrentView extends BaseView {
 
     async afterRender(): Promise<void> {
         await Promise.all([
-            this.loadConfig(),
             this.loadMovies(),
             this.loadSeries()
         ]);
 
+        this.setupTaskSelector();
+        await this.loadConfig();
         this.setupEventListeners();
         await this.torrentService.checkInitialState();
-        this.setupTaskSelector();
     }
 
     private setupTaskSelector(): void {
@@ -86,6 +83,13 @@ export class TorrentView extends BaseView {
         const renderConfigFor = (task: string) => {
             if (task === 'torrent') {
                 configArea.innerHTML = `
+                    <div class="form-group">
+                        <a href="https://rojotorrent.com/descargar-peliculas"
+                           target="_blank"
+                           class="btn btn-danger-link">
+                            Ir a RojoTorrent
+                        </a>
+                    </div>
                     <div class="form-group">
                         <label>Último torrent</label>
                         <input type="text" id="last-torrent" value="">
@@ -122,7 +126,7 @@ export class TorrentView extends BaseView {
     private async loadConfig(): Promise<void> {
         try {
             const config = await this.torrentService.getConfig();
-            const container = document.getElementById('torrent-config');
+            const container = document.getElementById('run-task');
             if (!container) return;
 
             // Set values only if the inputs exist (do not overwrite task selector)
@@ -267,7 +271,7 @@ export class TorrentView extends BaseView {
         });
 
         // Escuchar eventos de tarea completada
-        window.addEventListener('torrent-task-complete', ((e: CustomEvent) => {
+        this.taskCompleteListener = ((e: CustomEvent) => {
             this.hideProgress();
 
             if (e.detail.task_status === 'completed') {
@@ -277,13 +281,17 @@ export class TorrentView extends BaseView {
             } else if (e.detail.task_status === 'failed') {
                 this.alertManager.error(e.detail.error || 'Error en la búsqueda');
             }
-        }) as EventListener);
+        }) as EventListener;
+
+        window.removeEventListener('torrent-task-complete', this.taskCompleteListener);
+        window.addEventListener('torrent-task-complete', this.taskCompleteListener);
     }
 
     private async startTorrentSearch(): Promise<void> {
         try {
             this.showProgress();
             this.clearLogs();
+            this.lastTaskOutputLength = 0;
             this.addLog('Iniciando búsqueda de torrents...');
 
             const taskSelect = document.getElementById('task-select') as HTMLSelectElement;
@@ -310,23 +318,43 @@ export class TorrentView extends BaseView {
             }
 
             this.addLog(`Tarea iniciada: ${taskId} (${selectedTask})`);
+            this.updateProgress(1, 'Tarea iniciada');
 
             // Polling real del estado
-            const pollInterval = window.setInterval(async () => {
+            this.pollingInterval = window.setInterval(async () => {
                 try {
                     const status = await this.torrentService.getTaskStatus(taskId);
 
-                    if (status?.task_status === 'completed' || status?.task_status === 'failed') {
-                        clearInterval(pollInterval);
+                    if (status?.output && status.output.length > this.lastTaskOutputLength) {
+                        const newOutput = status.output.slice(this.lastTaskOutputLength);
+                        this.lastTaskOutputLength = status.output.length;
+                        newOutput.split(/\r?\n/).map(line => line.trim()).filter(Boolean).forEach(line => this.addLog(line));
+                    }
+
+                    const outputProgress = this.extractProgressFromOutput(status?.output || '');
+                    const progressValue = Math.max(status?.progress || 0, outputProgress);
+
+                    if (status?.task_status === 'completed' ||
+                        status?.task_status === 'failed' ||
+                        status?.task_status === 'cancelled' ||
+                        status?.task_status === 'not_found') {
+                        if (this.pollingInterval) {
+                            clearInterval(this.pollingInterval);
+                            this.pollingInterval = null;
+                        }
                         this.updateProgress(100, status?.task_status === 'completed' ? 'Búsqueda completada' : 'Error en búsqueda');
                         this.hideProgress();
 
                         if (status?.task_status === 'completed') {
-                            this.alertManager.success('Búsqueda completada');
+                        this.updateProgress(progressValue, status?.message || 'Buscando...');
                             setTimeout(() => {
                                 this.loadMovies();
                                 this.loadSeries();
                             }, 1000);
+                        } else if (status?.task_status === 'cancelled') {
+                            this.alertManager.info('Búsqueda cancelada');
+                        } else if (status?.task_status === 'not_found') {
+                            this.alertManager.warning('La tarea ya no está disponible en el servidor');
                         } else {
                             this.alertManager.error(status?.error || 'Error en la búsqueda');
                         }
@@ -335,6 +363,11 @@ export class TorrentView extends BaseView {
                     }
                 } catch (error) {
                     this.addLog(`Error en polling: ${error}`);
+                    if (this.pollingInterval) {
+                        clearInterval(this.pollingInterval);
+                        this.pollingInterval = null;
+                    }
+                    this.hideProgress();
                 }
             }, 2000);
 
@@ -389,6 +422,15 @@ export class TorrentView extends BaseView {
         }
     }
 
+    private extractProgressFromOutput(output: string): number {
+        if (!output) return 0;
+        const matches = output.match(/PROGRESO:(\d+)/g);
+        if (!matches || matches.length === 0) return 0;
+        const lastMatch = matches[matches.length - 1];
+        const value = parseInt(lastMatch.replace('PROGRESO:', ''));
+        return Number.isFinite(value) ? value : 0;
+    }
+
     private clearLogs(): void {
         const logsArea = document.getElementById('torrent-logs') as HTMLTextAreaElement;
         if (logsArea) {
@@ -404,6 +446,10 @@ export class TorrentView extends BaseView {
 
     cleanup(): void {
         this.hideProgress();
+        if (this.taskCompleteListener) {
+            window.removeEventListener('torrent-task-complete', this.taskCompleteListener);
+            this.taskCompleteListener = undefined;
+        }
     }
 }
 

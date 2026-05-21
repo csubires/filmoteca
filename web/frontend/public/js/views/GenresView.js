@@ -18,10 +18,8 @@ export class GenresView extends BaseView {
         this.movieService = new MovieService();
     }
     async render(params) {
-        const rawId = params?.id;
-        const parsedId = rawId !== undefined && rawId !== null ? Number(rawId) : NaN;
-        this.currentGenreId = Number.isFinite(parsedId) ? parsedId : null;
-        if (this.currentGenreId !== null) {
+        this.currentGenreId = params?.id ? parseInt(params.id) : null;
+        if (this.currentGenreId) {
             return this.renderGenreDetail(this.currentGenreId);
         }
         else {
@@ -73,8 +71,8 @@ export class GenresView extends BaseView {
         `;
     }
     afterRender(params) {
-        if (this.currentGenreId !== null) {
-            this.loadGenreDetail(this.currentGenreId);
+        if (params?.id) {
+            this.loadGenreDetail(parseInt(params.id));
         }
         else {
             this.loadGenres();

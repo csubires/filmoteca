@@ -62,7 +62,7 @@ HEADERS_JSON = {
 }
 
 # Torrents
-URL_BASE_R, URL_FILM, URL_PAGE = 'https://rojotorrent.com', '/peliculas', '/page/%s'
-URL_BASE_S, URL_SERIE, URL_PAGE_S = 'https://rojotorrent.com', '/series', '/page/%s'
+URL_BASE_R, URL_FILM, URL_PAGE = 'https://6847-don.mirror.pm', '/peliculas', '/page/%s'
+URL_BASE_S, URL_SERIE, URL_PAGE_S = 'https://6847-don.mirror.pm', '/series', '/page/%s'
 URL_FILMAFFINITY = "https://filmaffinity.com/es/advsearch.php?stext={}&stype%5B%5D=title&fromyear={}&toyear={}"
 URL_IMBD = "https://www.imdb.com/search/title/?title={}&release_date={}-01-01,{}-12-31"

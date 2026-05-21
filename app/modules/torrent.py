@@ -39,6 +39,16 @@ def get_movies(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
 
     lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
     page_url = f'{URL_BASE_R}{URL_FILM}{URL_PAGE}' % index
+    # Mostrar en log la URL de la página que se está scrappeando
+    lg_prt('t', '[→] Scrapeando página:', page_url)
+    # Detectar si hay redirección y usar la URL final
+    try:
+        redirect_url, red_status = oCNT.get_url_redirect(page_url)
+        if redirect_url:
+            lg_prt('t', '[↪] Redirección detectada:', redirect_url)
+            page_url = redirect_url
+    except Exception as e:
+        lg_prt('ry', '[!] Error comprobando redirección:', str(e))
     page, status = oCNT.send('GET', page_url)
 
     if status != 200:
@@ -60,6 +70,14 @@ def get_movies(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
 
         # Obtener detalles de la película
         movie_url = f'{URL_BASE_R}{item}'
+        # Comprobar redirección específica de la URL de la película
+        try:
+            m_redirect, m_status = oCNT.get_url_redirect(movie_url)
+            if m_redirect:
+                lg_prt('t', '[↪] Redirección película:', m_redirect)
+                movie_url = m_redirect
+        except Exception:
+            pass
         page, status = oCNT.send('GET', movie_url)
 
         if status != 200:
@@ -141,6 +159,16 @@ def get_series(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
 
     lg_prt('t', f'\n\t ----- PAGE {index} ----- \n')
     page_url = f'{URL_BASE_S}{URL_SERIE}{URL_PAGE_S}' % index
+    # Mostrar en log la URL de la página de series que se está scrappeando
+    lg_prt('t', '[→] Scrapeando página (series):', page_url)
+    # Detectar redirección para la página de series
+    try:
+        redirect_url, red_status = oCNT.get_url_redirect(page_url)
+        if redirect_url:
+            lg_prt('t', '[↪] Redirección detectada (series):', redirect_url)
+            page_url = redirect_url
+    except Exception as e:
+        lg_prt('ry', '[!] Error comprobando redirección (series):', str(e))
     page, status = oCNT.send('GET', page_url)
 
     if status != 200:
@@ -157,6 +185,14 @@ def get_series(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
             return False
 
         serie_url = f'{URL_BASE_S}{item}'
+        # Comprobar redirección específica de la URL de la serie
+        try:
+            s_redirect, s_status = oCNT.get_url_redirect(serie_url)
+            if s_redirect:
+                lg_prt('t', '[↪] Redirección serie:', s_redirect)
+                serie_url = s_redirect
+        except Exception:
+            pass
         page, status = oCNT.send('GET', serie_url)
 
         if status != 200:

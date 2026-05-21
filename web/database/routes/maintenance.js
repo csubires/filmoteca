@@ -11,6 +11,24 @@ export default async function maintenanceRoutes(fastify) {
 		}
 	});
 
+	fastify.get('/maintenance/deleted-movies', async (request, reply) => {
+		try {
+			const result = await db.execute('deleted_movies', {});
+			return { data: result, status: 200 };
+		} catch (error) {
+			return reply.code(500).send({ error: error.message });
+		}
+	});
+
+	fastify.put('/restore_movie', async (request, reply) => {
+		try {
+			const result = await db.execute('restore_movie', { ':id_movie': request.body.id_movie });
+			return { data: result, message: 'Movie restored successfully', status: 200 };
+		} catch (error) {
+			return reply.code(500).send({ error: error.message });
+		}
+	});
+
 	fastify.get('/maintenance/missing-hdd0', async (request, reply) => {
 		try {
 			const result = await db.execute('missing_movies_hdd0', {});
@@ -101,6 +119,22 @@ export default async function maintenanceRoutes(fastify) {
 		}
 	});
 
+	fastify.put('/update_country', async (request, reply) => {
+		try {
+			const idCountry = request.body.id_country ?? request.body.idCountry;
+			const code = String(request.body.code ?? '').trim();
+			const flag = String(request.body.flag ?? '').trim();
+			const result = await db.execute('set_code_country', {
+				':id_country': idCountry,
+				':code': code,
+				':flag': flag
+			});
+			return { data: result, message: 'Country updated successfully', status: 200 };
+		} catch (error) {
+			return reply.code(500).send({ error: error.message });
+		}
+	});
+
 	// Movie modification endpoints
 	fastify.put('/modify_movie', async (request, reply) => {
 		try {
@@ -118,6 +152,15 @@ export default async function maintenanceRoutes(fastify) {
 		try {
 			const result = await db.execute('delete_movie', { ':id_movie': request.body.id_movie });
 			return { data: result, message: 'Movie deleted successfully', status: 200 };
+		} catch (error) {
+			return reply.code(500).send({ error: error.message });
+		}
+	});
+
+	fastify.delete('/delete_genre', async (request, reply) => {
+		try {
+			const result = await db.execute('delete_genre', { ':id_genre': request.body.id_genre });
+			return { data: result, message: 'Genre deleted successfully', status: 200 };
 		} catch (error) {
 			return reply.code(500).send({ error: error.message });
 		}

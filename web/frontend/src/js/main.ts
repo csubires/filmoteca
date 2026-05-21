@@ -30,6 +30,9 @@ let searchListenersReady = false;
 let themeLanguageListenersReady = false;
 let cardInfoListenerReady = false;
 let availableLanguages: Array<{ code: string; name: string }> = [];
+let translationCatalog: Record<string, Record<string, string>> = {};
+let translationCatalogLoaded = false;
+let translationCatalogPromise: Promise<void> | null = null;
 document.addEventListener('DOMContentLoaded', () => {
     auth.ready.finally(() => {
         router.handleRoute();
@@ -44,7 +47,9 @@ window.addEventListener('navigation-complete', () => {
     if (!genresLoaded) {
         loadGenres();
     }
-    void syncLanguageToggle();
+        const currentLanguage = getCurrentLanguage();
+        void syncLanguageToggle(currentLanguage);
+        void applyTranslations(currentLanguage);
     syncThemeToggle();
     setupCardInfoPositioning();
 });
@@ -124,11 +129,136 @@ async function changeLanguage(language: string): Promise<void> {
 
         localStorage.setItem('language', language);
         document.documentElement.lang = language;
-        await syncLanguageToggle(language);
-        // Recargar página para actualizar todo el contenido traducido
-        window.location.reload();
+            await router.handleRoute();
     } catch (error) {
         console.error('Error changing language:', error);
+    }
+}
+
+async function loadTranslationCatalog(): Promise<void> {
+    if (translationCatalogLoaded) return;
+    if (translationCatalogPromise) return translationCatalogPromise;
+
+    translationCatalogPromise = (async () => {
+        const [esResponse, enResponse] = await Promise.all([
+            fetch('/api/i18n/locales/es.json'),
+            fetch('/api/i18n/locales/en.json')
+        ]);
+
+        if (!esResponse.ok || !enResponse.ok) {
+            return;
+        }
+
+        const [esCatalog, enCatalog] = await Promise.all([
+            esResponse.json(),
+            enResponse.json()
+        ]);
+
+        translationCatalog = {
+            es: flattenTranslations(esCatalog),
+            en: flattenTranslations(enCatalog)
+        };
+        translationCatalogLoaded = true;
+    })();
+
+    try {
+        await translationCatalogPromise;
+    } finally {
+        translationCatalogPromise = null;
+    }
+}
+
+function flattenTranslations(payload: Record<string, unknown>, prefix = ''): Record<string, string> {
+    const result: Record<string, string> = {};
+
+    Object.entries(payload || {}).forEach(([key, value]) => {
+        const nextKey = prefix ? `${prefix}.${key}` : key;
+
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            Object.assign(result, flattenTranslations(value as Record<string, unknown>, nextKey));
+            return;
+        }
+
+        if (typeof value === 'string') {
+            result[nextKey] = value;
+        }
+    });
+
+    return result;
+}
+
+function getTranslationMaps(language?: string): { source: Record<string, string>; target: Record<string, string> } {
+    const normalizedLanguage = language === 'en' ? 'en' : 'es';
+    const target = translationCatalog[normalizedLanguage] || {};
+    const source = translationCatalog[normalizedLanguage === 'en' ? 'es' : 'en'] || {};
+    return { source, target };
+}
+
+function translateNodeText(text: string, sourceMap: Record<string, string>, targetMap: Record<string, string>): string {
+    const trimmed = text.trim();
+    const translated = targetMap[sourceMap[trimmed] ? trimmed : text] || targetMap[trimmed] || targetMap[sourceMap[trimmed] || ''];
+
+    if (!translated) {
+        return text;
+    }
+
+    return text.replace(trimmed, translated);
+}
+
+function translateDomAttributes(root: ParentNode, sourceMap: Record<string, string>, targetMap: Record<string, string>): void {
+    const elements = root.querySelectorAll<HTMLElement>('*');
+    elements.forEach(element => {
+        ['placeholder', 'title', 'aria-label', 'value'].forEach(attribute => {
+            const current = element.getAttribute(attribute);
+            if (!current) return;
+
+            const trimmed = current.trim();
+            const translated = targetMap[sourceMap[trimmed] ? trimmed : current] || targetMap[trimmed];
+            if (translated) {
+                element.setAttribute(attribute, translated);
+            }
+        });
+    });
+}
+
+function translateDomText(root: ParentNode, sourceMap: Record<string, string>, targetMap: Record<string, string>): void {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const skipTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA']);
+    const nodes: Text[] = [];
+
+    while (walker.nextNode()) {
+        const node = walker.currentNode as Text;
+        const parent = node.parentElement;
+        if (!parent || skipTags.has(parent.tagName)) continue;
+        if (!node.nodeValue || !node.nodeValue.trim()) continue;
+        nodes.push(node);
+    }
+
+    nodes.forEach(node => {
+        const current = node.nodeValue || '';
+        const trimmed = current.trim();
+        const translated = targetMap[sourceMap[trimmed] ? trimmed : current] || targetMap[trimmed];
+        if (!translated) return;
+
+        node.nodeValue = current.replace(trimmed, translated);
+    });
+}
+
+async function applyTranslations(language?: string): Promise<void> {
+    await loadTranslationCatalog();
+
+    if (!translationCatalogLoaded) return;
+
+    const normalizedLanguage = language === 'en' ? 'en' : 'es';
+    const { source, target } = getTranslationMaps(normalizedLanguage);
+
+    translateDomText(document.body, source, target);
+    translateDomAttributes(document.body, source, target);
+
+    const button = document.querySelector('[data-action="toggle-language"]') as HTMLButtonElement | null;
+    if (button) {
+        const nextLanguage = normalizedLanguage === 'es' ? 'en' : 'es';
+        button.textContent = flagEmoji(nextLanguage);
     }
 }
 
@@ -350,7 +480,7 @@ async function loadNavigation(): Promise<void> {
             <a href="/view/0" ${isActive('/view') ? 'class="active"' : ''}>Recientes</a>
             <a href="/menu/statistics" ${isActive('/menu/statistics') ? 'class="active"' : ''}>Estadísticas</a>
             <a href="/menu/inventories" ${isActive('/menu/inventories') ? 'class="active"' : ''}>Listados</a>
-            <a href="/menu/tasks" ${isActive('/menu/tasks') ? 'class="active"' : ''}>Torrents</a>
+            <a href="/menu/tasks" ${isActive('/menu/tasks') ? 'class="active"' : ''}>Tareas</a>
             <a href="/menu/search" ${isActive('/menu/search') || isActive('/auth/search') ? 'class="active"' : ''}>Búsqueda Avanzada</a>
             <a href="/maintenance/general" ${isActive('/maintenance') ? 'class="active"' : ''}>Mantenimiento</a>
             <a href="#" id="logout-btn">Salir</a>
@@ -360,7 +490,7 @@ async function loadNavigation(): Promise<void> {
             <a class="mark-opt" href="/login" ${isActive('/login') ? 'class="active"' : ''}>Iniciar Sesión</a>
             <a href="/view/0" ${isActive('/view') ? 'class="active"' : ''}>Recientes</a>
             <a href="/menu/inventories" ${isActive('/menu/inventories') ? 'class="active"' : ''}>Listados</a>
-            <a href="/menu/tasks" ${isActive('/menu/tasks') ? 'class="active"' : ''}>Torrents</a>
+            <a href="/menu/tasks" ${isActive('/menu/tasks') ? 'class="active"' : ''}>Tareas</a>
         `;
     }
     menuHtml += `

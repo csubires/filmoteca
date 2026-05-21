@@ -5,6 +5,7 @@ export interface TorrentTaskStatus {
     type?: string;
     data?: any;
     error?: string;
+    output?: string;
 }
 
 export interface TorrentStartResponse {

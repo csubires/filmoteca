@@ -60,7 +60,7 @@ export default async function filtersRoutes(fastify) {
 	fastify.get('/advanced_search', async (request, reply) => {
 		try {
 			const q = request.query || {};
-			const where = [];
+			const where = ['M.deleted = 0'];
 			const params = {};
 
 			const idMovie = parseInt(q.id_movie, 10);

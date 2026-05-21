@@ -3,12 +3,17 @@
 
 SHELL := /bin/bash
 
+COMPOSE_FILE := infra/containers/docker-compose.yml
+COMPOSE := docker compose -f $(COMPOSE_FILE)
+WEB_BASE_IMAGE := filmoteca-web-base:latest
+
 # Carpeta de TypeScript (ajusta si es diferente)
 TS_SRC := src
 TS_BUILD := dist
 
 .PHONY: help sass start dev test-db db-backup ts-watch all \
-        web-database web-auth web-i18n web-gateway web-install web-services
+	web-database web-auth web-i18n web-gateway web-install web-services \
+	docker-build-base docker-build docker-up docker-stop docker-down docker-clean
 
 help:
 	@echo "Makefile commands disponibles:"
@@ -27,6 +32,14 @@ help:
 	@echo "  make web-i18n     - Inicia el servicio de i18n (web/i18n)"
 	@echo "  make web-gateway  - Inicia el API Gateway (web/gateway)"
 	@echo "  make web-services - Inicia todos los microservicios en paralelo"
+	@echo ""
+	@echo "  Docker production:"
+	@echo "  make docker-build-base - Construye la imagen base compartida"
+	@echo "  make docker-build      - Construye todas las imágenes de producción"
+	@echo "  make docker-up         - Levanta toda la pila de producción"
+	@echo "  make docker-stop       - Detiene toda la pila de producción"
+	@echo "  make docker-down       - Detiene y elimina contenedores y red"
+	@echo "  make docker-clean      - Elimina contenedores, volúmenes e imágenes"
 
 # Sass watch
 sass:
@@ -100,3 +113,24 @@ web-services:
 	sleep 5
 	$(MAKE) web-gateway &
 	wait
+
+# ── Docker production ────────────────────────────────────────────────────────
+
+docker-build-base:
+	docker build -f infra/containers/web/base/Dockerfile -t $(WEB_BASE_IMAGE) .
+
+docker-build: docker-build-base
+	$(COMPOSE) build
+
+docker-up: docker-build-base
+	$(COMPOSE) up -d
+
+docker-stop:
+	$(COMPOSE) stop
+
+docker-down:
+	$(COMPOSE) down --remove-orphans
+
+docker-clean:
+	$(COMPOSE) down -v --remove-orphans --rmi all
+	-docker image rm $(WEB_BASE_IMAGE)

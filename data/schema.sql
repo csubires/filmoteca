@@ -60,7 +60,6 @@ CREATE TABLE "rating" (
 	CONSTRAINT "rating_UN" UNIQUE("title","year")
 );
 
-
 -- report definition
 
 CREATE TABLE "report" (
@@ -82,7 +81,7 @@ CREATE TABLE "report" (
 
 
 -- "user" definition
-
+	id_subgenre INTEGER DEFAULT NULL,
 CREATE TABLE "user" (
 	"id_user"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"name"	TEXT NOT NULL,
@@ -120,7 +119,7 @@ CREATE TABLE "deleted_movies" (
 	"file_created"	TEXT,
 	"report_date"	TEXT,
 	"id_genre"	INTEGER NOT NULL,
-	"id_subgenre"	INTEGER DEFAULT -1,
+	"id_subgenre"	INTEGER DEFAULT NULL,
 	"id_country"	INTEGER,
 	"hdd_code"	INTEGER NOT NULL DEFAULT 99,
 	FOREIGN KEY("id_subgenre") REFERENCES "genre"("id_genre"),
@@ -152,7 +151,7 @@ CREATE TABLE movies (
 	file_created TEXT,
 	report_date TEXT,
 	id_genre INTEGER NOT NULL,
-	id_subgenre INTEGER DEFAULT (-1),
+	id_subgenre INTEGER DEFAULT NULL,
 	id_country INTEGER,
 	hdd_code INTEGER DEFAULT (99) NOT NULL,
 	CONSTRAINT FK_movies_country FOREIGN KEY (id_country) REFERENCES country(id_country),

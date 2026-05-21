@@ -1,7 +1,8 @@
-FROM base:latest
-WORKDIR /app
-COPY i18n/package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm install
-COPY i18n ./i18n
-COPY shared ./shared
+ARG BASE_IMAGE=filmoteca-web-base:latest
+FROM ${BASE_IMAGE}
+
+WORKDIR /app/web/i18n
+
+COPY web/i18n ./
+
 CMD ["npm", "start"]

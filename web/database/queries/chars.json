@@ -1,9 +1,9 @@
 
 {
   "select_country": "SELECT id_country, (flag || \" \" || name || \" (\" || code || \")\") AS name FROM country ORDER BY name",
-  "modify_movie": "UPDATE movies SET censure = :censure, duration = :duration, duration_str = :duration_str, fps = :fps, id_country = :id_country, pathfile = :pathfile, quality = :quality, ratings = :ratings, realtitle = :realtitle, resolution = :resolution, size = :size, size_str = :size_str, title = :title, urldesc = :urldesc, urlpicture = :urlpicture, year = :year, id_genre = :id_genre, id_subgenre = :id_subgenre, hdd_code = :hdd_code, extension = :extension WHERE id_movie = :id_movie",
-  "update_inet_movie": "SELECT id_movie, title, id_genre, id_subgenre, year, urldesc FROM movies WHERE id_movie = :id_movie",
-  "extra_info_movie": "SELECT id_movie, realtitle, quality, extension, size_str, urldesc, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END  AS id_genre_path, country.code AS id_country, country.name, hdd_code, country.flag FROM movies LEFT JOIN country ON movies.id_country = country.id_country WHERE movies.id_movie = :id_movie",
+  "modify_movie": "UPDATE movies SET censure = :censure, duration = :duration, duration_str = :duration_str, fps = :fps, id_country = :id_country, pathfile = :pathfile, quality = :quality, ratings = :ratings, realtitle = :realtitle, resolution = :resolution, size = :size, size_str = :size_str, title = :title, urldesc = :urldesc, urlpicture = :urlpicture, year = :year, id_genre = :id_genre, id_subgenre = :id_subgenre, hdd_code = :hdd_code, extension = :extension WHERE id_movie = :id_movie AND deleted = 0",
+  "update_inet_movie": "SELECT id_movie, title, id_genre, id_subgenre, year, urldesc FROM movies WHERE id_movie = :id_movie AND deleted = 0",
+  "extra_info_movie": "SELECT id_movie, realtitle, quality, extension, size_str, urldesc, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END  AS id_genre_path, country.code AS id_country, country.name, hdd_code, country.flag FROM movies LEFT JOIN country ON movies.id_country = country.id_country WHERE movies.id_movie = :id_movie AND movies.deleted = 0",
   "delete_report": "DELETE FROM report WHERE id_report = :id_report",
   "set_code_country": "UPDATE country SET code = :code, flag = :flag WHERE id_country = :id_country"
 }

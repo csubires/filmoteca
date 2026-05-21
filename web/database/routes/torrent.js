@@ -30,11 +30,11 @@ export default async function torrentRoutes(fastify) {
 
 			if (!result || result.length === 0) {
 				fastify.log.info('No config found in DB, returning defaults');
-				return { url_end: null, date_end: null, npseries: 1, status: 200 };
+				return { data: { url_end: null, date_end: null, npseries: 1 }, status: 200 };
 			}
 			const { url_end, date_end, npseries } = result[0];
 			fastify.log.info(`Config loaded: url_end=${url_end}, date_end=${date_end}, npseries=${npseries}`);
-			return { url_end, date_end, npseries, status: 200 };
+			return { data: { url_end, date_end, npseries }, status: 200 };
 		} catch (error) {
 			fastify.log.error('Error in /get_config:', error.message || error);
 			fastify.log.error('Error stack:', error.stack);
@@ -127,73 +127,66 @@ export default async function torrentRoutes(fastify) {
 				output: ''
 			};
 
-			pythonProcess.stdout.on('data', (data) => {
-				const output = data.toString().trim();
-				taskData.output += output + '\n';
-				fastify.log.info(`[Task ${taskId}] ${output}`);
+			function appendTaskOutput(line) {
+				if (!line) return;
+				taskData.output += line + '\n';
+				fastify.log.info(`[Task ${taskId}] ${line}`);
 
-				if (output.includes('PROGRESO:')) {
-					const match = output.match(/PROGRESO:(\d+)/);
+				if (line.includes('PROGRESO:')) {
+					const match = line.match(/PROGRESO:(\d+)/);
 					if (match) taskData.progress = parseInt(match[1]);
 				}
 
-				if (output.includes('TAREA COMPLETADA')) {
-					taskData.status = 'completed';
+				if (line.startsWith('LOG:')) {
+					taskData.message = line.replace(/^LOG:\s*/, '') || taskData.message;
 				}
 
-				// Try to parse JSON result for caching if it's a torrent task
-				try {
-					if (task === 'torrent' && output.startsWith('{') && output.endsWith('}')) {
-						const result = JSON.parse(output);
-						if (result.data && Array.isArray(result.data)) {
-							const today = getTodayDate();
-							const cacheData = {
-								date_end: result.data[3] || today,
-								url_end: result.data[2] || null,
-								npseries: result.data[4] || 1,
-								movies: result.data[0] || [],
-								series: result.data[1] || []
-							};
-							// Persistir en DB (insert or update)
-							(async () => {
-								try {
-									const existing = await db.execute('select_torrent_cache_by_date', { ':date_cached': today });
-									const movies_json = JSON.stringify(cacheData.movies);
-									const series_json = JSON.stringify(cacheData.series);
-									if (existing && existing.length > 0) {
-										await db.execute('update_torrent_cache', {
-											':movies_json': movies_json,
-											':series_json': series_json,
-											':url_end': cacheData.url_end,
-											':npseries': cacheData.npseries,
-											':date_cached': today
-										});
-									} else {
-										await db.execute('insert_torrent_cache', {
-											':date_cached': today,
-											':movies_json': movies_json,
-											':series_json': series_json,
-											':url_end': cacheData.url_end,
-											':npseries': cacheData.npseries
-										});
-									}
-									fastify.log.info(`Torrent cache saved with ${cacheData.movies.length} movies and ${cacheData.series.length} series`);
-								} catch (err) {
-									fastify.log.error('Error saving torrent cache to DB', err);
+				if (line.includes('TAREA COMPLETADA')) {
+					taskData.status = 'completed';
+				}
+			}
+
+			pythonProcess.stdout.on('data', (data) => {
+				const output = data.toString().trim();
+				const lines = output.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+				lines.forEach(appendTaskOutput);
+
+				// Log JSON parsing for debugging (torrent task)
+				if (task === 'torrent') {
+					for (const line of lines) {
+						try {
+							if (line.startsWith('{') && line.endsWith('}')) {
+								const result = JSON.parse(line);
+								if (result.data && Array.isArray(result.data)) {
+									fastify.log.info(`Torrent task completed with ${result.data[0]?.length || 0} movies and ${result.data[1]?.length || 0} series`);
+									// Python adapter already saves to torrent_cache, no need to duplicate
+									break;
 								}
-							})();
+							}
+						} catch (e) {
+							// ignore parse errors for this line and continue
 						}
 					}
-				} catch (e) {
-					// ignore parse errors
 				}
 			});
 
 			pythonProcess.stderr.on('data', (data) => {
 				const error = data.toString().trim();
-				taskData.output += error + '\n';
-				fastify.log.error(`[Task ${taskId}] ${error}`);
-				if (!taskData.error) taskData.error = error;
+				error.split(/\r?\n/).map(line => line.trim()).filter(Boolean).forEach(line => {
+					taskData.output += line + '\n';
+					fastify.log.error(`[Task ${taskId}] ${line}`);
+					if (!taskData.error) taskData.error = line;
+					if (line && taskData.status !== 'cancelled') {
+						taskData.status = 'failed';
+						taskData.message = line;
+					}
+				});
+			});
+
+			pythonProcess.on('error', (err) => {
+				fastify.log.error(`[Task ${taskId}] Process error: ${err && err.message ? err.message : err}`);
+				taskData.error = (err && err.message) || String(err);
+				taskData.status = 'failed';
 			});
 
 			pythonProcess.on('close', (code) => {
@@ -218,21 +211,27 @@ export default async function torrentRoutes(fastify) {
 	// Generic task status
 	fastify.get('/task_status', async (request, reply) => {
 		try {
+			fastify.log.info(`/task_status query: ${JSON.stringify(request.query)}`);
 			const taskId = request.query.taskId;
-			if (!taskId) return { task_status: 'no_task', status: 200 };
+			if (!taskId) return { data: { task_status: 'no_task' }, status: 200 };
 
 			const taskData = activeTasks.get(taskId);
-			if (!taskData) return { task_status: 'not_found', status: 200 };
+			fastify.log.info({ taskId, hasTask: !!taskData, activeCount: activeTasks.size }, 'task_status lookup');
+			if (!taskData) return { data: { task_status: 'not_found' }, status: 200 };
 
 			return {
-				task_status: taskData.status,
-				progress: taskData.progress,
-				message: taskData.message,
-				error: taskData.error,
+				data: {
+					task_status: taskData.status,
+					progress: taskData.progress,
+					message: taskData.message,
+					error: taskData.error,
+					output: taskData.output
+				},
 				status: 200
 			};
 		} catch (error) {
-			return reply.code(500).send({ error: error.message });
+			fastify.log.error('Error in /task_status:', error);
+			return reply.code(500).send({ error: error.message, stack: error.stack });
 		}
 	});
 

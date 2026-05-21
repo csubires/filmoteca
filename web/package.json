@@ -1,10 +1,11 @@
 {
 "scripts": {
     "tsc": "tsc --watch --project frontend/tsconfig.json"
-},  
+},
   "name": "filmoteca-web-monorepo",
   "private": true,
   "workspaces": [
+    "shared",
     "gateway",
     "auth",
     "database",

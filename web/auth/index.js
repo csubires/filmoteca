@@ -2,13 +2,9 @@
 import 'dotenv/config';
 import createFastifyApp from './fastify-config.js';
 import authRoutes from './routes/auth.js';
-import { initializeDatabase, closeDatabase } from './db.js';
 
 async function startAuthService() {
 	try {
-		// Initialize database first
-		await initializeDatabase();
-
 		const fastify = await createFastifyApp({
 			serviceName: 'auth-service',
 			corsOrigin: true,
@@ -24,7 +20,6 @@ async function startAuthService() {
 			process.on(signal, async () => {
 				console.log(`\nReceived ${signal}, shutting down...`);
 				await fastify.close();
-				await closeDatabase();
 				process.exit(0);
 			});
 		});
@@ -39,7 +34,6 @@ async function startAuthService() {
 		console.log('='.repeat(50) + '\n');
 	} catch (error) {
 		console.error('Failed to start auth service:', error);
-		await closeDatabase();
 		process.exit(1);
 	}
 }

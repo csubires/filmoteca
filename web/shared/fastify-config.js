@@ -135,13 +135,15 @@ if (enableSessions) {
 		reply.status(statusCode).send(response);
 	});
 
-	fastify.setNotFoundHandler(function (request, reply) {
-		reply.status(404).send({
-			error: 'Route not found',
-			path: request.url,
-			code: 'ROUTE_NOT_FOUND'
+	if (serviceName !== 'api-gateway') {
+		fastify.setNotFoundHandler(function (request, reply) {
+			reply.status(404).send({
+				error: 'Route not found',
+				path: request.url,
+				code: 'ROUTE_NOT_FOUND'
+			});
 		});
-	});
+	}
 
 	return fastify;
 }

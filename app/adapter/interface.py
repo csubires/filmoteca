@@ -80,31 +80,31 @@ def execute_torrent_search(task_config, should_continue_callback=None):
 		npseries = task_config.get('npseries', 1) if task_config else 1
 
 		if result:
-			url_end = result[0].get('url_end') or url_end
-			npseries = result[0].get('npseries', npseries)
+			url_end = result[0][0] or url_end  # result[0][0] = url_end
+			npseries = result[0][2] if len(result[0]) > 2 else npseries  # result[0][2] = npseries
 
 		log_progress(20, f"URL: {url_end}, Series: {npseries}")
 
 		# Comprobar caché en la tabla torrent_cache por fecha actual
 		current_date = dt_format('symd')
 		try:
-			cache_res = oSRVC.oDTB.execute('select_torrent_cache_by_date', {':date_cached': current_date})
+			cache_res = oSRVC.oDTB.execute('select_torrent_cache_by_date', {'date_cached': current_date})
 			if cache_res and len(cache_res) > 0:
 				# Devolver datos cacheados
 				try:
-					movies = json.loads(cache_res[0].get('movies_json') or '[]')
-					series = json.loads(cache_res[0].get('series_json') or '[]')
+					movies = json.loads(cache_res[0][2] or '[]')  # movies_json
+					series = json.loads(cache_res[0][3] or '[]')  # series_json
 					log_progress(30, 'Usando datos en caché')
 					return {
 						'status': 'completed',
-						'data': [movies, series, cache_res[0].get('url_end'), cache_res[0].get('date_cached'), cache_res[0].get('npseries')],
+						'data': [movies, series, cache_res[0][4], cache_res[0][1], cache_res[0][5]],  # url_end, date_cached, npseries
 						'message': 'Usando datos en caché'
 					}
 				except Exception as e:
 					log_progress(30, f'Error parseando caché: {e}')
-			except Exception:
-				# Si la consulta no existe o falla, continuamos sin caché
-				pass
+		except Exception:
+			# Si la consulta no existe o falla, continuamos sin caché
+			pass
 
 		# Ejecutar búsqueda
 		log_progress(25, "Buscando torrents...")
@@ -136,25 +136,25 @@ def execute_torrent_search(task_config, should_continue_callback=None):
 			# Intentar insertar
 			existing = None
 			try:
-				existing = oSRVC.oDTB.execute('select_torrent_cache_by_date', {':date_cached': current_date})
+				existing = oSRVC.oDTB.execute('select_torrent_cache_by_date', {'date_cached': current_date})
 			except Exception:
 				existing = None
 
 			if existing and len(existing) > 0:
 					oSRVC.oDTB.execute('update_torrent_cache', {
-						':movies_json': movies_json,
-						':series_json': series_json,
-						':url_end': data[2],
-						':npseries': data[3] if len(data) > 3 else npseries,
-						':date_cached': current_date
+						'movies_json': movies_json,
+						'series_json': series_json,
+						'url_end': data[2],
+						'npseries': data[3] if len(data) > 3 else npseries,
+						'date_cached': current_date
 					})
 			else:
 					oSRVC.oDTB.execute('insert_torrent_cache', {
-						':date_cached': current_date,
-						':movies_json': movies_json,
-						':series_json': series_json,
-						':url_end': data[2],
-						':npseries': data[3] if len(data) > 3 else npseries
+						'date_cached': current_date,
+						'movies_json': movies_json,
+						'series_json': series_json,
+						'url_end': data[2],
+						'npseries': data[3] if len(data) > 3 else npseries
 					})
 		except Exception as e:
 			log_progress(95, f"Advertencia guardando caché: {e}")

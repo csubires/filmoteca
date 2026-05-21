@@ -1,7 +1,8 @@
-FROM base:latest
-WORKDIR /app
-COPY auth/package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm install
-COPY auth ./auth
-COPY shared ./shared
+ARG BASE_IMAGE=filmoteca-web-base:latest
+FROM ${BASE_IMAGE}
+
+WORKDIR /app/web/auth
+
+COPY web/auth ./
+
 CMD ["npm", "start"]

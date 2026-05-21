@@ -21,7 +21,6 @@ export class TorrentService extends BaseService {
             if (data?.taskId) {
                 this.currentTaskId = data.taskId;
                 this.isTaskRunning = true;
-                this.startPolling();
                 return data.taskId;
             }
             return null;
@@ -112,8 +111,7 @@ export class TorrentService extends BaseService {
             if (response?.data) {
                 const status = response.data.task_status;
                 if (status === 'running' || status === 'pending') {
-                    this.isTaskRunning = true;
-                    this.startPolling();
+                    this.isTaskRunning = false;
                 }
             }
         }

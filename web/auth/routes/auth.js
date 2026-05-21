@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { getAsync, runAsync } from '../db.js';
+import { databaseClient } from '../services/database-client.js';
 
 // Email validation schema
 function isValidEmail(email) {
@@ -72,12 +72,9 @@ export default async function authRoutes(fastify, options) {
 			}
 
 			// Check if user exists
-			const existingUser = await getAsync(
-				'SELECT id_user FROM user WHERE email = ? OR name = ?',
-				[email, name]
-			);
+			const existingUser = await databaseClient.userExists(email, name);
 
-			if (existingUser) {
+			if (existingUser?.data?.exists) {
 				return reply.status(409).send({
 					error: 'El usuario ya existe'
 				});
@@ -89,10 +86,16 @@ export default async function authRoutes(fastify, options) {
 			const agent = getUserAgent(request);
 			const createdAt = getCurrentTimestamp();
 
-			const result = await runAsync(
-				'INSERT INTO user(name, email, password, ip, agent, created_at, last_login, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-				[name, email, hashedPassword, ip, agent, createdAt, createdAt, 'user']
-			);
+			const result = await databaseClient.createUser({
+				name,
+				email,
+				password: hashedPassword,
+				ip,
+				agent,
+				created_at: createdAt,
+				last_login: createdAt,
+				role: 'user'
+			});
 
 			// Generate JWT token
 			const token = fastify.jwt.sign({
@@ -145,10 +148,8 @@ export default async function authRoutes(fastify, options) {
 			}
 
 			// Check if user exists and get password
-			const user = await getAsync(
-				'SELECT id_user, name, password, role FROM user WHERE email = ?',
-				[email]
-			);
+			const userResponse = await databaseClient.findUserByEmail(email);
+			const user = userResponse?.data;
 
 			if (!user) {
 				return reply.status(401).send({
@@ -166,10 +167,7 @@ export default async function authRoutes(fastify, options) {
 
 			// Update last_login timestamp
 			const lastLogin = getCurrentTimestamp();
-			await runAsync(
-				'UPDATE user SET last_login = ? WHERE id_user = ?',
-				[lastLogin, user.id_user]
-			);
+			await databaseClient.updateLastLogin(user.id_user, lastLogin);
 
 			// Generate JWT token
 			const token = fastify.jwt.sign({
