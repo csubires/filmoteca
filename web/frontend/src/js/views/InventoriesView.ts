@@ -226,23 +226,22 @@ export class InventoriesView extends BaseView {
             if (!downloads) return;
 
             const rows = downloads.map((item: any) => `
-                <tr id="rating-tr-${item.id}" class="${item.present ? 'present' : 'missing'}">
+                <tr id="rating-tr-${item.id_rating}" class="${item.present ? 'present' : 'missing'}">
                     <td>
-                        <a target="_blank" href="https://www.filmaffinity.com${item.url}">
-                            ${item.title}
-                        </a>
+
+                                               <a target="_blank" href="https://www.filmaffinity.com${item.url}">
+                                                <img class="proposal-thumb" src="https://pics.filmaffinity.com${item.src_img}" alt="${item.title}">
+
+                                            </a>
                     </td>
+					<td><span><a target="_blank" href="https://www.filmaffinity.com${item.url}">${item.title}</span></a></td>
                     <td><strong>${item.rating}</strong></td>
                     <td>${item.present ? '✅ Presente' : '❌ Pendiente'}</td>
                     <td>
                         <button class="btn btn-danger-outline mark-present"
-                                data-id="${item.id}"
+                                data-id="${item.id_rating}"
                                 data-title="${item.title}">
                             Marcar como presente
-                        </button>
-                        <button class="btn btn-info-outline view-details"
-                                data-id="${item.id}">
-                            Ver detalles
                         </button>
                     </td>
                 </tr>

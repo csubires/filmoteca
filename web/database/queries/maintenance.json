@@ -1,6 +1,6 @@
 {
   "get_all_report": "SELECT * FROM report ORDER BY hdd_code ASC, report_date DESC",
-  "repeated_movies": "SELECT a.id_movie, a.title, a.year, a.duration_str, a.ratings, a.urlpicture, CASE WHEN a.id_subgenre IS NULL THEN a.id_genre ELSE a.id_subgenre END FROM movies a INNER JOIN (SELECT title FROM movies WHERE deleted = 0 GROUP BY title HAVING COUNT(*) > 1) b ON a.title = b.title WHERE a.deleted = 0 ORDER BY a.title",
+  "repeated_movies": "SELECT a.id_movie, a.title, a.year, a.duration_str, a.ratings, a.urlpicture, CASE WHEN a.id_subgenre IS NULL THEN a.id_genre ELSE a.id_subgenre END AS id_genre FROM movies a INNER JOIN (SELECT title FROM movies WHERE deleted = 0 GROUP BY title HAVING COUNT(*) > 1) b ON a.title = b.title WHERE a.deleted = 0 ORDER BY a.title",
   "deleted_movies": "SELECT id_movie, title, year, ratings, urlpicture FROM movies WHERE deleted = 1 ORDER BY year DESC, title ASC",
   "restore_movie": "UPDATE movies SET deleted = 0 WHERE id_movie = :id_movie AND deleted = 1",
   "missing_movies_hdd0": "SELECT id_movie, title, year, duration_str, ratings, urlpicture, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END FROM movies WHERE deleted = 0 AND report_date <> (SELECT MAX(report_date) FROM report WHERE hdd_code = 0) AND hdd_code = 0",
@@ -22,6 +22,7 @@
   "country_byname": "SELECT id_country FROM country WHERE name = :name",
   "get_urlpicture": "SELECT id_movie, CASE WHEN id_subgenre IS NULL THEN id_genre ELSE id_subgenre END AS id_genre_path, urlpicture FROM movies WHERE deleted = 0 AND urlpicture IS NOT NULL",
   "update_movie": "UPDATE movies SET urldesc = :urldesc, realtitle = :realtitle, id_country = :id_country, ratings = :ratings, urlpicture = :urlpicture WHERE id_movie = :id_movie AND deleted = 0",
+ "uncoded_country": "SELECT * FROM country WHERE code = \"n/a\" OR flag IS NULL",
   "insert_country": "INSERT OR IGNORE INTO country (name) VALUES (:name)",
   "set_present": "UPDATE rating SET is_present=1 WHERE id_rating = :id_rating",
   "get_rating": "SELECT id_rating, src_img, url, title, year, rating, is_present FROM rating WHERE is_present = 0 AND year is :year ORDER BY rating DESC",

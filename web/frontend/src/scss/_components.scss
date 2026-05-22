@@ -136,7 +136,7 @@ label {
 	padding: 0.5rem;
 	text-transform: capitalize;
 	font-weight: bold;
-	width: 80%;
+	width: initial;
 
 	input {
 		@extend input;
@@ -380,10 +380,6 @@ dialog {
 		background-color: rgba(255, 255, 255, 0.068);
 		backdrop-filter: blur(7px);
 		opacity: 0.9;
-	}
-
-	&#dialog-edit {
-		margin: 0 3rem;
 	}
 
 	header {

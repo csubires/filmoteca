@@ -11,7 +11,7 @@ export class MaintenanceView extends BaseView {
         const options = [
             { key: 'repeated', name: 'Duplicados', description: 'Películas potencialmente duplicadas' },
             { key: 'deleted-movies', name: 'Borradas', description: 'Películas marcadas como eliminadas' },
-            { key: 'uncoded-countries', name: 'Países', description: 'Películas de países sin código' },
+            { key: 'uncoded-countries', name: 'Países', description: 'Países sin código' },
             { key: 'incomplete-genres', name: 'Géneros', description: 'Películas con géneros incompletos' },
             { key: 'incomplete', name: 'Incompletas', description: 'Películas sin información completa' },
             { key: 'censored', name: 'Censuradas', description: 'Películas marcadas como censuradas' },
@@ -121,7 +121,7 @@ export class MaintenanceView extends BaseView {
                                 <th>Título</th>
                                 <th>Año</th>
                                 <th>Rating</th>
-                                <th>Acciones</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="deleted-table-body"></tbody>
@@ -133,20 +133,21 @@ export class MaintenanceView extends BaseView {
     renderCountriesMenu() {
         return `
             <div class="head-result">
-                <h3>Películas de países sin código <span id="countries-count">0</span></h3>
+                <h3>Países sin código <span id="countries-count">0</span></h3>
             </div>
             <main class="table">
                 <section class="table__header">
-                    <h1>Películas de países sin código de identificación</h1>
+                    <h1>Países sin código de identificación</h1>
+					<a class="btn btn-primary-outline" target="_blank" href="https://country-code.cl/es/">Listado de códigos</a>
                 </section>
                 <section class="table__body">
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Película</th>
-                                <th>País</th>
-                                <th>Año</th>
+                                <th>Flag</th>
+                                <th>Code</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="countries-table-body"></tbody>
@@ -168,9 +169,10 @@ export class MaintenanceView extends BaseView {
                     <table>
                         <thead>
                             <tr>
-                                <th>Género ID</th>
+                                <th>ID</th>
                                 <th>Género</th>
                                 <th>Películas</th>
+								 <th></th>
                             </tr>
                         </thead>
                         <tbody id="genres-table-body"></tbody>
@@ -196,6 +198,7 @@ export class MaintenanceView extends BaseView {
                                 <th>Título</th>
                                 <th>Año</th>
                                 <th>Rating</th>
+								<th></th>
                             </tr>
                         </thead>
                         <tbody id="incomplete-table-body"></tbody>
@@ -245,6 +248,7 @@ export class MaintenanceView extends BaseView {
                                 <th>Título</th>
                                 <th>Año</th>
                                 <th>Rating</th>
+								<th></th>
                             </tr>
                         </thead>
                         <tbody id="bad-table-body"></tbody>
@@ -310,6 +314,8 @@ export class MaintenanceView extends BaseView {
                                 <th>ID</th>
                                 <th>Título</th>
                                 <th>Año</th>
+								<th></th>
+								<th></th>
                             </tr>
                         </thead>
                         <tbody id="missing-table-body"></tbody>
@@ -335,6 +341,7 @@ export class MaintenanceView extends BaseView {
                                 <th>Título</th>
                                 <th>Año</th>
                                 <th>Rating</th>
+								<th></th>
                             </tr>
                         </thead>
                         <tbody id="lowrated-table-body"></tbody>
@@ -360,6 +367,7 @@ export class MaintenanceView extends BaseView {
                                 <th>Título</th>
                                 <th>Año</th>
                                 <th>Rating</th>
+								<th></th>
                             </tr>
                         </thead>
                         <tbody id="over-table-body"></tbody>
@@ -408,23 +416,20 @@ export class MaintenanceView extends BaseView {
                     <td>${this.escapeHtml(m.title)}</td>
                     <td>${m.year}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${m.id_movie}">Modificar</button>
-                        <button class="btn btn-danger-outline delete-movie" data-id="${m.id_movie}">Eliminar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${m.id_movie}">EDITAR</button>
+                        <button type="button" class="btn btn-danger-outline" data-action="delete-movie" data-id="${m.id_movie}">ELIMINAR</button>
                     </td>
                 </tr>
             `).join('');
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((x) => Number(x.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadMissingHdd0();
                     });
                 });
             });
-            tbody.querySelectorAll('.delete-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="delete-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
                     const confirmed = await this.modalManager.confirm('¿Eliminar esta película?', { title: 'Confirmación', confirmText: 'Eliminar', cancelText: 'Cancelar' });
@@ -466,17 +471,14 @@ export class MaintenanceView extends BaseView {
                     <td>${this.escapeHtml(m.title)}</td>
                     <td>${m.year}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${m.id_movie}">Modificar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${m.id_movie}">EDITAR</button>
                     </td>
                 </tr>
             `).join('');
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((x) => Number(x.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadMissingHdd1();
                     });
                 });
@@ -503,7 +505,7 @@ export class MaintenanceView extends BaseView {
                     <td>${m.year}</td>
                     <td>${m.ratings ?? 'N/A'}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${m.id_movie}">Modificar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${m.id_movie}">EDITAR</button>
                     </td>
                 </tr>
             `).join('');
@@ -521,13 +523,10 @@ export class MaintenanceView extends BaseView {
                     }
                 });
             }
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((x) => Number(x.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadLowRated();
                     });
                 });
@@ -554,7 +553,7 @@ export class MaintenanceView extends BaseView {
                     <td>${m.year}</td>
                     <td>${m.ratings ?? 'N/A'}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${m.id_movie}">Modificar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${m.id_movie}">EDITAR</button>
                     </td>
                 </tr>
             `).join('');
@@ -572,13 +571,10 @@ export class MaintenanceView extends BaseView {
                     }
                 });
             }
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((x) => Number(x.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadOverevaluated();
                     });
                 });
@@ -604,11 +600,11 @@ export class MaintenanceView extends BaseView {
                     <td>${this.escapeHtml(m.title)}</td>
                     <td>${m.year}</td>
                     <td>
-                        <button class="btn btn-danger-outline delete-movie" data-id="${m.id_movie}">Eliminar</button>
+                        <button type="button" class="btn btn-danger-outline" data-action="delete-movie" data-id="${m.id_movie}">ELIMINAR</button>
                     </td>
                 </tr>
             `).join('');
-            tbody.querySelectorAll('.delete-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="delete-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
                     const confirmed = await this.modalManager.confirm('¿Eliminar esta película?', { title: 'Confirmación', confirmText: 'Eliminar', cancelText: 'Cancelar' });
@@ -654,19 +650,20 @@ export class MaintenanceView extends BaseView {
             tbody.innerHTML = pairs.map(group => {
                 const left = group[0] || {};
                 const right = group[1] || {};
-                const leftPoster = left.urlpicture ? `<img src="${left.urlpicture}" alt="${this.escapeHtml(left.title || '')}" class="thumb-small">` : '';
-                const rightPoster = right.urlpicture ? `<img src="${right.urlpicture}" alt="${this.escapeHtml(right.title || '')}" class="thumb-small">` : '';
+                const leftPoster = left.urlpicture ? `<img src="\/posters/${left.id_genre || ''}${left.urlpicture}" alt="${this.escapeHtml(left.title || '')}" class="thumb-small">` : '';
+                const rightPoster = right.urlpicture ? `<img src="\/posters/${right.id_genre || ''}${right.urlpicture}" alt="${this.escapeHtml(right.title || '')}" class="thumb-small">` : '';
                 return `
                 <tr>
-                    <td class="dup-poster">${leftPoster}<div>${this.escapeHtml(left.title || '')}<br><small>ID ${left.id_movie || ''}</small></div></td>
-                    <td class="dup-actions"><button class="btn btn-danger-outline" data-action="delete-dup" data-id="${left.id_movie || ''}">Eliminar</button></td>
-                    <td class="dup-poster">${rightPoster}<div>${this.escapeHtml(right.title || '')}<br><small>ID ${right.id_movie || ''}</small></div></td>
-                    <td class="dup-actions"><button class="btn btn-danger-outline" data-action="delete-dup" data-id="${right.id_movie || ''}">Eliminar</button></td>
-                    <td>${this.escapeHtml(left.year || right.year || '')}</td>
+                    <td class="dup-poster">${leftPoster}<div>${this.escapeHtml(left.title || '')}<br><small>ID ${left.id_movie || ''}</small><br><small>Genre ${left.id_genre || ''}</small></div></td>
+                    <td class="dup-actions"><button type="button" class="btn btn-danger-outline" data-action="delete-movie" data-id="${left.id_movie || ''}">ELIMINAR</button></td>
+                    <td>${this.escapeHtml(left.year || '')}</td>
+					<td class="dup-poster">${rightPoster}<div>${this.escapeHtml(right.title || '')}<br><small>ID ${right.id_movie || ''}</small><br><small>Genre ${right.id_genre || ''}</small></div></td>
+                    <td class="dup-actions"><button type="button" class="btn btn-danger-outline" data-action="delete-movie" data-id="${right.id_movie || ''}">ELIMINAR</button></td>
+                    <td>${this.escapeHtml(right.year || '')}</td>
                 </tr>
             `;
             }).join('');
-            tbody.querySelectorAll('[data-action="delete-dup"]').forEach(btn => {
+            tbody.querySelectorAll('[data-action="delete-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
                     if (!Number.isInteger(id) || id <= 0)
@@ -781,7 +778,7 @@ export class MaintenanceView extends BaseView {
             });
         }
         catch (error) {
-            this.handleError(error, 'Error al cargar películas de países');
+            this.handleError(error, 'Error al cargar Países');
         }
     }
     async loadGenres() {
@@ -798,10 +795,34 @@ export class MaintenanceView extends BaseView {
             tbody.innerHTML = genres.map((genre) => `
                 <tr>
                     <td>${genre.id_genre}</td>
-                    <td>${genre.name}</td>
+                    <td>${this.escapeHtml(genre.name || '')}</td>
                     <td>${genre.count || 0}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger-outline" data-action="delete-genre" data-id="${genre.id_genre}">ELIMINAR</button>
+                    </td>
                 </tr>
             `).join('');
+            tbody.querySelectorAll('[data-action="delete-genre"]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = Number(btn.dataset.id);
+                    const confirmed = await this.modalManager.confirm('¿Eliminar este género?', { title: 'Confirmación', confirmText: 'Eliminar', cancelText: 'Cancelar' });
+                    if (!confirmed)
+                        return;
+                    try {
+                        const res = await this.movieService['connection'].delete('/delete_genre', { id_genre: id }, { showAlerts: false });
+                        if (res?.status === 200) {
+                            this.alertManager.success('Género eliminado');
+                            await this.loadGenres();
+                        }
+                        else {
+                            this.alertManager.error('No se pudo eliminar el género');
+                        }
+                    }
+                    catch (e) {
+                        this.handleError(e, 'Error al eliminar género');
+                    }
+                });
+            });
         }
         catch (error) {
             this.handleError(error, 'Error al cargar géneros');
@@ -825,23 +846,20 @@ export class MaintenanceView extends BaseView {
                     <td>${movie.year}</td>
                     <td>${movie.rating || 'N/A'}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${movie.id_movie}">Modificar</button>
-                        <button class="btn btn-danger-outline delete-movie" data-id="${movie.id_movie}">Eliminar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${movie.id_movie}">EDITAR</button>
+                        <button type="button" class="btn btn-danger-outline" data-action="delete-movie" data-id="${movie.id_movie}">ELIMINAR</button>
                     </td>
                 </tr>
             `).join('');
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((m) => Number(m.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadIncomplete();
                     });
                 });
             });
-            tbody.querySelectorAll('.delete-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="delete-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
                     const confirmed = await this.modalManager.confirm('¿Eliminar esta película?', { title: 'Confirmación', confirmText: 'Eliminar', cancelText: 'Cancelar' });
@@ -908,17 +926,14 @@ export class MaintenanceView extends BaseView {
                     <td>${movie.year}</td>
                     <td>${movie.rating || 'N/A'}</td>
                     <td>
-                        <button class="btn btn-primary-outline edit-movie" data-id="${movie.id_movie}">Modificar</button>
+                        <button type="button" class="btn btn-primary" data-action="edit-movie" data-id="${movie.id_movie}">EDITAR</button>
                     </td>
                 </tr>
             `).join('');
-            tbody.querySelectorAll('.edit-movie').forEach(btn => {
+            tbody.querySelectorAll('[data-action="edit-movie"]').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = Number(btn.dataset.id);
-                    const movie = movies.find((x) => Number(x.id_movie) === id);
-                    if (!movie)
-                        return;
-                    this.modalManager.openMovieEditor(id, movie, async () => {
+                    await this.openUnifiedMovieEditor(id, async () => {
                         await this.loadBadMovies();
                     });
                 });
@@ -930,12 +945,25 @@ export class MaintenanceView extends BaseView {
     }
     cleanup() {
     }
+    async openUnifiedMovieEditor(movieId, onSaved) {
+        if (!Number.isInteger(movieId) || movieId <= 0)
+            return;
+        try {
+            const movie = await this.movieService.getById(movieId);
+            if (!movie) {
+                this.alertManager.error('No se pudieron cargar los datos completos de la película');
+                return;
+            }
+            this.modalManager.openMovieEditor(movieId, movie, onSaved);
+        }
+        catch (error) {
+            this.handleError(error, 'Error al abrir editor de película');
+        }
+    }
     escapeHtml(value) {
         if (value === null || value === undefined)
             return '';
-        return String(value).replace(/[&<>"']/g, function (s) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[s];
-        });
+        return String(value).replace(/[&<>"']/g, (s) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[s]));
     }
 }
 export default MaintenanceView;

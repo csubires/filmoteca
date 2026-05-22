@@ -129,7 +129,9 @@ export class MovieCard {
                     <button type="button" class="btn-close" data-action="close" aria-label="Cerrar">×</button>
                 </div>
                 <div class="movie-info-body">
-                    <img class="movie-info-poster" src="${posterSrc}" loading="lazy" alt="${movieTitle}">
+                    <a href="${posterSrc}" target="_blank" rel="noopener noreferrer">
+                        <img class="movie-info-poster" src="${posterSrc}" loading="lazy" alt="${movieTitle}">
+                    </a>
                     <div class="movie-info-content">
                         <div class="movie-info-meta">
                             <span><i class="icon-file"></i>${movie?.extension || 'N/A'}</span>

@@ -68,7 +68,7 @@ export class MovieService extends BaseService {
         return response?.[0] || null;
     }
     async update(movieId, changes) {
-        const response = await this.connection.patch(`/modify_movie/${movieId}`, changes, { showAlerts: false });
+        const response = await this.connection.patch(`/modify_movie/${movieId}`, changes);
         return response?.status === 200;
     }
     async delete(movieId) {

@@ -21,9 +21,9 @@
                     </div>
                 </div>
                 <form id="form-search" action="/view" method="GET">
-                    <i class="btn" id="clear-search" data-action="clear-search">🅧</i>
-                    <input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año" data-action="autocomplete-search">
+					<input type="search" name="search" id="text-search" list="dlSearch" placeholder="Título o año" data-action="autocomplete-search">
                     <datalist id="dlSearch"></datalist>
+                    <i class="btn" id="clear-search" data-action="clear-search">x</i>
                     <input type="submit" id="btn-search" class="btn btn-light" value="🔍">
                 </form>
                 <div class="menu">
@@ -46,133 +46,7 @@
             </div>
             <p>Cargando, por favor espere...</p>
         </div>
-        <dialog id="dialog-edit" class="edit">
-            <form method="dialog" id="form-editor">
-                <header><h3>Editar película</h3></header>
-                <article class="edit">
-                    <div class="row">
-                        <label for="id_movie" class="row"><span>id_movie</span>
-                            <input type="number" id="id_movie" class="noborder" name="id_movie" disabled>
-                        </label>
-                        <label for="year" class="row"><span>year</span>
-                            <div class="inp-number">
-                                <input type="button" onclick="this.parentNode.querySelector('#year').stepDown()" value="-">
-                                <input type="number" id="year" name="year" class="noborder" min="1800" max="2900" maxlength="4" placeholder="9999">
-                                <input type="button" onclick="this.parentNode.querySelector('#year').stepUp()" value="+">
-                            </div>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="hdd_code" class="row"><span>HDD</span>
-                            <div class="btn-group" role="group">
-                                <input type="radio" class="btn-check" name="hdd_code" id="hdd_code_int" autocomplete="off" value="0">
-                                <label class="btn btn-primary-outline" for="hdd_code_int">Interno</label>
-                                <input type="radio" class="btn-check" name="hdd_code" id="hdd_code_ext" autocomplete="off" value="1">
-                                <label class="btn btn-primary-outline" for="hdd_code_ext">Externo</label>
-                            </div>
-                        </label>
-                        <label for="censure" class="row"><span>censure</span>
-                            <input type="checkbox" name="censure" value="1">
-                        </label>
-                    </div>
-                    <div>
-                        <label for="title"><span>title</span>
-                            <input type="text" name="title" id="title">
-                        </label>
-                        <label for="realtitle"><span>realtitle</span>
-                            <input type="text" name="realtitle" id="realtitle">
-                        </label>
-                    </div>
-                    <div>
-                        <label for="size"><span>size (bytes)</span>
-                            <div class="inp-number">
-                                <input type="button" onclick="this.parentNode.querySelector('#size').stepDown()" value="-">
-                                <input type="number" id="size" name="size" class="noborder" placeholder="9999999">
-                                <input type="button" onclick="this.parentNode.querySelector('#size').stepUp()" value="+">
-                            </div>
-                        </label>
-                        <label for="size_str"><span>size_str</span>
-                            <input type="text" name="size_str" id="size_str" placeholder="999.9 MB" disabled>
-                        </label>
-                    </div>
-                    <div>
-                        <label for="quality"><span>quality</span>
-                            <input type="text" name="quality" id="quality" list="dlQuality" placeholder="SELEC">
-                            <datalist id="dlQuality"></datalist>
-                        </label>
-                        <label for="extension"><span>extension</span>
-                            <input type="text" maxlength="4" name="extension" id="extension" list="dlExtension">
-                            <datalist id="dlExtension"></datalist>
-                        </label>
-                    </div>
-                    <div>
-                        <label for="fps"><span>fps</span>
-                            <div class="inp-number">
-                                <input type="button" onclick="this.parentNode.querySelector('#fps').stepDown()" value="-">
-                                <input type="number" id="fps" name="fps" placeholder="99.99" step="0.1" list="dlFps">
-                                <datalist id="dlFps"></datalist>
-                                <input type="button" onclick="this.parentNode.querySelector('#fps').stepUp()" value="+">
-                            </div>
-                        </label>
-                        <label for="resolution"><span>resolution</span>
-                            <input type="text" name="resolution" id="resolution" placeholder="999x999" list="dlResolution">
-                            <datalist id="dlResolution"></datalist>
-                        </label>
-                    </div>
-                    <div>
-                        <label for="duration"><span>duration (segundos)</span>
-                            <div class="inp-number">
-                                <input type="button" onclick="this.parentNode.querySelector('#duration').stepDown()" value="-">
-                                <input type="number" id="duration" name="duration" placeholder="9999">
-                                <input type="button" onclick="this.parentNode.querySelector('#duration').stepUp()" value="+">
-                            </div>
-                        </label>
-                        <label for="duration_str"><span>duration_str</span>
-                            <input type="text" name="duration_str" id="duration_str" placeholder="9hr, 99min, 99seg" disabled>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="ratings" class="row"><span>ratings</span>
-                            <input type="number" class="noborder" id="vratings" placeholder="9.9" disabled>
-                        </label>
-                        <input type="range" id="range" name="ratings" step="0.5" min="0.0" max="10.0" oninput="vratings.value=value">
-                    </div>
-                    <div>
-                        <label for="pathfile"><span>pathfile</span>
-                            <input type="text" class="folder" id="pathfile" name="pathfile">
-                        </label>
-                    </div>
-                    <div>
-                        <label for="id_country"><span>id_country</span>
-                            <select id="id_country" name="id_country"></select>
-                        </label>
-                    </div>
-                    <div>
-                        <label for="urldesc"><span>urldesc</span>
-                            <input type="text" class="folder" id="urldesc" name="urldesc" placeholder="/es/film99.html" data-action="enable-update">
-                        </label>
-                        <label for="urlpicture"><span>urlpicture</span>
-                            <input type="text" class="folder" name="urlpicture" id="urlpicture" placeholder="/namefile-mmed.jpg">
-                        </label>
-                    </div>
-                    <div>
-                        <label for="id_genre"><span>id_genre</span>
-                            <select id="id_genre" name="id_genre" data-action="change-path"></select>
-                        </label>
-                        <label for="id_subgenre"><span>id_subgenre</span>
-                            <select id="id_subgenre" name="id_subgenre" data-action="change-path"></select>
-                        </label>
-                    </div>
-                </article>
-                <footer>
-                    <menu>
-                        <button class="btn btn-warning-outline" id="btnUpdate" disabled data-action="update-film">Actualizar</button>
-                        <button class="btn btn-primary" data-action="save-film">Guardar</button>
-                        <button autofocus type="reset" class="btn btn-secondary-outline" data-action="close-dialog">Cancelar</button>
-                    </menu>
-                </footer>
-            </form>
-        </dialog>
+        <!-- Movie editor modal is now unified and managed by ModalManager.ts in modal-container -->
         <div id="screen-block" style="display: none;"></div>
         <noscript>
             <div class="noscript-warning">

@@ -10,7 +10,6 @@
   "get_all_countries": "SELECT id_country, name, code, flag FROM country ORDER BY name ASC",
   "get_all_genres": "SELECT id_genre, name, is_subgenre FROM genre WHERE is_subgenre = 0 ORDER BY name ASC",
   "get_all_subgenres": "SELECT id_genre, name, is_subgenre FROM genre WHERE is_subgenre = 1 ORDER BY name ASC",
-  "uncoded_country": "SELECT * FROM country WHERE code = \"n/a\" OR flag IS NULL",
   "delete_movie": "UPDATE movies SET deleted = 1 WHERE id_movie = :id_movie AND deleted = 0",
   "report_bd_01": "SELECT report_date, num_movies, global_size, global_duration, real_size, add_recent FROM report WHERE hdd_code = :hdd_code ORDER BY report_date",
   "report_bd_02": "SELECT name, num_movies FROM genre WHERE is_subgenre = 0 ORDER BY name",
