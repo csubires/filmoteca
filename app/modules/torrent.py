@@ -88,19 +88,21 @@ def get_movies(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
         if not film_info:
             continue
 
+
+
         # Construir URLs de forma segura
         try:
             safe_title = film_info['title'].replace(' ', '+') if film_info.get('title') else 'unknown'
             safe_year = film_info.get('year', '0000')
 
-            url_filma = URL_FILMAFFINITY.format(safe_title, safe_year, safe_year)
-            url_imbd = URL_IMBD.format(safe_title, safe_year, safe_year)
+            url_filma = URL_FILMAFFINITY.format(safe_title, int(safe_year)-1, int(safe_year)+1)
+            url_imbd = URL_IMBD.format(safe_title, int(safe_year)-1, int(safe_year)+1)
         except Exception as e:
             lg_prt('ry', f'[✖] ERROR construyendo URLs: {e}')
             url_filma = URL_FILMAFFINITY.format('unknown', '0000', '0000')
             url_imbd = URL_IMBD.format('unknown', '0000', '0000')
 
-        sleep(random.uniform(5, 15))
+        sleep(random.uniform(8, 24))
 
         # Actualizar información
         film_info.update({
@@ -112,7 +114,9 @@ def get_movies(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
 
         # Obtener rating (manejando posibles errores)
         try:
+
             rating_page, rating_status = oCNT.send('GET', url_filma)
+            #print(rating_page.text)
             if rating_status == 200:
                 get_rating(rating_page, film_info)
             else:
@@ -142,6 +146,8 @@ def get_movies(oCNT: Any, index: int, should_continue_callback: Optional[Callabl
             str(film_info.get('rating', 0.0)),
             film_info.get('url_filma', ''),
         )
+
+        print(film_info)
 
         all_movies.append(film_info)
         lg_prt('yow', f'{idx+1: >3}', item, '\n')

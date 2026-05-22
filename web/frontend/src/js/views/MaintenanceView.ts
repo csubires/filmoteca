@@ -537,7 +537,7 @@ export class MaintenanceView extends BaseView {
             if (lowCount && !document.getElementById('copy-lowrated')) {
                 lowCount.insertAdjacentHTML('afterend', ' <button id="copy-lowrated" class="btn btn-primary-outline">Copiar lista</button>');
                 document.getElementById('copy-lowrated')?.addEventListener('click', async () => {
-                    const text = movies.map((m: any) => `${m.id_movie}\t${m.title}\t${m.year}\t${m.ratings ?? ''}`).join('\n');
+                    const text = movies.map((m: any) => `${m.pathfile}\t${m.title}\t${m.year}\t${m.ratings ?? ''}`).join('\n');
                     try {
                         await navigator.clipboard.writeText(text);
                         this.alertManager.success('Listado copiado al portapapeles');
@@ -584,7 +584,7 @@ export class MaintenanceView extends BaseView {
             if (overCount && !document.getElementById('copy-over')) {
                 overCount.insertAdjacentHTML('afterend', ' <button id="copy-over" class="btn btn-primary-outline">Copiar lista</button>');
                 document.getElementById('copy-over')?.addEventListener('click', async () => {
-                    const text = movies.map((m: any) => `${m.id_movie}\t${m.title}\t${m.year}\t${m.ratings ?? ''}`).join('\n');
+                    const text = movies.map((m: any) => `${m.pathfile}\t${m.title}\t${m.year}\t${m.ratings ?? ''}`).join('\n');
                     try {
                         await navigator.clipboard.writeText(text);
                         this.alertManager.success('Listado copiado al portapapeles');

@@ -84,7 +84,7 @@ class Handler_connection:
     def __init__(
         self,
         persistence: bool = False,
-        use_curl:    bool = False,
+        use_curl:    bool = True,
         timeout:     int  = DEFAULT_TIMEOUT,
         impersonate: str  = 'chrome120',
     ) -> None:

@@ -122,7 +122,7 @@ def get_posible_url(raw_html):
 	try:		# Provocar un error si encuentra una web relacionada con la película seguir, sino ...
 		soup.select('div#adv-search-no-results')[0].text.strip()
 	except Exception:
-		posible_url = soup.select('div.mc-title')[0].a.get('href').strip()
+		posible_url = soup.select('div.mc-title>a')[0].get('href').strip()
 		posible_url = posible_url.replace(URL_BASE, '')
 	finally:
 		return posible_url
@@ -226,12 +226,13 @@ def get_film(raw_html):
     # Devolver información de una película
     title = 'Sin título'
     year = '0000'
+    description	 = ''
 
     try:
         soup = BeautifulSoup(raw_html.content, 'html.parser')
 
         # Título con manejo seguro
-        title_elements = soup.select('h2.descargarTitulo')
+        title_elements = soup.select('.descargarTitulo')
         if title_elements:
             title = title_elements[0].text.strip() or 'Sin título'
 
@@ -241,6 +242,12 @@ def get_film(raw_html):
             year_text = year_elements[0].text.strip()
             year = year_text.replace('Año: ', '') if year_text else '0000'
 
+        # Año con manejo seguro
+        description = soup.select('.text-justify')
+        if description:
+            description_text = description[0].text.strip()
+            description = description_text.replace('Descripción: ', '') if description_text else ''
+
     except Exception as e:
         print(f"Error en get_film: {e}")
         title = 'Error al obtener título'
@@ -249,6 +256,7 @@ def get_film(raw_html):
     return {
         'title': title,
         'year': year,
+		'description': description,
         'rating': 0.0,
         'url_rojo': '',
         'url_filma': ''

@@ -16,8 +16,10 @@ from modules.service import HandlerService      # Para obtener más información
 from modules.utils import lg_prt, dt_format     # Mostrar y Colorear texto en consola
 from helper import help                         # Mostrar el panel de ayuda
 
-from config.constant import PATH_COVERS
+from config.constant import PATH_COVERS, DB_FILE
 
+
+from config.queries import TAG_QUERY_REPORT
 
 oSCN = oSRVC = None
 
@@ -84,27 +86,39 @@ def main():
 
     elif arg1 == 'torrent':
         lg_prt('t', 'BUSCAR NUEVOS TORRENTS ')
-        oSRVC = HandlerService()
         from modules.torrent import get_torrents
+        from modules.connection import Handler_connection
+        from modules.sqlite import Handler_SQL
+        from config.constant import DB_FILE
+        from config.queries import TAG_QUERY_REPORT
+        oCNT = Handler_connection()
+        oDTB = Handler_SQL(DB_FILE, TAG_QUERY_REPORT)
 
         # Obtener configuración actual
-        result = oSRVC.oDTB.execute('select_urlend')
+        result = oDTB.execute('select_urlend')
+
         url_end, date_end, npseries = None, None, 1
         if result:
-            url_end = result[0].get('url_end')
-            date_end = result[0].get('date_end')
-            npseries = result[0].get('npseries', 1)
+            url_end = result[0][0]
+            date_end = result[0][1]
+            npseries = result[0][2]
 
         current_date = dt_format('symd')
+
+
+        oCNT.set_cookies({
+            'browser-pow-auth': 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhY3Rpb24iOiJDSEFMTEVOR0UiLCJjaGFsbGVuZ2UiOiIwMTllNTA0MS01NWViLTcwMTAtYjE3ZC01OGRlYTgyOWYzMGYiLCJleHAiOjE3Nzk1MDYxMzAsImlhdCI6MTc3OTQ2MjkzMCwibWV0aG9kIjoiZmFzdCIsIm5iZiI6MTc3OTQ2Mjg3MCwicG9saWN5UnVsZSI6ImYxNDdjYjQ2ZmE2YmJkZGIiLCJyZXN0cmljdGlvbiI6ImE4ODQ2YjRlYjhlNjMxYjFiNjEyZDA5NjljNGE1ODZmNjFjMzAzNTU5ZjQ3OGIzZDNhYTVlY2VkYjJiNjJhMTYifQ.7r_TC5K-3zeYh34QmG17O9CJOgz-3p-QoEdWFIIVRW7o3IYmxnK9O5U1cg1aps1PPg35DOplraB0jQwTl1O8Cg',
+            'browser-pow-cookie-verification': '019e5041-55eb-7010-b17d-58dea829f30f'
+        })
 
         # Buscar si es diferente al día actual
         if not date_end or str(date_end) != str(current_date):
             lg_prt('gy', '[▪] Buscando torrents...')
-            data = get_torrents(oSRVC.oCNT, url_end, npseries)
+            data = get_torrents(oCNT, url_end, npseries)
 
             if data and len(data) > 2:
                 # Actualizar base de datos
-                oSRVC.oDTB.execute('update_urlend', {
+                oDTB.execute('update_urlend', {
                     'url_end': data[2],
                     'date_end': current_date,
                     'npseries': data[3] if len(data) > 3 else npseries
@@ -113,7 +127,8 @@ def main():
         else:
             lg_prt('gy', '[✔] Usando datos en caché (fecha actual)')
 
-        del oSRVC
+        del oCNT
+        del oDTB
 
     elif arg1 == 'backup':
         lg_prt('t', 'CREAR UNA COPIA DE LA BASE DE DATOS ')
