@@ -1,5 +1,6 @@
 import { AlertManager } from '../components/AlertManager.js';
 import { ApiResponse } from '../types/api.types.js';
+import { getHeaders } from '../api.js';
 
 
 export class ApiError extends Error {
@@ -52,13 +53,13 @@ private async request<T>(
             'X-Requested-With': 'XMLHttpRequest',
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
-            'Expires': '0'
+            'Expires': '0',
+            ...getHeaders()
         };
 
         const config: RequestInit = {
             method,
             headers,
-            credentials: 'include',
             signal: controller.signal
         };
 
@@ -119,6 +120,10 @@ private async request<T>(
 
     async put<T = any>(endpoint: string, data?: any, options?: any): Promise<ApiResponse<T>> {
         return this.request<T>('PUT', endpoint, data, options);
+    }
+
+    async patch<T = any>(endpoint: string, data?: any, options?: any): Promise<ApiResponse<T>> {
+        return this.request<T>('PATCH', endpoint, data, options);
     }
 
     async delete<T = any>(endpoint: string, data?: any, options?: any): Promise<ApiResponse<T>> {

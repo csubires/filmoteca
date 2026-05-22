@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@fastify/jwt": "^10.0.0",
 		"bcrypt": "^5.1.1",
-		"dotenv": "^16.3.1"
+		"dotenv": "^16.3.1",
+		"jsonwebtoken": "^9.0.3"
 	}
 }

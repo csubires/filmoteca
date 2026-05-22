@@ -97,9 +97,7 @@ export class MovieService extends BaseService {
     async getByGenre(genreId: number, page: number = 1, limit?: number): Promise<{ data: MovieCard[], pagination?: any } | null> {
         const offset = (page - 1) * (limit || 20);
         const url = `/movies_by_genre?id_genre=${genreId}&offset=${offset}${limit ? `&limit=${limit}` : ''}`;
-        console.log('getByGenre url:', url);
         const response = await this.connection.get<any>(url);
-        console.log('getByGenre response:', response);
         return {
             data: response?.data ?? [],
             pagination: (response as any)?.pagination
@@ -149,10 +147,10 @@ export class MovieService extends BaseService {
     }
 
     // Modificar película
-    async update(movieData: Partial<Movie>): Promise<boolean> {
-        const response = await this.connection.put(
-            '/modify_movie',
-            this.buildParams(movieData)
+    async update(movieId: number, changes: Partial<Movie>): Promise<boolean> {
+        const response = await this.connection.patch(
+            `/modify_movie/${movieId}`,
+            changes
         );
         return response?.status === 200;
     }
@@ -208,7 +206,6 @@ export class MovieService extends BaseService {
                 code: c.code
             }));
         } catch (error) {
-            console.error('Error getting countries:', error);
             return null;
         }
     }
@@ -225,7 +222,6 @@ export class MovieService extends BaseService {
                 value: g.name
             }));
         } catch (error) {
-            console.error('Error getting genres:', error);
             return null;
         }
     }
@@ -242,7 +238,6 @@ export class MovieService extends BaseService {
                 value: s.name
             }));
         } catch (error) {
-            console.error('Error getting subgenres:', error);
             return null;
         }
     }
@@ -263,7 +258,6 @@ export class MovieService extends BaseService {
                 flag: c.flag
             }));
         } catch (error) {
-            console.error('Error getting countries raw:', error);
             return null;
         }
     }
@@ -283,7 +277,6 @@ export class MovieService extends BaseService {
                 value: g.name
             }));
         } catch (error) {
-            console.error('Error getting genres raw:', error);
             return null;
         }
     }
@@ -303,7 +296,6 @@ export class MovieService extends BaseService {
                 value: s.name
             }));
         } catch (error) {
-            console.error('Error getting subgenres raw:', error);
             return null;
         }
     }

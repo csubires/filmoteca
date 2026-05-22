@@ -65,32 +65,48 @@ async function startGateway() {
 	await fastify.register(gatewayRoutes, { prefix: '/gateway' });
 
 	// Proxy function for backend services
-	async function proxyAPI(request, reply, upstreamBase, pathPrefix = '') {
+	async function proxyAPI(request, reply, upstreamBase, pathPrefix = '', overrides = {}) {
 		try {
-			let url = request.url.replace(/^\/api/, '');
+			let url = overrides.url || request.url.replace(/^\/api/, '');
 			if (pathPrefix) {
 				url = pathPrefix + url;
 			}
 			const target = `${upstreamBase}${url}`;
+			const outboundMethod = overrides.method || request.method;
 			const headers = {
 				'Content-Type': request.headers['content-type'] || 'application/json'
 			};
 
+			if (request.headers.authorization) {
+				headers.Authorization = request.headers.authorization;
+			}
+			if (request.headers.cookie) {
+				headers.Cookie = request.headers.cookie;
+			}
+			if (request.headers['x-service-token']) {
+				headers['x-service-token'] = request.headers['x-service-token'];
+			}
+
 			let body;
-			if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method) && request.body) {
-				body = typeof request.body === 'string' ? request.body : JSON.stringify(request.body);
+			const payload = Object.prototype.hasOwnProperty.call(overrides, 'body') ? overrides.body : request.body;
+			if (!['GET', 'HEAD', 'OPTIONS'].includes(outboundMethod) && payload) {
+				body = typeof payload === 'string' ? payload : JSON.stringify(payload);
 			}
 
 			// Log incoming request
 			console.log(`\n[GATEWAY] ${request.method} ${request.url}`);
 			console.log(`[GATEWAY] → Target: ${target}`);
+			console.log(`[GATEWAY] Headers: auth=${!!headers.Authorization ? 'yes' : 'no'}, cookie=${!!headers.Cookie ? 'yes' : 'no'}`);
+			if (outboundMethod !== request.method) {
+				console.log(`[GATEWAY] ↻ Rewritten Method: ${outboundMethod}`);
+			}
 			if (body) {
 				console.log(`[GATEWAY] Body:`, body.length > 200 ? body.substring(0, 200) + '...' : body);
 			}
 			const startTime = Date.now();
 
 			const upstreamRes = await fetch(target, {
-				method: request.method,
+				method: outboundMethod,
 				headers,
 				body,
 				redirect: 'manual'
@@ -129,6 +145,36 @@ async function startGateway() {
 		}
 	}
 
+	// Backward compatibility: legacy clients still sending full PUT payload.
+	// Rewrite to partial PATCH endpoint expected by database service.
+	fastify.put('/api/modify_movie', async (request, reply) => {
+		const body = request.body && typeof request.body === 'object' ? request.body : {};
+		const idMovie = Number.parseInt(String(body.id_movie ?? ''), 10);
+
+		if (!Number.isInteger(idMovie) || idMovie <= 0) {
+			return reply.code(400).send({
+				error: 'id_movie is required',
+				code: 'INVALID_ID'
+			});
+		}
+
+		const patchBody = { ...body };
+		delete patchBody.id_movie;
+
+		if (Object.keys(patchBody).length === 0) {
+			return reply.code(400).send({
+				error: 'No fields provided for update',
+				code: 'EMPTY_PATCH'
+			});
+		}
+
+		return proxyAPI(request, reply, databaseUpstream, '', {
+			method: 'PATCH',
+			url: `/database/modify_movie/${idMovie}`,
+			body: patchBody
+		});
+	});
+
 	// API routing - proxy to microservices
 	fastify.route({
 		method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -150,6 +196,20 @@ async function startGateway() {
 		method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 		url: '/api/database/*',
 		handler: async (request, reply) => {
+			if (request.method === 'PUT' && request.url.startsWith('/api/database/modify_movie')) {
+				const body = request.body && typeof request.body === 'object' ? request.body : {};
+				const idMovie = Number.parseInt(String(body.id_movie ?? ''), 10);
+				if (!Number.isInteger(idMovie) || idMovie <= 0) {
+					return reply.code(400).send({ error: 'id_movie is required', code: 'INVALID_ID' });
+				}
+				const patchBody = { ...body };
+				delete patchBody.id_movie;
+				return proxyAPI(request, reply, databaseUpstream, '', {
+					method: 'PATCH',
+					url: `/modify_movie/${idMovie}`,
+					body: patchBody
+				});
+			}
 			return proxyAPI(request, reply, databaseUpstream);
 		}
 	});

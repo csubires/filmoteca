@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import { databaseClient } from '../services/database-client.js';
+import jwtService from '../services/jwt.js';
+import { resolveAuthToken } from '../services/token.js';
 
 // Email validation schema
 function isValidEmail(email) {
@@ -98,22 +100,15 @@ export default async function authRoutes(fastify, options) {
 			});
 
 			// Generate JWT token
-			const token = fastify.jwt.sign({
+			const token = await jwtService.generateToken({
 				sub: email,
 				name: name,
 				role: 'user'
 			});
 
-			reply.cookie('auth_token', token, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
-				sameSite: 'lax',
-				path: '/',
-				maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-			});
-
 			return reply.status(201).send({
 				message: 'Usuario registrado exitosamente',
+				token: token,
 				user: {
 					name: name,
 					email: email,
@@ -170,22 +165,15 @@ export default async function authRoutes(fastify, options) {
 			await databaseClient.updateLastLogin(user.id_user, lastLogin);
 
 			// Generate JWT token
-			const token = fastify.jwt.sign({
+			const token = await jwtService.generateToken({
 				sub: email,
 				name: user.name,
 				role: user.role || 'user'
 			});
 
-			reply.cookie('auth_token', token, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
-				sameSite: 'lax',
-				path: '/',
-				maxAge: 7 * 24 * 60 * 60 * 1000
-			});
-
 			return reply.send({
 				message: 'Login exitoso',
+				token: token,
 				user: {
 					name: user.name,
 					email: email,
@@ -204,17 +192,21 @@ export default async function authRoutes(fastify, options) {
 	// Verify token endpoint
 	fastify.post('/auth/verify', async (request, reply) => {
 		try {
-			const token = request.headers.authorization?.replace('Bearer ', '') ||
-				request.cookies.auth_token;
+			const token = resolveAuthToken(request);
 
 			if (!token) {
 				return reply.status(401).send({
-					error: 'Token requerido'
+					error: 'auth.authenticationRequired'
 				});
 			}
 
 			try {
-				const decoded = await fastify.jwt.verify(token);
+				const decoded = await jwtService.verifyToken(token);
+				if (!decoded) {
+					return reply.status(401).send({
+						error: 'auth.invalidToken'
+					});
+				}
 				return reply.send({
 					valid: true,
 					user: {
@@ -225,7 +217,7 @@ export default async function authRoutes(fastify, options) {
 				});
 			} catch (verifyError) {
 				return reply.status(401).send({
-					error: 'Token inválido o expirado'
+					error: 'auth.invalidToken'
 				});
 			}
 		} catch (error) {
@@ -238,10 +230,6 @@ export default async function authRoutes(fastify, options) {
 
 	// Logout endpoint
 	fastify.post('/auth/logout', async (request, reply) => {
-		reply.clearCookie('auth_token', {
-			path: '/',
-			sameSite: 'lax'
-		});
 		return reply.send({
 			message: 'Logout exitoso'
 		});

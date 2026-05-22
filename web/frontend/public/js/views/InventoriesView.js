@@ -279,7 +279,6 @@ export class InventoriesView extends BaseView {
             btn.addEventListener('click', async (e) => {
                 const target = e.target;
                 const id = target.dataset.id;
-                console.log('View details for:', id);
             });
         });
     }

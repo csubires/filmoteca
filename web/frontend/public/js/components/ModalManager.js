@@ -6,6 +6,7 @@ import { flagEmoji } from '../utils.js';
 export class ModalManager {
     constructor() {
         this.activeModal = null;
+        this.originalMovieSnapshot = {};
         this.renderer = Renderer.getInstance();
         this.movieService = new MovieService();
         this.selectDataManager = SelectDataManager.getInstance();
@@ -87,6 +88,7 @@ export class ModalManager {
         this.activeModal = null;
     }
     openMovieEditor(movieId, movieData, onSaved) {
+        this.originalMovieSnapshot = this.normalizeMovieData(movieData);
         this.open({
             id: `edit-movie-${movieId}`,
             title: 'Editar Película',
@@ -210,11 +212,16 @@ export class ModalManager {
         if (!form)
             return;
         const formData = new FormData(form);
-        const payload = this.mapMovieFormPayload(movieId, formData);
+        const currentValues = this.mapMovieFormPayload(formData);
+        const dirtyPayload = this.getDirtyMovieFields(currentValues, this.originalMovieSnapshot);
+        if (Object.keys(dirtyPayload).length === 0) {
+            this.alertManager.info('No hay cambios para guardar');
+            return;
+        }
         saveBtn.disabled = true;
         saveBtn.textContent = 'Guardando...';
         try {
-            const updated = await this.movieService.update(payload);
+            const updated = await this.movieService.update(movieId, dirtyPayload);
             if (!updated) {
                 this.alertManager.error('No se pudo actualizar la película');
                 return;
@@ -234,7 +241,7 @@ export class ModalManager {
             saveBtn.textContent = 'Guardar';
         }
     }
-    mapMovieFormPayload(movieId, formData) {
+    mapMovieFormPayload(formData) {
         const readNumber = (key) => {
             const value = String(formData.get(key) || '').trim();
             return value === '' ? null : Number(value);
@@ -244,19 +251,16 @@ export class ModalManager {
             return value === '' ? null : value;
         };
         const readBoolean = (key) => {
-            return formData.get(key) !== null;
+            return formData.get(key) !== null ? 1 : 0;
         };
         return {
-            id_movie: movieId,
             year: readNumber('year'),
             title: readString('title'),
             realtitle: readString('realtitle'),
             quality: readString('quality'),
             extension: readString('extension'),
             size: readNumber('size'),
-            size_str: readString('size_str'),
             duration: readNumber('duration'),
-            duration_str: readString('duration_str'),
             fps: readNumber('fps'),
             resolution: readString('resolution'),
             hdd_code: readNumber('hdd_code'),
@@ -269,6 +273,49 @@ export class ModalManager {
             id_genre: readNumber('id_genre'),
             id_subgenre: readNumber('id_subgenre')
         };
+    }
+    normalizeMovieData(movieData) {
+        const normalizeNumber = (value) => {
+            if (value === null || value === undefined || value === '')
+                return null;
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        };
+        const normalizeString = (value) => {
+            if (value === null || value === undefined)
+                return null;
+            const normalized = String(value).trim();
+            return normalized === '' ? null : normalized;
+        };
+        return {
+            year: normalizeNumber(movieData.year),
+            title: normalizeString(movieData.title),
+            realtitle: normalizeString(movieData.realtitle),
+            quality: normalizeString(movieData.quality),
+            extension: normalizeString(movieData.extension),
+            size: normalizeNumber(movieData.size),
+            duration: normalizeNumber(movieData.duration),
+            fps: normalizeNumber(movieData.fps),
+            resolution: normalizeString(movieData.resolution),
+            hdd_code: normalizeNumber(movieData.hdd_code),
+            ratings: normalizeNumber(movieData.ratings),
+            pathfile: normalizeString(movieData.pathfile),
+            censure: movieData.censure ? 1 : 0,
+            id_country: normalizeNumber(movieData.id_country),
+            urldesc: normalizeString(movieData.urldesc),
+            urlpicture: normalizeString(movieData.urlpicture),
+            id_genre: normalizeNumber(movieData.id_genre),
+            id_subgenre: normalizeNumber(movieData.id_subgenre)
+        };
+    }
+    getDirtyMovieFields(currentValues, originalValues) {
+        const dirty = {};
+        for (const [key, value] of Object.entries(currentValues)) {
+            if (value !== originalValues[key]) {
+                dirty[key] = value;
+            }
+        }
+        return dirty;
     }
     renderMovieEditor(movie) {
         return `

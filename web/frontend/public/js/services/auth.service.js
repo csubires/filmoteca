@@ -1,4 +1,5 @@
 import { showMessage } from '../utils.js';
+import { setToken, getToken, removeAuthToken } from '../api.js';
 export class AuthService {
     constructor(connection) {
         this.currentUser = null;
@@ -29,11 +30,25 @@ export class AuthService {
         if (this.currentUser?.auth)
             return;
         try {
-            const response = await fetch('/auth/verify', {
+            const token = getToken();
+            console.log('[AuthService.bootstrap] Token from storage:', { length: token?.length });
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+                console.log('[AuthService.bootstrap] Added Authorization header');
+            }
+            else {
+                console.log('[AuthService.bootstrap] No token to add');
+            }
+            const response = await fetch('/api/auth/verify', {
                 method: 'POST',
-                credentials: 'include'
+                headers
             });
+            console.log('[AuthService.bootstrap] Verify response:', response.status);
             if (!response.ok) {
+                removeAuthToken();
                 this.clearSession();
                 return;
             }
@@ -47,43 +62,51 @@ export class AuthService {
                 });
             }
             else {
+                removeAuthToken();
                 this.clearSession();
             }
         }
         catch {
+            removeAuthToken();
             this.clearSession();
         }
     }
-    getRoleFromCookie() {
-        const cookies = document.cookie.split(';');
-        const roleCookie = cookies.find(c => c.trim().startsWith('user_role='));
-        if (roleCookie) {
-            return roleCookie.split('=')[1];
-        }
-        return 'user';
-    }
     async login(email, password) {
         try {
-            const response = await fetch('/auth/login', {
+            console.log('[AuthService.login] Starting login...');
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
+            console.log('[AuthService.login] Response status:', response.status);
             const contentType = response.headers.get('content-type') || '';
             const payload = contentType.includes('application/json')
                 ? await response.json()
                 : { message: await response.text() };
+            console.log('[AuthService.login] Payload:', { message: payload.message, hasToken: !!payload.token, hasUser: !!payload.user });
             if (response.ok) {
                 const user = payload?.user || {};
+                const token = typeof payload?.token === 'string' ? payload.token.trim() : '';
+                console.log('[AuthService.login] Token received:', { length: token?.length, isString: typeof token === 'string' });
+                if (!token) {
+                    removeAuthToken();
+                    this.clearSession();
+                    showMessage('No se recibió el token de autenticación', 'danger');
+                    return false;
+                }
+                console.log('[AuthService.login] Calling setToken...');
+                setToken(token);
+                console.log('[AuthService.login] Token saved');
                 this.saveSession({
                     email: user.email || email,
                     role: user.role || 'user',
                     auth: true
                 });
                 showMessage(payload?.message || 'Login exitoso', 'success');
+                console.log('[AuthService.login] Redirecting to home...');
                 window.location.href = '/';
                 return true;
             }
@@ -98,21 +121,41 @@ export class AuthService {
             return false;
         }
     }
+    getRoleFromCookie() {
+        const cookies = document.cookie.split(';');
+        const roleCookie = cookies.find(c => c.trim().startsWith('user_role='));
+        if (roleCookie) {
+            return roleCookie.split('=')[1];
+        }
+        return 'user';
+    }
     async signup(credentials) {
         try {
-            const response = await fetch('/auth/register', {
+            console.log('[AuthService.signup] Starting signup...');
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify(credentials)
             });
+            console.log('[AuthService.signup] Response status:', response.status);
             const contentType = response.headers.get('content-type') || '';
             const payload = contentType.includes('application/json')
                 ? await response.json()
                 : { message: await response.text() };
+            console.log('[AuthService.signup] Payload:', { message: payload.message, hasToken: !!payload.token });
             if (response.ok) {
+                const user = payload?.user || {};
+                const token = payload?.token;
+                if (token) {
+                    console.log('[AuthService.signup] Calling setToken...');
+                    setToken(token);
+                    console.log('[AuthService.signup] Token saved');
+                }
+                else {
+                    console.warn('[AuthService.signup] No token in payload!');
+                }
                 showMessage(payload?.message || 'Usuario registrado exitosamente', 'success');
                 window.location.href = '/login';
                 return true;
@@ -128,15 +171,17 @@ export class AuthService {
     }
     async logout() {
         try {
-            await fetch('/auth/logout', {
-                method: 'POST',
-                credentials: 'include'
+            await fetch('/api/auth/logout', {
+                method: 'POST'
             });
-            this.clearSession();
-            window.location.href = '/';
         }
         catch (error) {
             console.error('Logout error:', error);
+        }
+        finally {
+            removeAuthToken();
+            this.clearSession();
+            window.location.href = '/';
         }
     }
     isAuthenticated() {

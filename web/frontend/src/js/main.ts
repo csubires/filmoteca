@@ -34,7 +34,17 @@ let translationCatalog: Record<string, Record<string, string>> = {};
 let translationLookup: Record<string, string> = {};
 let translationCatalogLoaded = false;
 let translationCatalogPromise: Promise<void> | null = null;
+let translationAnnotationDone = false;
+
+function initializeLanguage(): void {
+    // Read language from localStorage, or default to 'es'
+    const savedLanguage = localStorage.getItem('language') || 'es';
+    const normalizedLanguage = savedLanguage === 'en' ? 'en' : 'es';
+    document.documentElement.lang = normalizedLanguage;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initializeLanguage();
     auth.ready.finally(() => {
         router.handleRoute();
     });
@@ -56,7 +66,8 @@ window.addEventListener('navigation-complete', async () => {
 });
 
 window.addEventListener('i18n-content-changed', () => {
-    void applyTranslations(getCurrentLanguage());
+    // Re-annotate new DOM elements with i18n markers, but keep the current language
+    void applyTranslations(getCurrentLanguage(), true);
 });
 function setupMenuClickToggle(): void {
     document.addEventListener('click', (e) => {
@@ -357,13 +368,19 @@ function translateDomText(root: ParentNode, sourceMap: Record<string, string>, t
     });
 }
 
-async function applyTranslations(language?: string): Promise<void> {
+async function applyTranslations(language?: string, forceAnnotate = false): Promise<void> {
     await loadTranslationCatalog();
 
     if (!translationCatalogLoaded) return;
 
     const normalizedLanguage = language === 'en' ? 'en' : 'es';
-    annotateI18n(document.body);
+
+    // Annotate elements: on first load, or when forceAnnotate is true (for dynamic content)
+    if (!translationAnnotationDone || forceAnnotate) {
+        annotateI18n(document.body);
+        translationAnnotationDone = true;
+    }
+
     document.querySelectorAll<HTMLElement>('[data-i18n], [data-i18n-attr]').forEach(element => {
         translateAnnotatedElement(element, normalizedLanguage);
     });

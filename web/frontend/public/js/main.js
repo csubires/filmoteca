@@ -34,7 +34,14 @@ let translationCatalog = {};
 let translationLookup = {};
 let translationCatalogLoaded = false;
 let translationCatalogPromise = null;
+let translationAnnotationDone = false;
+function initializeLanguage() {
+    const savedLanguage = localStorage.getItem('language') || 'es';
+    const normalizedLanguage = savedLanguage === 'en' ? 'en' : 'es';
+    document.documentElement.lang = normalizedLanguage;
+}
 document.addEventListener('DOMContentLoaded', () => {
+    initializeLanguage();
     auth.ready.finally(() => {
         router.handleRoute();
     });
@@ -55,7 +62,7 @@ window.addEventListener('navigation-complete', async () => {
     setupCardInfoPositioning();
 });
 window.addEventListener('i18n-content-changed', () => {
-    void applyTranslations(getCurrentLanguage());
+    void applyTranslations(getCurrentLanguage(), true);
 });
 function setupMenuClickToggle() {
     document.addEventListener('click', (e) => {
@@ -325,12 +332,15 @@ function translateDomText(root, sourceMap, targetMap) {
         node.nodeValue = current.replace(trimmed, translated);
     });
 }
-async function applyTranslations(language) {
+async function applyTranslations(language, forceAnnotate = false) {
     await loadTranslationCatalog();
     if (!translationCatalogLoaded)
         return;
     const normalizedLanguage = language === 'en' ? 'en' : 'es';
-    annotateI18n(document.body);
+    if (!translationAnnotationDone || forceAnnotate) {
+        annotateI18n(document.body);
+        translationAnnotationDone = true;
+    }
     document.querySelectorAll('[data-i18n], [data-i18n-attr]').forEach(element => {
         translateAnnotatedElement(element, normalizedLanguage);
     });

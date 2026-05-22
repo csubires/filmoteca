@@ -28,6 +28,7 @@ export class ModalManager {
     private movieService: MovieService;
     private selectDataManager: SelectDataManager;
     private alertManager: AlertManager;
+    private originalMovieSnapshot: Record<string, string | number | null> = {};
 
     private constructor() {
         this.renderer = Renderer.getInstance();
@@ -129,6 +130,7 @@ export class ModalManager {
 
     // Modal específico para edición de películas
     openMovieEditor(movieId: number, movieData: any, onSaved?: () => void | Promise<void>): void {
+        this.originalMovieSnapshot = this.normalizeMovieData(movieData);
         this.open({
             id: `edit-movie-${movieId}`,
             title: 'Editar Película',
@@ -289,13 +291,19 @@ export class ModalManager {
         if (!form) return;
 
         const formData = new FormData(form);
-        const payload = this.mapMovieFormPayload(movieId, formData);
+        const currentValues = this.mapMovieFormPayload(formData);
+        const dirtyPayload = this.getDirtyMovieFields(currentValues, this.originalMovieSnapshot);
+
+        if (Object.keys(dirtyPayload).length === 0) {
+            this.alertManager.info('No hay cambios para guardar');
+            return;
+        }
 
         saveBtn.disabled = true;
         saveBtn.textContent = 'Guardando...';
 
         try {
-            const updated = await this.movieService.update(payload);
+            const updated = await this.movieService.update(movieId, dirtyPayload);
             if (!updated) {
                 this.alertManager.error('No se pudo actualizar la película');
                 return;
@@ -315,7 +323,7 @@ export class ModalManager {
         }
     }
 
-    private mapMovieFormPayload(movieId: number, formData: FormData): Record<string, string | number | null | boolean> {
+    private mapMovieFormPayload(formData: FormData): Record<string, string | number | null> {
         const readNumber = (key: string): number | null => {
             const value = String(formData.get(key) || '').trim();
             return value === '' ? null : Number(value);
@@ -326,21 +334,18 @@ export class ModalManager {
             return value === '' ? null : value;
         };
 
-        const readBoolean = (key: string): boolean => {
-            return formData.get(key) !== null;
+        const readBoolean = (key: string): number => {
+            return formData.get(key) !== null ? 1 : 0;
         };
 
         return {
-            id_movie: movieId,
             year: readNumber('year'),
             title: readString('title'),
             realtitle: readString('realtitle'),
             quality: readString('quality'),
             extension: readString('extension'),
             size: readNumber('size'),
-            size_str: readString('size_str'),
             duration: readNumber('duration'),
-            duration_str: readString('duration_str'),
             fps: readNumber('fps'),
             resolution: readString('resolution'),
             hdd_code: readNumber('hdd_code'),
@@ -353,6 +358,56 @@ export class ModalManager {
             id_genre: readNumber('id_genre'),
             id_subgenre: readNumber('id_subgenre')
         };
+    }
+
+    private normalizeMovieData(movieData: any): Record<string, string | number | null> {
+        const normalizeNumber = (value: any): number | null => {
+            if (value === null || value === undefined || value === '') return null;
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        };
+
+        const normalizeString = (value: any): string | null => {
+            if (value === null || value === undefined) return null;
+            const normalized = String(value).trim();
+            return normalized === '' ? null : normalized;
+        };
+
+        return {
+            year: normalizeNumber(movieData.year),
+            title: normalizeString(movieData.title),
+            realtitle: normalizeString(movieData.realtitle),
+            quality: normalizeString(movieData.quality),
+            extension: normalizeString(movieData.extension),
+            size: normalizeNumber(movieData.size),
+            duration: normalizeNumber(movieData.duration),
+            fps: normalizeNumber(movieData.fps),
+            resolution: normalizeString(movieData.resolution),
+            hdd_code: normalizeNumber(movieData.hdd_code),
+            ratings: normalizeNumber(movieData.ratings),
+            pathfile: normalizeString(movieData.pathfile),
+            censure: movieData.censure ? 1 : 0,
+            id_country: normalizeNumber(movieData.id_country),
+            urldesc: normalizeString(movieData.urldesc),
+            urlpicture: normalizeString(movieData.urlpicture),
+            id_genre: normalizeNumber(movieData.id_genre),
+            id_subgenre: normalizeNumber(movieData.id_subgenre)
+        };
+    }
+
+    private getDirtyMovieFields(
+        currentValues: Record<string, string | number | null>,
+        originalValues: Record<string, string | number | null>
+    ): Record<string, string | number | null> {
+        const dirty: Record<string, string | number | null> = {};
+
+        for (const [key, value] of Object.entries(currentValues)) {
+            if (value !== originalValues[key]) {
+                dirty[key] = value;
+            }
+        }
+
+        return dirty;
     }
 
     private renderMovieEditor(movie: any): string {

@@ -84,6 +84,54 @@ class HandlerSQL {
 		});
 	}
 
+	async executeRaw(sql, params = []) {
+		if (!sql || typeof sql !== 'string') {
+			throw new Error('SQL statement is required');
+		}
+
+		const trimmed = sql.trim();
+		const isSelect = trimmed.toUpperCase().startsWith('SELECT');
+		const startTime = Date.now();
+
+		console.log('\n[DB] Raw SQL:', trimmed);
+		console.log('[DB] Raw Params:', params);
+
+		return new Promise((resolve, reject) => {
+			if (isSelect) {
+				this.db.all(trimmed, params, (err, rows) => {
+					const duration = Date.now() - startTime;
+					if (err) {
+						console.error(`[DB] ❌ Raw query failed (${duration}ms):`, err.message);
+						reject(err);
+						return;
+					}
+
+					console.log(`[DB] ✅ Raw query success (${duration}ms) - ${rows?.length || 0} rows`);
+					this.lastAffected = rows ? rows.length : 0;
+					resolve(rows || []);
+				});
+				return;
+			}
+
+			const handler = this;
+			handler.db.run(trimmed, params, function (err) {
+				const duration = Date.now() - startTime;
+				if (err) {
+					console.error(`[DB] ❌ Raw query failed (${duration}ms):`, err.message);
+					reject(err);
+					return;
+				}
+
+				console.log(`[DB] ✅ Raw query success (${duration}ms) - ${this.changes} rows affected`);
+				handler.lastAffected = this.changes;
+				resolve({
+					changes: this.changes,
+					lastID: this.lastID
+				});
+			});
+		});
+	}
+
 	affected() {
 		return this.lastAffected;
 	}

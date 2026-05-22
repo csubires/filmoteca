@@ -26,7 +26,6 @@ export class TorrentService extends BaseService {
             return null;
         }
         catch (error) {
-            console.error('Error starting task:', error);
             return null;
         }
     }
@@ -54,7 +53,6 @@ export class TorrentService extends BaseService {
             return false;
         }
         catch (error) {
-            console.error('Error stopping task:', error);
             return false;
         }
     }
@@ -116,7 +114,6 @@ export class TorrentService extends BaseService {
             }
         }
         catch (error) {
-            console.log('No hay tareas en ejecución');
         }
     }
 }

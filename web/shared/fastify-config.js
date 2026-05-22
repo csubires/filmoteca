@@ -6,8 +6,10 @@ export default async function createFastifyApp(options = {}) {
 	const {
 		serviceName = 'unknown',
 		enableSessions = false,
+		enableJWT = false,
 		corsOrigin = false,
 		getSessionSecret = null,
+		jwtSecret = process.env.JWT_SECRET || 'change-this-secret-in-production',
 	} = options;
 
 
@@ -39,6 +41,16 @@ export default async function createFastifyApp(options = {}) {
 	if (serviceName === 'api-gateway' || serviceName === 'auth-service') {
 		const fastifyFormbody = await import('@fastify/formbody');
 		await fastify.register(fastifyFormbody.default);
+	}
+
+	if (enableJWT || serviceName === 'auth-service') {
+		const fastifyCookie = await import('@fastify/cookie');
+		await fastify.register(fastifyCookie.default);
+
+		const fastifyJwt = await import('@fastify/jwt');
+		await fastify.register(fastifyJwt.default, {
+			secret: jwtSecret
+		});
 	}
 
 if (enableSessions) {

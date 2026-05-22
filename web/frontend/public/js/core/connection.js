@@ -1,4 +1,5 @@
 import { AlertManager } from '../components/AlertManager.js';
+import { getHeaders } from '../api.js';
 export class ApiError extends Error {
     constructor(message, status, data) {
         super(message);
@@ -30,12 +31,12 @@ export class Connection {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
-                'Expires': '0'
+                'Expires': '0',
+                ...getHeaders()
             };
             const config = {
                 method,
                 headers,
-                credentials: 'include',
                 signal: controller.signal
             };
             if (data) {
@@ -83,6 +84,9 @@ export class Connection {
     }
     async put(endpoint, data, options) {
         return this.request('PUT', endpoint, data, options);
+    }
+    async patch(endpoint, data, options) {
+        return this.request('PATCH', endpoint, data, options);
     }
     async delete(endpoint, data, options) {
         return this.request('DELETE', endpoint, data, options);

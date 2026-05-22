@@ -322,9 +322,6 @@ export class InventoriesView extends BaseView {
             btn.addEventListener('click', async (e) => {
                 const target = e.target as HTMLElement;
                 const id = target.dataset.id;
-
-                // Aquí podrías abrir un modal con más detalles
-                console.log('View details for:', id);
             });
         });
     }
