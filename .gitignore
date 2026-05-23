@@ -69,3 +69,4 @@ data/
 wheels/
 yarn-debug.log*
 yarn-error.log*
+*.zip

@@ -4,6 +4,7 @@ export class TorrentView extends BaseView {
     constructor() {
         super();
         this.pollingInterval = null;
+        this.autoCloseInterval = null;
         this.lastTaskOutputLength = 0;
         this.torrentService = new TorrentService();
     }
@@ -13,6 +14,8 @@ export class TorrentView extends BaseView {
                 <div class="torrent-header">
                     <h1>Gestor de Tareas</h1>
                 </div>
+
+                <!-- La configuración de data se muestra dentro de task-config-area -->
 
                 <div class="torrent-config card" id="run-task">
                     <div class="form-group">
@@ -43,8 +46,12 @@ export class TorrentView extends BaseView {
                         <span id="progress-percent" class="progress-percent">0%</span>
                     </div>
                     <p id="progress-message" class="progress-message">Iniciando búsqueda...</p>
-                    <textarea id="torrent-logs" class="torrent-logs" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; font-family: monospace; font-size: 12px; margin-top: 10px;"></textarea>
-                    <button id="cancel-task" class="btn btn-danger" style="margin-top: 10px;">Cancelar búsqueda</button>
+                    <textarea id="torrent-logs" class="torrent-logs" readonly style="width: 100%; height: 250px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; font-family: monospace; font-size: 12px; margin-top: 10px; overflow-y: auto;"></textarea>
+                    <div class="form-actions" style="margin-top: 10px;">
+                        <button id="cancel-task" class="btn btn-danger">Cancelar búsqueda</button>
+                        <button id="close-progress" class="btn btn-secondary" style="display: none;">Cerrar panel</button>
+                        <span id="auto-close-timer" style="margin-left: 10px; color: #666;"></span>
+                    </div>
                 </div>
 
                 <div class="torrent-tabs">
@@ -57,6 +64,16 @@ export class TorrentView extends BaseView {
         `;
     }
     async afterRender() {
+        try {
+            const cachedMovies = await this.torrentService.getMovies();
+            if (cachedMovies && Array.isArray(cachedMovies) && cachedMovies.length > 0) {
+                const movieTab = document.querySelector('.tab-btn[data-tab="movies"]');
+                if (movieTab)
+                    movieTab.classList.add('active');
+            }
+        }
+        catch (e) {
+        }
         await Promise.all([
             this.loadMovies(),
             this.loadSeries()
@@ -84,6 +101,10 @@ export class TorrentView extends BaseView {
                     <div class="form-group">
                         <label>Último torrent</label>
                         <input type="text" id="last-torrent" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha última búsqueda</label>
+                        <input type="text" id="last-date" value="" placeholder="YYYYMMDD">
                     </div>
                     <div class="form-group">
                         <label>Páginas de series</label>
@@ -115,6 +136,7 @@ export class TorrentView extends BaseView {
     async loadConfig() {
         try {
             const config = await this.torrentService.getConfig();
+            const dataConfig = await this.torrentService.getDataConfig();
             const container = document.getElementById('run-task');
             if (!container)
                 return;
@@ -123,14 +145,16 @@ export class TorrentView extends BaseView {
                 lastTorrent.value = config?.url_end || '';
             const lastDate = document.getElementById('last-date');
             if (lastDate)
-                lastDate.value = config?.date_end || '';
+                lastDate.value = (dataConfig?.date_end || config?.date_end) || '';
             const npSeries = document.getElementById('np-series');
             if (npSeries)
-                npSeries.value = String(config?.npseries || 0);
+                npSeries.value = String((dataConfig?.npseries ?? config?.npseries) || 0);
         }
         catch (error) {
             this.handleError(error, 'Error al cargar configuración');
         }
+    }
+    async loadDataConfig() {
     }
     async loadMovies() {
         try {
@@ -205,6 +229,34 @@ export class TorrentView extends BaseView {
         `;
     }
     setupEventListeners() {
+        const taskConfigArea = document.getElementById('task-config-area');
+        if (taskConfigArea) {
+            let saveTimer = null;
+            taskConfigArea.addEventListener('input', (ev) => {
+                const target = ev.target;
+                if (!target)
+                    return;
+                const id = target.id || '';
+                if (!['last-torrent', 'last-date', 'np-series'].includes(id))
+                    return;
+                if (saveTimer)
+                    clearTimeout(saveTimer);
+                saveTimer = window.setTimeout(async () => {
+                    try {
+                        const config = {
+                            url_end: (document.getElementById('last-torrent')?.value || undefined),
+                            date_end: (document.getElementById('last-date')?.value || undefined),
+                            npseries: parseInt((document.getElementById('np-series')?.value || '1'))
+                        };
+                        await this.torrentService.updateDataConfig(config);
+                        this.alertManager.success('Configuración guardada automáticamente');
+                    }
+                    catch (error) {
+                        this.handleError(error, 'Error al guardar configuración automáticamente');
+                    }
+                }, 800);
+            });
+        }
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.target;
@@ -243,12 +295,20 @@ export class TorrentView extends BaseView {
             this.hideProgress();
             this.alertManager.info('Búsqueda cancelada');
         });
+        document.getElementById('close-progress')?.addEventListener('click', () => {
+            this.hideProgress();
+        });
         this.taskCompleteListener = ((e) => {
             this.hideProgress();
             if (e.detail.task_status === 'completed') {
                 this.alertManager.success('Búsqueda completada');
-                this.loadMovies();
-                this.loadSeries();
+                const movieTab = document.querySelector('.tab-btn[data-tab="movies"]');
+                if (movieTab) {
+                    movieTab.click();
+                }
+                else {
+                    this.loadMovies();
+                }
             }
             else if (e.detail.task_status === 'failed') {
                 this.alertManager.error(e.detail.error || 'Error en la búsqueda');
@@ -303,7 +363,7 @@ export class TorrentView extends BaseView {
                             this.pollingInterval = null;
                         }
                         this.updateProgress(100, status?.task_status === 'completed' ? 'Búsqueda completada' : 'Error en búsqueda');
-                        this.hideProgress();
+                        this.completeProgress(status?.task_status === 'completed');
                         if (status?.task_status === 'completed') {
                             this.updateProgress(progressValue, status?.message || 'Buscando...');
                             setTimeout(() => {
@@ -345,6 +405,12 @@ export class TorrentView extends BaseView {
         if (progressDiv) {
             progressDiv.style.display = 'block';
         }
+        const cancelBtn = document.getElementById('cancel-task');
+        const closeBtn = document.getElementById('close-progress');
+        if (cancelBtn)
+            cancelBtn.style.display = 'inline-block';
+        if (closeBtn)
+            closeBtn.style.display = 'none';
         this.updateProgress(0, 'Iniciando...');
     }
     hideProgress() {
@@ -356,6 +422,41 @@ export class TorrentView extends BaseView {
             clearInterval(this.pollingInterval);
             this.pollingInterval = null;
         }
+        if (this.autoCloseInterval) {
+            clearInterval(this.autoCloseInterval);
+            this.autoCloseInterval = null;
+        }
+        const timerEl = document.getElementById('auto-close-timer');
+        if (timerEl) {
+            timerEl.textContent = '';
+        }
+    }
+    completeProgress(isSuccess) {
+        const cancelBtn = document.getElementById('cancel-task');
+        const closeBtn = document.getElementById('close-progress');
+        const timerEl = document.getElementById('auto-close-timer');
+        if (cancelBtn)
+            cancelBtn.style.display = 'none';
+        if (closeBtn)
+            closeBtn.style.display = 'inline-block';
+        if (this.autoCloseInterval) {
+            clearInterval(this.autoCloseInterval);
+        }
+        let secondsLeft = 10;
+        if (timerEl) {
+            timerEl.textContent = `Se cerrará en ${secondsLeft}s...`;
+        }
+        this.autoCloseInterval = window.setInterval(() => {
+            secondsLeft--;
+            if (timerEl) {
+                timerEl.textContent = `Se cerrará en ${secondsLeft}s...`;
+            }
+            if (secondsLeft <= 0) {
+                clearInterval(this.autoCloseInterval);
+                this.autoCloseInterval = null;
+                this.hideProgress();
+            }
+        }, 1000);
     }
     updateProgress(percent, message) {
         const bar = document.getElementById('progress-bar');

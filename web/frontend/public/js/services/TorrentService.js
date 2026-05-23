@@ -116,4 +116,13 @@ export class TorrentService extends BaseService {
         catch (error) {
         }
     }
+    async getDataConfig() {
+        return this.handleRequest(this.connection.get('/get_data'), 'Error al obtener configuración de tabla data');
+    }
+    async updateDataConfig(config) {
+        return this.handleRequest(this.connection.put('/update_data', this.buildParams(config)), 'Error al actualizar configuración de tabla data');
+    }
+    async resetDataConfig() {
+        return this.handleRequest(this.connection.post('/reset_data', {}), 'Error al reinicializar configuración');
+    }
 }

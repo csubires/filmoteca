@@ -2,10 +2,11 @@ name: filmoteca
 
 services:
   database:
-    image: filmoteca-database:latest
+    image: filmoteca-database
     build:
-      context: ../..
+      context: ${PWD}
       dockerfile: infra/containers/web/database/Dockerfile
+    container_name: filmoteca-database
     environment:
       NODE_ENV: production
       DB_PATH: /app/data/filmoteca.db
@@ -17,13 +18,15 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    networks: [filmoteca-net]
     restart: unless-stopped
 
   auth:
-    image: filmoteca-auth:latest
+    image: filmoteca-auth
     build:
-      context: ../..
+      context: ${PWD}
       dockerfile: infra/containers/web/auth/Dockerfile
+    container_name: filmoteca-auth
     environment:
       NODE_ENV: production
       DATABASE_URL: http://database:3003
@@ -37,13 +40,15 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    networks: [filmoteca-net]
     restart: unless-stopped
 
   i18n:
-    image: filmoteca-i18n:latest
+    image: filmoteca-i18n
     build:
-      context: ../..
+      context: ${PWD}
       dockerfile: infra/containers/web/i18n/Dockerfile
+    container_name: filmoteca-i18n
     environment:
       NODE_ENV: production
     healthcheck:
@@ -51,13 +56,15 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    networks: [filmoteca-net]
     restart: unless-stopped
 
   gateway:
-    image: filmoteca-gateway:latest
+    image: filmoteca-gateway
     build:
-      context: ../..
+      context: ${PWD}
       dockerfile: infra/containers/web/gateway/Dockerfile
+    container_name: filmoteca-gateway
     environment:
       NODE_ENV: production
       DATABASE_URL: http://database:3003
@@ -77,13 +84,15 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    networks: [filmoteca-net]
     restart: unless-stopped
 
   nginx:
-    image: filmoteca-nginx:latest
+    image: filmoteca-nginx
     build:
-      context: ../..
+      context: ${PWD}
       dockerfile: infra/containers/web/nginx/Dockerfile
+    container_name: filmoteca-nginx
     ports:
       - "8443:443"
     volumes:
@@ -96,8 +105,11 @@ services:
       interval: 20s
       timeout: 5s
       retries: 3
+    networks: [filmoteca-net]
     restart: unless-stopped
 
 networks:
-  default:
+  filmoteca-net:
     name: filmoteca-net
+    driver: bridge
+    enable_ipv6: false

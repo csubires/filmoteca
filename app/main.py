@@ -105,7 +105,6 @@ def main():
 
         current_date = dt_format('symd')
 
-
         oCNT.set_cookies({
             'browser-pow-auth': 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhY3Rpb24iOiJDSEFMTEVOR0UiLCJjaGFsbGVuZ2UiOiIwMTllNTA0MS01NWViLTcwMTAtYjE3ZC01OGRlYTgyOWYzMGYiLCJleHAiOjE3Nzk1MDYxMzAsImlhdCI6MTc3OTQ2MjkzMCwibWV0aG9kIjoiZmFzdCIsIm5iZiI6MTc3OTQ2Mjg3MCwicG9saWN5UnVsZSI6ImYxNDdjYjQ2ZmE2YmJkZGIiLCJyZXN0cmljdGlvbiI6ImE4ODQ2YjRlYjhlNjMxYjFiNjEyZDA5NjljNGE1ODZmNjFjMzAzNTU5ZjQ3OGIzZDNhYTVlY2VkYjJiNjJhMTYifQ.7r_TC5K-3zeYh34QmG17O9CJOgz-3p-QoEdWFIIVRW7o3IYmxnK9O5U1cg1aps1PPg35DOplraB0jQwTl1O8Cg',
             'browser-pow-cookie-verification': '019e5041-55eb-7010-b17d-58dea829f30f'

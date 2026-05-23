@@ -44,7 +44,8 @@ export class AuthService {
             }
             const response = await fetch('/api/auth/verify', {
                 method: 'POST',
-                headers
+                headers,
+                body: JSON.stringify({})
             });
             console.log('[AuthService.bootstrap] Verify response:', response.status);
             if (!response.ok) {

@@ -170,4 +170,33 @@ export class TorrentService extends BaseService {
         } catch (error) {
         }
     }
+
+    // ===== MÉTODOS PARA GESTIONAR TABLA DATA =====
+
+    // Obtener datos de tabla data
+    async getDataConfig(): Promise<TorrentConfig | null> {
+        return this.handleRequest(
+            this.connection.get<TorrentConfig>('/get_data'),
+            'Error al obtener configuración de tabla data'
+        );
+    }
+
+    // Actualizar datos de tabla data
+    async updateDataConfig(config: Partial<TorrentConfig>): Promise<TorrentConfig | null> {
+        return this.handleRequest(
+            this.connection.put<TorrentConfig>(
+                '/update_data',
+                this.buildParams(config)
+            ),
+            'Error al actualizar configuración de tabla data'
+        );
+    }
+
+    // Reinicializar tabla data a valores por defecto
+    async resetDataConfig(): Promise<TorrentConfig | null> {
+        return this.handleRequest(
+            this.connection.post<TorrentConfig>('/reset_data', {}),
+            'Error al reinicializar configuración'
+        );
+    }
 }

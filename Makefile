@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 
 COMPOSE_FILE := infra/containers/docker-compose.yml
-COMPOSE := docker compose -f $(COMPOSE_FILE)
+COMPOSE := podman compose -f $(COMPOSE_FILE)
 WEB_BASE_IMAGE := filmoteca-web-base:latest
 
 # Carpeta de TypeScript (ajusta si es diferente)
@@ -117,12 +117,13 @@ web-services:
 # ── Docker production ────────────────────────────────────────────────────────
 
 docker-build-base:
-	docker build -f infra/containers/web/base/Dockerfile -t $(WEB_BASE_IMAGE) .
+	podman build -f infra/containers/web/base/Dockerfile -t $(WEB_BASE_IMAGE) .
 
 docker-build: docker-build-base
 	$(COMPOSE) build
 
-docker-up: docker-build-base
+docker-up: docker-build
+	@echo "Starting services with podman compose"
 	$(COMPOSE) up -d
 
 docker-stop:
@@ -133,4 +134,4 @@ docker-down:
 
 docker-clean:
 	$(COMPOSE) down -v --remove-orphans --rmi all
-	-docker image rm $(WEB_BASE_IMAGE)
+	-@podman image rm $(WEB_BASE_IMAGE) || true

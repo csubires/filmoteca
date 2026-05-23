@@ -1,8 +1,11 @@
-FROM nginx:1.27-alpine
+FROM docker.io/library/nginx:stable
 
 USER root
 
-RUN apk add --no-cache curl openssl \
+# Install required packages on Debian-slim
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /etc/nginx/ssl /var/log/nginx \
   && rm -f /etc/nginx/conf.d/default.conf \
   && openssl req -x509 -nodes -newkey rsa:2048 \

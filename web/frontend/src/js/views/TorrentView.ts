@@ -5,6 +5,7 @@ import { TorrentConfig, TorrentMovie, TorrentSerie } from '../types/torrent.type
 export class TorrentView extends BaseView {
     private torrentService: TorrentService;
     private pollingInterval: number | null = null;
+    private autoCloseInterval: number | null = null;
     private lastTaskOutputLength: number = 0;
     private taskCompleteListener?: EventListener;
 
@@ -19,6 +20,8 @@ export class TorrentView extends BaseView {
                 <div class="torrent-header">
                     <h1>Gestor de Tareas</h1>
                 </div>
+
+                <!-- La configuración de data se muestra dentro de task-config-area -->
 
                 <div class="torrent-config card" id="run-task">
                     <div class="form-group">
@@ -49,8 +52,12 @@ export class TorrentView extends BaseView {
                         <span id="progress-percent" class="progress-percent">0%</span>
                     </div>
                     <p id="progress-message" class="progress-message">Iniciando búsqueda...</p>
-                    <textarea id="torrent-logs" class="torrent-logs" readonly style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; font-family: monospace; font-size: 12px; margin-top: 10px;"></textarea>
-                    <button id="cancel-task" class="btn btn-danger" style="margin-top: 10px;">Cancelar búsqueda</button>
+                    <textarea id="torrent-logs" class="torrent-logs" readonly style="width: 100%; height: 250px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; font-family: monospace; font-size: 12px; margin-top: 10px; overflow-y: auto;"></textarea>
+                    <div class="form-actions" style="margin-top: 10px;">
+                        <button id="cancel-task" class="btn btn-danger">Cancelar búsqueda</button>
+                        <button id="close-progress" class="btn btn-secondary" style="display: none;">Cerrar panel</button>
+                        <span id="auto-close-timer" style="margin-left: 10px; color: #666;"></span>
+                    </div>
                 </div>
 
                 <div class="torrent-tabs">
@@ -64,6 +71,18 @@ export class TorrentView extends BaseView {
     }
 
     async afterRender(): Promise<void> {
+        // Comprobar caché de hoy: si hay películas cacheadas, seleccionar pestaña 'movies' automáticamente
+        try {
+            const cachedMovies = await this.torrentService.getMovies();
+            if (cachedMovies && Array.isArray(cachedMovies) && cachedMovies.length > 0) {
+                // Activar pestaña movies
+                const movieTab = document.querySelector('.tab-btn[data-tab="movies"]') as HTMLElement | null;
+                if (movieTab) movieTab.classList.add('active');
+            }
+        } catch (e) {
+            // ignorar errores al comprobar caché
+        }
+
         await Promise.all([
             this.loadMovies(),
             this.loadSeries()
@@ -93,6 +112,10 @@ export class TorrentView extends BaseView {
                     <div class="form-group">
                         <label>Último torrent</label>
                         <input type="text" id="last-torrent" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha última búsqueda</label>
+                        <input type="text" id="last-date" value="" placeholder="YYYYMMDD">
                     </div>
                     <div class="form-group">
                         <label>Páginas de series</label>
@@ -126,6 +149,7 @@ export class TorrentView extends BaseView {
     private async loadConfig(): Promise<void> {
         try {
             const config = await this.torrentService.getConfig();
+            const dataConfig = await this.torrentService.getDataConfig();
             const container = document.getElementById('run-task');
             if (!container) return;
 
@@ -134,15 +158,19 @@ export class TorrentView extends BaseView {
             if (lastTorrent) lastTorrent.value = config?.url_end || '';
 
             const lastDate = document.getElementById('last-date') as HTMLInputElement;
-            if (lastDate) lastDate.value = config?.date_end || '';
+            if (lastDate) lastDate.value = (dataConfig?.date_end || config?.date_end) || '';
 
             const npSeries = document.getElementById('np-series') as HTMLInputElement;
-            if (npSeries) npSeries.value = String(config?.npseries || 0);
+            if (npSeries) npSeries.value = String((dataConfig?.npseries ?? config?.npseries) || 0);
 
             // Session is authenticated through httpOnly JWT cookie.
         } catch (error) {
             this.handleError(error, 'Error al cargar configuración');
         }
+    }
+
+    private async loadDataConfig(): Promise<void> {
+        // Eliminado: la configuración ahora se muestra/gestiona en task-config-area
     }
 
     private async loadMovies(): Promise<void> {
@@ -222,6 +250,34 @@ export class TorrentView extends BaseView {
     }
 
     protected setupEventListeners(): void {
+        // Auto-guardar cambios dentro de `task-config-area` (debounced)
+        const taskConfigArea = document.getElementById('task-config-area');
+        if (taskConfigArea) {
+            let saveTimer: number | null = null;
+            taskConfigArea.addEventListener('input', (ev) => {
+                const target = ev.target as HTMLElement | null;
+                if (!target) return;
+                const id = (target as HTMLInputElement).id || '';
+                // Sólo reaccionar a los campos relevantes
+                if (!['last-torrent', 'last-date', 'np-series'].includes(id)) return;
+
+                if (saveTimer) clearTimeout(saveTimer);
+                saveTimer = window.setTimeout(async () => {
+                    try {
+                        const config: Partial<TorrentConfig> = {
+                            url_end: ((document.getElementById('last-torrent') as HTMLInputElement)?.value || undefined),
+                            date_end: ((document.getElementById('last-date') as HTMLInputElement)?.value || undefined),
+                            npseries: parseInt(((document.getElementById('np-series') as HTMLInputElement)?.value || '1'))
+                        };
+                        await this.torrentService.updateDataConfig(config);
+                        this.alertManager.success('Configuración guardada automáticamente');
+                    } catch (error) {
+                        this.handleError(error, 'Error al guardar configuración automáticamente');
+                    }
+                }, 800) as unknown as number;
+            });
+        }
+
         // Tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -270,14 +326,24 @@ export class TorrentView extends BaseView {
             this.alertManager.info('Búsqueda cancelada');
         });
 
+        // Cerrar panel de progreso
+        document.getElementById('close-progress')?.addEventListener('click', () => {
+            this.hideProgress();
+        });
+
         // Escuchar eventos de tarea completada
         this.taskCompleteListener = ((e: CustomEvent) => {
             this.hideProgress();
 
             if (e.detail.task_status === 'completed') {
                 this.alertManager.success('Búsqueda completada');
-                this.loadMovies();
-                this.loadSeries();
+                // Seleccionar automáticamente la pestaña de Películas y recargar
+                const movieTab = document.querySelector('.tab-btn[data-tab="movies"]') as HTMLElement | null;
+                if (movieTab) {
+                    movieTab.click();
+                } else {
+                    this.loadMovies();
+                }
             } else if (e.detail.task_status === 'failed') {
                 this.alertManager.error(e.detail.error || 'Error en la búsqueda');
             }
@@ -343,7 +409,9 @@ export class TorrentView extends BaseView {
                             this.pollingInterval = null;
                         }
                         this.updateProgress(100, status?.task_status === 'completed' ? 'Búsqueda completada' : 'Error en búsqueda');
-                        this.hideProgress();
+
+                        // Cambiar a modo "completado" con opción de cierre manual
+                        this.completeProgress(status?.task_status === 'completed');
 
                         if (status?.task_status === 'completed') {
                         this.updateProgress(progressValue, status?.message || 'Buscando...');
@@ -382,6 +450,13 @@ export class TorrentView extends BaseView {
         if (progressDiv) {
             progressDiv.style.display = 'block';
         }
+
+        // Resetear botones al estado inicial
+        const cancelBtn = document.getElementById('cancel-task');
+        const closeBtn = document.getElementById('close-progress');
+        if (cancelBtn) cancelBtn.style.display = 'inline-block';
+        if (closeBtn) closeBtn.style.display = 'none';
+
         this.updateProgress(0, 'Iniciando...');
     }
 
@@ -395,6 +470,51 @@ export class TorrentView extends BaseView {
             clearInterval(this.pollingInterval);
             this.pollingInterval = null;
         }
+
+        // Limpiar timer de cierre automático
+        if (this.autoCloseInterval) {
+            clearInterval(this.autoCloseInterval);
+            this.autoCloseInterval = null;
+        }
+
+        const timerEl = document.getElementById('auto-close-timer');
+        if (timerEl) {
+            timerEl.textContent = '';
+        }
+    }
+
+    private completeProgress(isSuccess: boolean): void {
+        const cancelBtn = document.getElementById('cancel-task');
+        const closeBtn = document.getElementById('close-progress');
+        const timerEl = document.getElementById('auto-close-timer');
+
+        // Cambiar botones
+        if (cancelBtn) cancelBtn.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'inline-block';
+
+        // Limpiar timer anterior si existe
+        if (this.autoCloseInterval) {
+            clearInterval(this.autoCloseInterval);
+        }
+
+        // Timer de cierre automático (10 segundos)
+        let secondsLeft = 10;
+        if (timerEl) {
+            timerEl.textContent = `Se cerrará en ${secondsLeft}s...`;
+        }
+
+        this.autoCloseInterval = window.setInterval(() => {
+            secondsLeft--;
+            if (timerEl) {
+                timerEl.textContent = `Se cerrará en ${secondsLeft}s...`;
+            }
+
+            if (secondsLeft <= 0) {
+                clearInterval(this.autoCloseInterval!);
+                this.autoCloseInterval = null;
+                this.hideProgress();
+            }
+        }, 1000);
     }
 
     private updateProgress(percent: number, message: string): void {
