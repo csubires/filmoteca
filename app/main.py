@@ -110,6 +110,7 @@ def main():
             'browser-pow-cookie-verification': '019e5041-55eb-7010-b17d-58dea829f30f'
         })
 
+
         # Buscar si es diferente al día actual
         if not date_end or str(date_end) != str(current_date):
             lg_prt('gy', '[▪] Buscando torrents...')
