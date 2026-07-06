@@ -1,4 +1,10 @@
 ## TODO (Hay otros en el código)
+
+- [ ] Generar Documentación con Assets
+- Comprobar nombre de archivo en python y alertar si hay espacios de mas, o corchetes sin cerrar etc
+- Update where gente = 1, en vez de ir uno a uno
+- En torrent poder elegir collumnas y sacar listado links
+- Normaliza funciones, clases, snake_case o como sea más estandar
 ---
 
 postgres

@@ -29,13 +29,13 @@ help:
 	@echo "  make stop          - Parar contenedores"
 	@echo "  make down          - Eliminar contenedores y red"
 	@echo "  make clean         - Limpiar contenedores, imágenes y volúmenes"
-	@echo "  make fclean        - Limpieza total de podman/docker"
+	@echo "  make fclean        - Limpieza total de docker"
 	@echo "  make re            - Rebuild completo"
 	@echo ""
 	@echo "── Estado / Debug ─────────────────────────────────────────"
 	@echo "  make ps            - Ver estado compose"
 	@echo "  make status        - Ver containers/images/volumes/networks"
-	@echo "  make destroy-all   - Eliminar TODO del sistema docker/podman"
+	@echo "  make destroy-all   - Eliminar TODO del sistema docker"
 	@echo ""
 	@echo "── Microservicios Web ─────────────────────────────────────"
 	@echo "  make web-install   - Instalar dependencias"
@@ -71,8 +71,8 @@ build: docker-build-base
 
 up:
 	$(COMPOSE) up -d
-	@echo "\nhttps://localhost:8443/"
-	@echo "\nhttps://localhost:3000/"
+	@echo -ne "\nhttps://localhost:8443/"
+	@echo -ne "\nhttps://localhost:3000/"
 
 stop:
 	$(COMPOSE) stop

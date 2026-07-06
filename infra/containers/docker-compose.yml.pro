@@ -1,20 +1,20 @@
 name: filmoteca
 
 services:
-  
+
   web-base:
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/base/Dockerfile
       network: host
     image: filmoteca-web-base:latest
-    container_name: filmoteca-web-base  
-  
-  
+    container_name: filmoteca-web-base
+
+
   database:
     image: filmoteca-database
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/database/Dockerfile
       network: host
     container_name: filmoteca-database
@@ -23,7 +23,7 @@ services:
       DB_PATH: /app/data/filmoteca.db
       QUERIES_PATH: /app/web/database/queries
     volumes:
-      - ../../data:/app/data
+      - /home/user/server/data/filmoteca/data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/database/health"]
       interval: 20s
@@ -35,7 +35,7 @@ services:
   auth:
     image: filmoteca-auth
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/auth/Dockerfile
       network: host
     container_name: filmoteca-auth
@@ -43,7 +43,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: http://database:3003
     volumes:
-      - ../../data:/app/data
+      - /home/user/server/data/filmoteca/data:/app/data
     depends_on:
       database:
         condition: service_healthy
@@ -58,7 +58,7 @@ services:
   i18n:
     image: filmoteca-i18n
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/i18n/Dockerfile
       network: host
     container_name: filmoteca-i18n
@@ -75,7 +75,7 @@ services:
   gateway:
     image: filmoteca-gateway
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/gateway/Dockerfile
       network: host
     container_name: filmoteca-gateway
@@ -85,7 +85,7 @@ services:
       AUTH_URL: http://auth:3001
       I18N_URL: http://i18n:3002
     volumes:
-      - ../../data:/app/data:ro
+      - /home/user/server/data/filmoteca/data:/app/data:ro
     depends_on:
       database:
         condition: service_healthy
@@ -104,14 +104,14 @@ services:
   nginx:
     image: filmoteca-nginx
     build:
-      context: ${PWD}
+      context: ../../data/filmoteca
       dockerfile: infra/containers/web/nginx/Dockerfile
       network: host
     container_name: filmoteca-nginx
     ports:
-      - "8443:443"
+      - "8080:443"
     volumes:
-      - ../../data/logs/nginx:/var/log/nginx
+      - /home/user/server/data/filmoteca/data/logs/nginx:/var/log/nginx
     depends_on:
       gateway:
         condition: service_healthy
@@ -128,3 +128,6 @@ networks:
     name: filmoteca-net
     driver: bridge
     enable_ipv6: false
+  npm-net:
+    external: true
+    name: npm-net
