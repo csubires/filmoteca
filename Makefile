@@ -6,7 +6,7 @@ SHELL := /bin/bash
 KITTY := /usr/bin/kitty
 
 WEB_BASE := filmoteca-web-base
-SERVICES := filmoteca-database filmoteca-auth filmoteca-i18n filmoteca-gateway filmoteca-nginx
+SERVICES := filmoteca-app filmoteca-database filmoteca-auth filmoteca-i18n filmoteca-gateway filmoteca-nginx
 NETWORKS := filmoteca-net
 VOLUMES :=
 COMPOSE_FILE := infra/containers/docker-compose.yml
@@ -26,6 +26,7 @@ help:
 	@echo "  make all           - Build base + levantar toda la stack"
 	@echo "  make build         - Construir imágenes"
 	@echo "  make up            - Levantar contenedores"
+	@echo "  make app           - Levantar solo el contenedor app"
 	@echo "  make stop          - Parar contenedores"
 	@echo "  make down          - Eliminar contenedores y red"
 	@echo "  make clean         - Limpiar contenedores, imágenes y volúmenes"
@@ -69,9 +70,12 @@ docker-build-base:
 build: docker-build-base
 	$(COMPOSE) build
 
+app:
+	$(COMPOSE) up -d app
+
 up:
 	$(COMPOSE) up -d
-	@echo -ne "\nhttps://localhost:8443/"
+	@echo -ne "\nhttps://localhost:8080/"
 	@echo -ne "\nhttps://localhost:3000/"
 
 stop:

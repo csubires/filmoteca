@@ -3,6 +3,4 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /app/web/auth
 
-COPY web/auth ./
-
 CMD ["npm", "start"]

@@ -3,6 +3,4 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /app/web/database
 
-COPY web/database ./
-
 CMD ["npm", "start"]

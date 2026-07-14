@@ -87,134 +87,72 @@ export default async function torrentRoutes(fastify) {
 
 	// Legacy torrent_task_status and stop_torrent_task removed - use /task_status and /stop_task
 
-	// Generic execute task (uses interface.py)
+	// Generic execute task (delegates to Python adapter HTTP service)
 	fastify.post('/execute_task', async (request, reply) => {
 		try {
 			const { task, config } = request.body || {};
 			if (!task) return reply.code(400).send({ error: 'No task specified' });
 
-			const taskId = `${task}_${Date.now()}`;
-			fastify.log.info(`POST /execute_task - Task: ${task}, Task ID: ${taskId}`);
+			const adapterUrl = process.env.PYTHON_ADAPTER_URL || 'http://localhost:5000';
+			fastify.log.info(`POST /execute_task - Delegating ${task} to adapter ${adapterUrl}`);
 
-			// Spawn Python adapter from project root
-			const pythonScriptPath = path.join(__dirname, '../../../app/adapter/interface.py');
-			const projectRoot = path.join(__dirname, '../../../');
-
-			const taskConfig = config || {};
-
-			fastify.log.info(`Spawning Python: ${pythonScriptPath}`);
-			fastify.log.info(`Working directory: ${projectRoot}`);
-			fastify.log.info(`Task: ${task} with config: ${JSON.stringify(taskConfig)}`);
-
-			const pythonProcess = spawn('python3', [pythonScriptPath, task, JSON.stringify(taskConfig)], {
-				cwd: projectRoot,
-				stdio: ['pipe', 'pipe', 'pipe'],
-				env: {
-					...process.env,
-					PYTHONUNBUFFERED: '1',
-					PYTHONDONTWRITEBYTECODE: '1'
-				}
+			const resp = await fetch(`${adapterUrl}/execute_task`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ task, config: config || {} })
 			});
 
+			if (!resp.ok) {
+				const errText = await resp.text();
+				fastify.log.error('Adapter error: ' + errText);
+				return reply.code(500).send({ error: 'Adapter failed to start task' });
+			}
+
+			const json = await resp.json();
+			const taskId = json.taskId;
+
+			const nowId = `${task}_${Date.now()}`;
 			const taskData = {
 				id: taskId,
-				process: pythonProcess,
+				adapterId: taskId,
 				status: 'running',
 				progress: 0,
-				message: `Iniciando tarea ${task}...`,
+				message: `Delegated task ${task} to adapter`,
 				startTime: Date.now(),
 				shouldStop: false,
 				output: ''
 			};
 
-			function appendTaskOutput(line) {
-				if (!line) return;
-				taskData.output += line + '\n';
-				fastify.log.info(`[Task ${taskId}] ${line}`);
-
-				if (line.includes('PROGRESO:')) {
-					const match = line.match(/PROGRESO:(\d+)/);
-					if (match) taskData.progress = parseInt(match[1]);
-				}
-
-				if (line.startsWith('LOG:')) {
-					taskData.message = line.replace(/^LOG:\s*/, '') || taskData.message;
-				}
-
-				if (line.includes('TAREA COMPLETADA')) {
-					taskData.status = 'completed';
-				}
-			}
-
-			pythonProcess.stdout.on('data', (data) => {
-				const output = data.toString().trim();
-				const lines = output.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-				lines.forEach(appendTaskOutput);
-
-				// Log JSON parsing for debugging (torrent task)
-				if (task === 'torrent') {
-					for (const line of lines) {
-						try {
-							if (line.startsWith('{') && line.endsWith('}')) {
-								const result = JSON.parse(line);
-								if (result.data && Array.isArray(result.data)) {
-									fastify.log.info(`Torrent task completed with ${result.data[0]?.length || 0} movies and ${result.data[1]?.length || 0} series`);
-									// Python adapter already saves to torrent_cache, no need to duplicate
-									break;
-								}
-							}
-						} catch (e) {
-							// ignore parse errors for this line and continue
-						}
-					}
-				}
-			});
-
-			pythonProcess.stderr.on('data', (data) => {
-				const error = data.toString().trim();
-				error.split(/\r?\n/).map(line => line.trim()).filter(Boolean).forEach(line => {
-					taskData.output += line + '\n';
-					fastify.log.error(`[Task ${taskId}] ${line}`);
-					if (!taskData.error) taskData.error = line;
-					if (line && taskData.status !== 'cancelled') {
-						taskData.status = 'failed';
-						taskData.message = line;
-					}
-				});
-			});
-
-			pythonProcess.on('error', (err) => {
-				fastify.log.error(`[Task ${taskId}] Process error: ${err && err.message ? err.message : err}`);
-				taskData.error = (err && err.message) || String(err);
-				taskData.status = 'failed';
-			});
-
-			pythonProcess.on('close', (code) => {
-				fastify.log.info(`[Task ${taskId}] Process exited with code ${code}`);
-				if (code !== 0 && taskData.status !== 'cancelled') {
-					taskData.status = 'failed';
-				} else if (taskData.status !== 'completed') {
-					taskData.status = taskData.shouldStop ? 'cancelled' : (code === 0 ? 'completed' : 'failed');
-				}
-				setTimeout(() => activeTasks.delete(taskId), 30000);
-			});
-
 			activeTasks.set(taskId, taskData);
 
 			return { taskId, status: 200 };
 		} catch (error) {
-			fastify.log.error('Error executing task:', error);
+			fastify.log.error('Error executing task (proxy):', error);
 			return reply.code(500).send({ error: error.message });
 		}
 	});
 
-	// Generic task status
+	// Generic task status (proxy to adapter when task exists)
 	fastify.get('/task_status', async (request, reply) => {
 		try {
 			fastify.log.info(`/task_status query: ${JSON.stringify(request.query)}`);
 			const taskId = request.query.taskId;
 			if (!taskId) return { data: { task_status: 'no_task' }, status: 200 };
 
+			const adapterUrl = process.env.PYTHON_ADAPTER_URL || 'http://localhost:5000';
+
+			// If we know the task locally, ask adapter for latest status
+			try {
+				const resp = await fetch(`${adapterUrl}/task_status?taskId=${encodeURIComponent(taskId)}`);
+				if (resp.ok) {
+					const json = await resp.json();
+					return { data: json.data, status: 200 };
+				}
+			} catch (e) {
+				fastify.log.error('Error contacting adapter for status', e);
+			}
+
+			// Fallback to local info if adapter not reachable
 			const taskData = activeTasks.get(taskId);
 			fastify.log.info({ taskId, hasTask: !!taskData, activeCount: activeTasks.size }, 'task_status lookup');
 			if (!taskData) return { data: { task_status: 'not_found' }, status: 200 };
@@ -235,28 +173,34 @@ export default async function torrentRoutes(fastify) {
 		}
 	});
 
-	// Generic stop task
+	// Generic stop task (forward to adapter when possible)
 	fastify.post('/stop_task', async (request, reply) => {
 		try {
 			const taskId = request.body?.taskId;
 			if (!taskId) return { success: false, message: 'No taskId provided', status: 200 };
 
+			const adapterUrl = process.env.PYTHON_ADAPTER_URL || 'http://localhost:5000';
+			try {
+				const resp = await fetch(`${adapterUrl}/stop_task`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ taskId })
+				});
+				if (resp.ok) {
+					return { success: true, message: 'Task stop requested', status: 200 };
+				}
+			} catch (e) {
+				fastify.log.error('Error contacting adapter to stop task', e);
+			}
+
+			// Fallback: mark locally
 			const taskData = activeTasks.get(taskId);
 			if (!taskData) return { success: false, message: 'Task not found', status: 200 };
 
 			taskData.shouldStop = true;
 			taskData.status = 'stopping';
 
-			if (taskData.process && !taskData.process.killed) {
-				taskData.process.kill('SIGTERM');
-				setTimeout(() => {
-					if (taskData.process && !taskData.process.killed) {
-						taskData.process.kill('SIGKILL');
-					}
-				}, 5000);
-			}
-
-			return { success: true, message: 'Task stopped', status: 200 };
+			return { success: true, message: 'Task stopped (local)', status: 200 };
 		} catch (error) {
 			return reply.code(500).send({ error: error.message });
 		}
@@ -326,8 +270,13 @@ export default async function torrentRoutes(fastify) {
 
 			// Obtener valores actuales para mantener los que no se actualizan
 			const current = await db.execute('select_urlend', {});
-			const currentData = current && current.length > 0
-				? { url_end: current[0][0], date_end: current[0][1], npseries: current[0][2] }
+			const currentRow = current && current.length > 0 ? current[0] : null;
+			const currentData = currentRow
+				? {
+					url_end: Array.isArray(currentRow) ? currentRow[0] : currentRow.url_end,
+					date_end: Array.isArray(currentRow) ? currentRow[1] : currentRow.date_end,
+					npseries: Array.isArray(currentRow) ? currentRow[2] : currentRow.npseries
+				}
 				: { url_end: null, date_end: null, npseries: 1 };
 
 			// Preparar datos actualizados

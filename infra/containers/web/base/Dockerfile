@@ -12,7 +12,6 @@ COPY web/auth/package.json ./web/auth/
 COPY web/database/package.json ./web/database/
 COPY web/gateway/package.json ./web/gateway/
 COPY web/i18n/package.json ./web/i18n/
-COPY web/shared/fastify-config.js ./web/shared/
 
 WORKDIR /app/web
 RUN npm install --omit=dev

@@ -1,11 +1,20 @@
-FROM python:3.13.1-alpine3.21
+FROM python:3.12.9-slim-bookworm
 WORKDIR /usr/src/app
-COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN apk add --no-cache gcc libc-dev linux-headers
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+	PYTHONUNBUFFERED=1
+
+COPY app/requirements.txt /tmp/app-requirements.txt
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends build-essential python3-dev \
+	&& rm -rf /var/lib/apt/lists/*
+
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-# RUN useradd -r -s /bin/false www-data
-# RUN adduser -D -S -G www-data www-data
-# RUN adduser -D -S -H -u 1001 -G www-data www-data
-# USER www-data
-# WORKDIR /usr/src/app
+RUN pip install --no-cache-dir -r /tmp/app-requirements.txt
+
+# Expose adapter port
+EXPOSE 5000
+
+# Run the Flask adapter by default
+CMD ["python3", "/usr/src/app/app/adapter/api.py"]

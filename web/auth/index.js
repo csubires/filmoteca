@@ -2,13 +2,18 @@
 import 'dotenv/config';
 import createFastifyApp from './fastify-config.js';
 import authRoutes from './routes/auth.js';
+import fastifyJwt from '@fastify/jwt';
 
 async function startAuthService() {
 	try {
 		const fastify = await createFastifyApp({
 			serviceName: 'auth-service',
 			corsOrigin: true,
-			enableJWT: true
+			enableJWT: false
+		});
+
+		await fastify.register(fastifyJwt, {
+			secret: process.env.JWT_SECRET || 'change-this-secret-in-production'
 		});
 
 		// Register auth routes

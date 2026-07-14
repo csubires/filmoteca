@@ -10,6 +10,19 @@ class HandlerSQL {
 		this.lastAffected = 0;
 	}
 
+	normalizeParams(params) {
+		if (!params || Array.isArray(params) || typeof params !== 'object') {
+			return params || {};
+		}
+
+		const normalized = {};
+		for (const [key, value] of Object.entries(params)) {
+			const bareKey = key.replace(/^[:@$]/, '');
+			normalized[`:${bareKey}`] = value;
+		}
+		return normalized;
+	}
+
 	async connect() {
 		return new Promise((resolve, reject) => {
 			const dbDir = path.dirname(this.dbPath);
@@ -47,6 +60,7 @@ class HandlerSQL {
 		// Log query execution
 		console.log(`\n[DB] Query: ${tagSQL}`);
 		console.log(`[DB] SQL: ${sql}`);
+		params = this.normalizeParams(params);
 		console.log(`[DB] Params:`, params);
 		const startTime = Date.now();
 		return new Promise((resolve, reject) => {
@@ -92,6 +106,7 @@ class HandlerSQL {
 		const trimmed = sql.trim();
 		const isSelect = trimmed.toUpperCase().startsWith('SELECT');
 		const startTime = Date.now();
+		params = this.normalizeParams(params);
 
 		console.log('\n[DB] Raw SQL:', trimmed);
 		console.log('[DB] Raw Params:', params);

@@ -3,6 +3,4 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /app/web/i18n
 
-COPY web/i18n ./
-
 CMD ["npm", "start"]

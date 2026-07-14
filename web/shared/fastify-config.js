@@ -46,11 +46,6 @@ export default async function createFastifyApp(options = {}) {
 	if (enableJWT || serviceName === 'auth-service') {
 		const fastifyCookie = await import('@fastify/cookie');
 		await fastify.register(fastifyCookie.default);
-
-		const fastifyJwt = await import('@fastify/jwt');
-		await fastify.register(fastifyJwt.default, {
-			secret: jwtSecret
-		});
 	}
 
 if (enableSessions) {
