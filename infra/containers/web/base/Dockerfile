@@ -1,4 +1,4 @@
-FROM node:20-trixie-slim
+FROM node:22.23.1-trixie-slim
 
 WORKDIR /app
 
@@ -14,18 +14,4 @@ COPY web/gateway/package.json ./web/gateway/
 COPY web/i18n/package.json ./web/i18n/
 
 WORKDIR /app/web
-RUN npm install --omit=dev
-
-WORKDIR /app/web/auth/
-RUN npm install --omit=dev
-
-WORKDIR /app/web/database/
-RUN npm install --omit=dev
-
-
-WORKDIR /app/web/gateway/
-RUN npm install --omit=dev
-
-
-WORKDIR /app/web/i18n/
 RUN npm install --omit=dev

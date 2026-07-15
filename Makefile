@@ -12,52 +12,50 @@ VOLUMES :=
 COMPOSE_FILE := infra/containers/docker-compose.yml
 COMPOSE := $(INFRA) compose -f $(COMPOSE_FILE)
 
-.PHONY: all build up stop down clean fclean re help web-install \
+.PHONY: all build up stop down clean fclean re tails help web-install \
 	web-database web-auth web-i18n web-gateway web-all web-services \
-	run watch ps status destroy-all sass tsc start dev test-db db-backup
+	run watch ps status destroy-all sass tsc start dev
 
 help:
-	@echo ""
-	@echo "════════════════════════════════════════════════════════════"
-	@echo "                  FILMOTECA MAKEFILE"
-	@echo "════════════════════════════════════════════════════════════"
-	@echo ""
-	@echo "── Docker / Containers ────────────────────────────────────"
-	@echo "  make all           - Build base + levantar toda la stack"
-	@echo "  make build         - Construir imágenes"
-	@echo "  make up            - Levantar contenedores"
-	@echo "  make app           - Levantar solo el contenedor app"
-	@echo "  make stop          - Parar contenedores"
-	@echo "  make down          - Eliminar contenedores y red"
-	@echo "  make clean         - Limpiar contenedores, imágenes y volúmenes"
-	@echo "  make fclean        - Limpieza total de docker"
-	@echo "  make re            - Rebuild completo"
-	@echo ""
-	@echo "── Estado / Debug ─────────────────────────────────────────"
-	@echo "  make ps            - Ver estado compose"
-	@echo "  make status        - Ver containers/images/volumes/networks"
-	@echo "  make destroy-all   - Eliminar TODO del sistema docker"
-	@echo ""
-	@echo "── Microservicios Web ─────────────────────────────────────"
-	@echo "  make web-install   - Instalar dependencias"
-	@echo "  make web-database  - Iniciar servicio database"
-	@echo "  make web-auth      - Iniciar servicio auth"
-	@echo "  make web-i18n      - Iniciar servicio i18n"
-	@echo "  make web-gateway   - Iniciar API gateway"
-	@echo "  make web-all       - Abrir todos los servicios en gnome-terminal"
-	@echo "  make web-services  - Ejecutar todos los servicios"
-	@echo ""
-	@echo "── Desarrollo ─────────────────────────────────────────────"
-	@echo "  make run           - Abrir microservicios en Kitty"
-	@echo "  make watch         - Sass + TypeScript watch"
-	@echo "  make sass          - Sass watch"
-	@echo "  make tsc           - TypeScript watch"
-	@echo "  make start         - Backend producción"
-	@echo "  make dev           - Backend desarrollo"
-	@echo "  make test-db       - Tests base de datos"
-	@echo "  make db-backup     - Backup base de datos"
-	@echo ""
-	@echo "════════════════════════════════════════════════════════════"
+	@echo -ne "\n"
+	@echo -ne "\n════════════════════════════════════════════════════════════"
+	@echo -ne "\n                  FILMOTECA MAKEFILE"
+	@echo -ne "\n════════════════════════════════════════════════════════════"
+	@echo -ne "\n"
+	@echo -ne "\n── Docker / Containers ────────────────────────────────────"
+	@echo -ne "\n  make all           - Build base + levantar toda la stack"
+	@echo -ne "\n  make build         - Construir imágenes"
+	@echo -ne "\n  make up            - Levantar contenedores"
+	@echo -ne "\n  make app           - Levantar solo el contenedor app"
+	@echo -ne "\n  make stop          - Parar contenedores"
+	@echo -ne "\n  make down          - Eliminar contenedores y red"
+	@echo -ne "\n  make clean         - Limpiar contenedores, imágenes y volúmenes"
+	@echo -ne "\n  make fclean        - Limpieza total de docker"
+	@echo -ne "\n  make re            - Rebuild completo"
+	@echo -ne "\n"
+	@echo -ne "\n── Estado / Debug ─────────────────────────────────────────"
+	@echo -ne "\n  make ps            - Ver estado compose"
+	@echo -ne "\n  make status        - Ver containers/images/volumes/networks"
+	@echo -ne "\n  make destroy-all   - Eliminar TODO del sistema docker"
+	@echo -ne "\n"
+	@echo -ne "\n── Microservicios Web ─────────────────────────────────────"
+	@echo -ne "\n  make web-install   - Instalar dependencias"
+	@echo -ne "\n  make web-database  - Iniciar servicio database"
+	@echo -ne "\n  make web-auth      - Iniciar servicio auth"
+	@echo -ne "\n  make web-i18n      - Iniciar servicio i18n"
+	@echo -ne "\n  make web-gateway   - Iniciar API gateway"
+	@echo -ne "\n  make web-all       - Abrir todos los servicios en gnome-terminal"
+	@echo -ne "\n  make web-services  - Ejecutar todos los servicios"
+	@echo -ne "\n"
+	@echo -ne "\n── Desarrollo ─────────────────────────────────────────────"
+	@echo -ne "\n  make run           - Abrir microservicios en Kitty"
+	@echo -ne "\n  make watch         - Sass + TypeScript watch"
+	@echo -ne "\n  make sass          - Sass watch"
+	@echo -ne "\n  make tsc           - TypeScript watch"
+	@echo -ne "\n  make start         - Backend producción"
+	@echo -ne "\n  make dev           - Backend desarrollo"
+	@echo -ne "\n"
+	@echo -ne "\n════════════════════════════════════════════════════════════"
 
 # ── Docker developer ────────────────────────────────────────────────────────
 
@@ -78,11 +76,11 @@ up:
 	@echo -ne "\nhttps://localhost:8080/"
 	@echo -ne "\nhttps://localhost:3000/"
 
-stop:
-	$(COMPOSE) stop
-
 down:
 	$(COMPOSE) down --remove-orphans
+
+stop:
+	$(COMPOSE) stop
 
 clean:
 	$(COMPOSE) down -v --remove-orphans --rmi all
@@ -99,12 +97,27 @@ fclean: clean
 
 re: fclean all
 
+tails:
+	@echo -ne "\n --- FILMOTECA-GATEWAY ---\n"
+	docker logs filmoteca-gateway | tail -n 20
+	@echo -ne "\n --- FILMOTECA-AUTH ---\n"
+	docker logs filmoteca-auth | tail -n 20
+	@echo -ne "\n --- FILMOTECA-I18N ---\n"
+	docker logs filmoteca-i18n | tail -n 20
+	@echo -ne "\n --- FILMOTECA-DATABASE ---\n"
+	docker logs filmoteca-database | tail -n 20
+	@echo -ne "\n --- FILMOTECA-APP ---\n"
+	docker logs filmoteca-app | tail -n 20
+	@echo -ne "\n --- FILMOTECA-NGINX ---\n"
+	docker logs filmoteca-nginx | tail -n 20
+	@echo -ne "\n --- FILMOTECA-WEB-BASE ---\n"
+	docker logs filmoteca-web-base | tail -n 20
 
 # ── Microservicios web ────────────────────────────────────────────────────────
 
 # Instala dependencias en todos los servicios
 web-install:
-	@echo "Instalando dependencias de todos los microservicios..."
+	@echo -ne "\nInstalando dependencias de todos los microservicios..."
 	npm --prefix web install
 	npm --prefix web/database install
 	npm --prefix web/auth install
@@ -131,20 +144,17 @@ start:
 dev:
 	npm --prefix web run dev
 
-web-all:
-	gnome-terminal --tab -- bash -c "npm --prefix web/database run dev"
-	gnome-terminal --tab -- bash -c "npm --prefix web/auth run dev"
-	gnome-terminal --tab -- bash -c "npm --prefix web/i18n run dev"
-	gnome-terminal --tab -- bash -c "npm --prefix web/gateway run dev"
+run-kitty:
+	./infra/tools/run_kitty.sh
 
 # Arranca los 4 microservicios en paralelo (database y auth primero, gateway al final)
 web-services:
-	@echo "Iniciando microservicios web..."
-	@echo "  [1] web/database  [2] web/auth  [3] web/i18n  [4] web/gateway"
+	@echo -ne "\nIniciando microservicios web..."
+	@echo -ne "\n  [1] web/database  [2] web/auth  [3] web/i18n  [4] web/gateway"
 	$(MAKE) web-database &
 	$(MAKE) web-auth &
 	$(MAKE) web-i18n &
-	@echo "Esperando a que los servicios base estén listos antes del gateway..."
+	@echo -ne "\nEsperando a que los servicios base estén listos antes del gateway..."
 	sleep 5
 	$(MAKE) web-gateway &
 	wait
@@ -183,7 +193,7 @@ destroy-all:
 
 # Sass watch
 sass:
-	@echo "Para producción ejecutar \"sass --watch example.scss:example.css --style compressed\""
+	@echo -ne "\nPara producción ejecutar \"sass --watch example.scss:example.css --style compressed\""
 	sass --watch --update ./web/frontend/src/scss/index.scss:./web/frontend/public/css/styles.css
 
 # TypeScript watch

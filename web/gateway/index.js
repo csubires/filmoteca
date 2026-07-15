@@ -8,10 +8,10 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const databaseUpstream = process.env.DATABASE_URL || 'http://localhost:3003';
-const appUpstream = process.env.APP_URL || 'http://localhost:5000';
-const authUpstream = process.env.AUTH_URL || 'http://localhost:3001';
-const i18nUpstream = process.env.I18N_URL || 'http://localhost:3002';
+const databaseUpstream = process.env.DATABASE_URL || 'http://database:3003';
+const appUpstream = process.env.APP_URL || 'http://app:5000';
+const authUpstream = process.env.AUTH_URL || 'http://auth:3001';
+const i18nUpstream = process.env.I18N_URL || 'http://i18n:3002';
 
 async function startGateway() {
 	const fastify = await createFastifyApp({

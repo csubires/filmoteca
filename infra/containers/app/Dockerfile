@@ -7,14 +7,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY app/requirements.txt /tmp/app-requirements.txt
 
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends build-essential python3-dev \
+	&& apt-get install -y --no-install-recommends curl build-essential python3-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r /tmp/app-requirements.txt
 
-# Expose adapter port
-EXPOSE 5000
+EXPOSE "5000"
 
 # Run the Flask adapter by default
 CMD ["python3", "/usr/src/app/app/adapter/api.py"]
